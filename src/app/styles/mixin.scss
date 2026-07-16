@@ -1,0 +1,111 @@
+@use './media-queries.scss' as *;
+
+@mixin section-style {
+    width: 100%;
+    padding: 0 20px;
+    margin: auto;
+
+    @include tablet-l {
+        padding: 0 30px;
+    }
+
+    @include desktop-m {
+        width: 1200px;
+        padding: 0 40px;
+    }
+
+    @include desktop-l {
+        width: 1280px;
+        padding: 0;
+    }
+
+    @include desktop-xl {
+        width: 1400px;
+    }
+}
+
+@mixin section-style-admin {
+    width: 100%;
+    margin: auto;
+    padding: 4rem 1rem;
+
+    @include tablet-m {
+        padding: 4rem 2.5rem;
+        margin-left: 320px !important;
+    }
+
+    @include tablet-l {
+        width: 92%;
+    }
+
+    @include tablet-l {
+        width: 80%;
+    }
+}
+
+@mixin dashed-border {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='black' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+@mixin modal-style {
+    padding: 2.5rem 2rem 2rem 2rem;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--white);
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+
+    @include tablet-m {
+        width: 80vw;
+    }
+}
+
+@mixin button-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 237px;
+    transition: background-color 0.3s ease;
+    @include dashed-border;
+}
+
+@mixin form-style {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    overflow-y: auto;
+    padding-right: 5px;
+    width: 100%;
+    height: 100%;
+}
+
+@mixin placeholder {
+    font-family: var(--font-lato);
+    font-size: var(--font-size-xxs);
+    color: var(--gray-dark-color);
+}
+
+@mixin placeholder-support {
+    &::placeholder {
+        @include placeholder;
+    }
+
+    &::-webkit-input-placeholder {
+        @include placeholder;
+    }
+
+    &:-moz-placeholder {
+        @include placeholder;
+    }
+
+    &::-moz-placeholder {
+        @include placeholder;
+    }
+
+    &:-ms-input-placeholder {
+        @include placeholder;
+    }
+}

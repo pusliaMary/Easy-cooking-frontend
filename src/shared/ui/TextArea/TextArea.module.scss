@@ -1,0 +1,51 @@
+@use "@/app/styles/mixin" as *;
+@use "@/app/styles/vars.scss" as *;
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 4rem;
+  padding: 1rem;
+  resize: none;
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height);
+  color: var(--text-color);
+  background: var(--background-color);
+  border: 1px solid var(--black-color);
+  border-radius: 4px; // Рекомендуется добавить для аккуратного отображения
+
+  @include placeholder-support;
+}
+
+// Модификатор ошибки (применяется вместе с .textarea)
+.error {
+  border-color: var(--error-color);
+}
+
+.fieldMeta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem; // Предотвращает слипание ошибки и счетчика на маленьких экранах
+  width: 100%;
+}
+
+.errorMessage {
+  color: var(--error-color);
+  min-width: 0; // Защита от переполнения грид-ячейки длинным текстом
+}
+
+.charCounter {
+  grid-column: 2; // Гарантирует, что счетчик всегда будет во второй колонке
+  justify-self: end;
+  color: var(--gray-dark-color);
+}

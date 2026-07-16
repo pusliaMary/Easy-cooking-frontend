@@ -1,0 +1,62 @@
+.flex {
+  display: flex;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+// 1. Автоматическая генерация классов для Justify-Content
+$justify-values: (
+  "Start": flex-start,
+  "Center": center,
+  "End": flex-end,
+  "Between": space-between,
+  "Around": space-around,
+  "Evenly": space-evenly
+);
+
+@each $name, $value in $justify-values {
+  .justify#{$name} {
+    justify-content: $value;
+  }
+}
+
+// 2. Автоматическая генерация классов для Align-Items
+$align-values: (
+  "Start": flex-start,
+  "Center": center,
+  "End": flex-end,
+  "Stretch": stretch
+);
+
+@each $name, $value in $align-values {
+  .align#{$name} {
+    align-items: $value;
+  }
+}
+
+// 3. Автоматическая генерация классов для Flex-Direction
+$direction-values: (
+  "Row": row,
+  "Column": column
+);
+
+@each $name, $value in $direction-values {
+  .direction#{$name} {
+    flex-direction: $value;
+  }
+}
+
+// 4. Автоматическая генерация классов для Gap (от 8 до 64)
+$gaps: 8, 16, 24, 32, 40, 64;
+
+@each $gap in $gaps {
+  .gap#{$gap} {
+    gap: #{$gap}px;
+  }
+}

@@ -1,0 +1,52 @@
+@use "@/app/styles/media-queries.scss" as *;
+
+// Модификаторы и утилиты
+.noMargin       { margin: 0; }
+.tabularNumbers { font-variant-numeric: tabular-nums; }
+
+// Шрифты и начертания
+.lato      { font-family: var(--font-lato); }
+.poiretOne { font-family: var(--font-poiret-one); }
+.normal    { font-weight: 400; }
+.bold      { font-weight: 700; }
+
+// Варианты типографики
+.h1 {
+  font-size: 32px;
+  line-height: 1.2;
+  // Убрано дублирование: на tablet-m размер оставался 32px
+}
+
+.h2 {
+  font-size: 20px;
+  line-height: 1.3;
+
+  @include tablet-m { font-size: 24px; }
+}
+
+.h3 {
+  font-size: 16px;
+  line-height: 1.4;
+
+  @include tablet-m { font-size: 18px; }
+}
+
+// Объединение общих свойств для body-классов
+.body16, .body14, .body12 {
+  line-height: var(--line-height);
+}
+
+.body16 {
+  font-size: 16px;
+  @include tablet-m { font-size: 18px; }
+}
+
+.body14 {
+  font-size: 14px;
+  @include tablet-m { font-size: 16px; }
+}
+
+.body12 {
+  font-size: 12px;
+  @include tablet-m { font-size: 14px; }
+}

@@ -1,0 +1,40 @@
+@use "@/app/styles/vars.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+@use "@/app/styles/mixin.scss" as *;
+
+.header {
+  @include section-style;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 55px 0px;
+  justify-self: center;
+
+   text-transform: var(--text-uppercase);
+    font-size: 36px;
+
+  @include mobile-xl {
+    padding: 20px 40px;
+  }
+
+  @include desktop-m {
+    box-shadow: none;
+  }
+
+}
+
+.mobileTitle {
+    text-transform: var(--text-uppercase);
+    font-size: 36px;
+
+    span {
+        color: var(--red-color);
+    }
+
+    @include mobile-l {
+        font-size: 3rem;
+    }
+
+    @include tablet-m {
+        display: none;
+    }
+}

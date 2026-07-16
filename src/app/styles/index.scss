@@ -1,0 +1,8 @@
+@use "normalize" as *;
+@use "vars" as *;
+@use "fonts" as *;
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
