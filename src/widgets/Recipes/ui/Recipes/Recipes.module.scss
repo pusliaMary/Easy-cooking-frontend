@@ -1,0 +1,119 @@
+@use "@/app/styles/mixin.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+
+.recipeSection {
+  @include section-style;
+
+  @include mobile-l {
+    .imageContainer {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  height: 200px;
+}
+
+
+
+.recipesImgBtn {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  display: flex;
+  position: relative;
+  scrollbar-width: thin;
+  padding-bottom: 8px;
+
+   
+    
+  }
+
+  
+
+  %button {
+    display: inline-block;
+    padding: 14px 28px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    /* Верхняя тень светлая (свет падает сверху), нижняя темная */
+    box-shadow:
+      inset 0px 2px 0px rgba(255, 255, 255, 0.4),
+      /* Светлый блик внутри */ inset 0px -2px 0px rgba(0, 0, 0, 0.3),
+      /* Тень внутри снизу */ 0px 4px 10px rgba(0, 0, 0, 0.2); /* Внешняя тень */
+
+    /* Эффект нажатия */
+    transition: all 0.1s ease-out;
+  }
+
+  .primaryButton {
+    @extend %button;
+    background-color: var(--green-light);
+    width: fit-content;
+    
+  }
+
+  .h2 {
+    align-self: center;
+  }
+  
+  .mealButton {
+            @extend %button;
+            color: var(--white);
+            background-color: var(--orange-color);
+        }
+
+        .recipeBaseButton {
+            @extend %button;
+            background-color: var(--white);
+            color: var(--orange-color);
+        }
+
+  
+  .button:active {
+    /* При нажатии кнопка "утапливается" */
+    box-shadow:
+      inset 0px 1px 0px rgba(0, 0, 0, 0.4),
+      0px 0px 0px rgba(0, 0, 0, 0.2);
+      background-color: var(--terracot);
+    transform: translateY(2px);
+  }
+
+    .mealButton:active, .recipeBaseButton:active {
+            
+            background-color: var(--terracot);
+        }
+
+    .recipeBaseButton:active {
+        color: var(--white)
+    }
+
+.buttonLoadMore {
+  color: var(--text-color);
+  font-size: var(--font-size-xs);
+}
+
+.recipeImgBtn::-webkit-scrollbar {
+  border-radius: 5px;
+  height: 20px;
+  display: block;
+}
+
+.recipeImgBtn::-webkit-scrollbar-thumb {
+  background-color: var(--gray-color);
+  border-radius: 5px;
+}
+
+/* For Firefox */
+@supports (-moz-appearance: meterbar) {
+  .recipeImgBtn {
+    scrollbar-width: thin;
+  }
+}
+
+.headingStyle {
+  text-transform: var(--text-uppercase);
+}

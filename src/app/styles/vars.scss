@@ -1,13 +1,15 @@
 :root {
     // colors
-    --gray-light-color: #F6F6F6; // accordion panel background
-    --gray-color: #D9D9D9; // circle number, portfolio filter scrollbar
-    --gray-dark-color: #676767; // accordion icon "+"
-    --red-color: #8A171A; // social media icons, numbers, first and last letter in H1
+    --orange-color: #EC956D; // accordion panel background
+    --gray-color: gray; // circle number, portfolio filter scrollbar
+    --gray-light: rgb(221, 218, 218);
+    --green-light: #58D29E;
+    --green-dark-color: #719D6E; // accordion icon "+"
+    --terracot: #DC5034; // social media icons, numbers, first and last letter in H1
     --error-color: #ff0000; //error
     --black-color: #000000;
-    --background-color: #FEFEFE;
-    --text-color: #1C1C1C;
+    --background-color: #e4dbd9;
+    --text-color: #282828;
     --white: #FFF;
 
     //fonts

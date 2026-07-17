@@ -1,5 +1,5 @@
 import { Stack } from "@/shared/ui/Stack";
-import style from "./Header.module.css";
+import styles from "./Header.module.css";
 import { Typography } from "@/shared/ui/Typography";
 
 export const Header = () => {
@@ -7,10 +7,10 @@ export const Header = () => {
     <Stack
             tag="header"
             align="center"
-            className={style.header}
+            className={styles.header}
             id="header"
         >
-        <Typography variant="h1" className="mobileTitle">
+        <Typography variant="h1" className={styles.mobileTitle}>
             What do you want to eat?
         </Typography>      
     </Stack>

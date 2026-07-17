@@ -48,12 +48,11 @@ $sizes: (
     }   
 }
 
-.primary::after {
-  width: 100%;
-}
+
 
 .secondary:hover::after {
   width: 100%;
+  
 }
 
 .isLoading {

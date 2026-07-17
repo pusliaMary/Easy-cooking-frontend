@@ -5,7 +5,6 @@
 .header {
   @include section-style;
 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: 55px 0px;
   justify-self: center;
 
@@ -25,7 +24,8 @@
 .mobileTitle {
     text-transform: var(--text-uppercase);
     font-size: 36px;
-
+    color: var(--green-dark-color);
+    
     span {
         color: var(--red-color);
     }
