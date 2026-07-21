@@ -2,7 +2,7 @@ import { filteredMeal, filteredRecipeBase } from "@/shared";
 import { Button } from "@/shared/ui/Button";
 import { Stack } from "@/shared/ui/Stack";
 import { useRef } from "react";
-import styles from "./filters.module.scss";
+import styles from "./Filters.module.scss";
 import { getStyles } from "@/shared/lib/getStyle/getStyle";
 
 export const Filters = () => {
@@ -41,7 +41,7 @@ export const Filters = () => {
           })}
         </Stack>
         <Button className={styles.primaryButton} variant="primary" size="sm">
-          Get your filters
+          Get your recipes
         </Button>
       </Stack>
     </Stack>
