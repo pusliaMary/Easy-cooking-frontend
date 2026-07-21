@@ -2,19 +2,19 @@ import { filteredMeal, filteredRecipeBase } from "@/shared";
 import { Button } from "@/shared/ui/Button";
 import { Stack } from "@/shared/ui/Stack";
 import { useRef } from "react";
-import styles from "./Recipes.module.scss";
+import styles from "./filters.module.scss";
 import { getStyles } from "@/shared/lib/getStyle/getStyle";
 
-export const Recipes = () => {
+export const Filters = () => {
   const targetRef = useRef(null);
 
   return (
-    <Stack tag="section" justify="around" max className={styles.recipeSection}>
+    <Stack tag="section" justify="around" max className={styles.filterSection}>
       <Stack
         direction="column"
         justify="between"
         ref={targetRef as React.Ref<never>}
-        className={getStyles(styles.recipesImgBtn, {}, [])}
+        className={getStyles(styles.filtersImgBtn, {}, [])}
       >
         {filteredMeal.map(({ label, value }) => {
           return (
@@ -30,18 +30,18 @@ export const Recipes = () => {
           ref={targetRef as React.Ref<never>}
           justify="between"
           align="start"
-          className={getStyles(styles.recipesImgBtn, {}, [])}
+          className={getStyles(styles.filtersImgBtn, {}, [])}
         >
           {filteredRecipeBase.map(({ label, value }) => {
             return (
-              <Button key={value} className={styles.recipeBaseButton}>
+              <Button key={value} className={styles.filterBaseButton}>
                 {label}
               </Button>
             );
           })}
         </Stack>
         <Button className={styles.primaryButton} variant="primary" size="sm">
-          Get your recipes
+          Get your filters
         </Button>
       </Stack>
     </Stack>

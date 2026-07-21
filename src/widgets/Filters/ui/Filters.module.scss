@@ -1,7 +1,7 @@
 @use "@/app/styles/mixin.scss" as *;
 @use "@/app/styles/media-queries.scss" as *;
 
-.recipeSection {
+.filterSection {
   @include section-style;
 
   @include mobile-l {
@@ -14,7 +14,7 @@
 
 
 
-.recipesImgBtn {
+.filtersImgBtn {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   white-space: nowrap;
@@ -66,7 +66,7 @@
             background-color: var(--orange-color);
         }
 
-        .recipeBaseButton {
+        .filterBaseButton {
             @extend %button;
             background-color: var(--white);
             color: var(--orange-color);
@@ -82,12 +82,12 @@
     transform: translateY(2px);
   }
 
-    .mealButton:active, .recipeBaseButton:active {
+    .mealButton:active, .filterBaseButton:active {
             
             background-color: var(--terracot);
         }
 
-    .recipeBaseButton:active {
+    .filterBaseButton:active {
         color: var(--white)
     }
 
@@ -96,20 +96,20 @@
   font-size: var(--font-size-xs);
 }
 
-.recipeImgBtn::-webkit-scrollbar {
+.filterImgBtn::-webkit-scrollbar {
   border-radius: 5px;
   height: 20px;
   display: block;
 }
 
-.recipeImgBtn::-webkit-scrollbar-thumb {
+.filterImgBtn::-webkit-scrollbar-thumb {
   background-color: var(--gray-color);
   border-radius: 5px;
 }
 
 /* For Firefox */
 @supports (-moz-appearance: meterbar) {
-  .recipeImgBtn {
+  .filterImgBtn {
     scrollbar-width: thin;
   }
 }
