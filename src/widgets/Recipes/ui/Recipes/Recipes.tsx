@@ -32,7 +32,9 @@ export const Recipes = () => {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [recipes]);
+
+    console.log(recipes)
 
     // if (isLoading) {
     //     return <div>Загрузка рецептов...</div>;
