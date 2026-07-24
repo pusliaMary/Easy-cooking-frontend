@@ -117,3 +117,23 @@
 .headingStyle {
   text-transform: var(--text-uppercase);
 }
+
+
+.mealButton.active {
+  background-color: var(--terracot) !important;
+  color: var(--white) !important;
+  box-shadow: 
+    inset 0px 4px 6px rgba(0, 0, 0, 0.4), 
+    0px 0px 0px rgba(0, 0, 0, 0);
+  transform: translateY(2px);
+}
+
+
+.filterBaseButton.active {
+  background-color: var(--terracot) !important;
+  color: var(--white) !important;
+  box-shadow: 
+    inset 0px 4px 6px rgba(0, 0, 0, 0.4), 
+    0px 0px 0px rgba(0, 0, 0, 0);
+  transform: translateY(2px);
+}

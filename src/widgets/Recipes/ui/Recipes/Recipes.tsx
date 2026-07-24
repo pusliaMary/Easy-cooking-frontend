@@ -1,36 +1,50 @@
 import { Stack } from "@/shared/ui/Stack/Stack";
 import { RecipeCard } from "../RecipeCard/RecipeCard";
+import { useEffect, useState } from "react";
 
 interface Recipe {
-  id: number;
-  img: string;
-  title: string;
+    _id: string;
+    imgSource: string;
+    title: string;
 }
 
-const recipes: Recipe[] = [
-  {
-    id: 1,
-    img: "https://images.unsplash.com/photo-1784035063903-1fd61fabef58?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "city",
-  },
-  {
-    id: 2,
-    img: "https://plus.unsplash.com/premium_photo-1784206737001-43b4a89e1627?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "forest",
-  },
-];
-
 export const Recipes = () => {
-  return (
-    <Stack>
-      {recipes.map((recipe) => {
-        return (
-          <RecipeCard img={recipe.img} title={recipe.title} key={recipe.id} />
-        );
-      })}
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    // const [isLoading, setIsLoading] = useState<boolean>(true);
 
-      {/*INGREDIENTS. overall list */}
-      {/* cooking sequence */}
-    </Stack>
-  );
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchRecipes = async () => {
+            try {
+                const response = await fetch('https://onrender.com');
+                const data: Recipe[] = await response.json();
+                if (isMounted) {
+                    setRecipes(data);
+                }
+            } catch (error) {
+                console.log('Error fetching recipes', error);
+            }
+        };
+
+        fetchRecipes();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    // if (isLoading) {
+    //     return <div>Загрузка рецептов...</div>;
+    // }
+
+    return (
+        <Stack>
+        
+            {recipes.map((recipe) => (
+                <RecipeCard img={recipe.imgSource} title={recipe.title} key={recipe._id} />
+            ))}
+        </Stack>
+    );
 };
+
