@@ -1,52 +1,61 @@
 import { Stack } from "@/shared/ui/Stack/Stack";
 import { RecipeCard } from "../RecipeCard/RecipeCard";
 import { useEffect, useState } from "react";
+// import { Filters } from "@/features/AdminAuth/ui/Filters/ui/Filters";
 
 interface Recipe {
-    _id: string;
-    imgSource: string;
-    title: string;
+  _id: string;
+  imgSource: string;
+  title: string;
 }
 
 export const Recipes = () => {
-    const [recipes, setRecipes] = useState<Recipe[]>([]);
-    // const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        let isMounted = true;
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
 
-        const fetchRecipes = async () => {
-            try {
-                const response = await fetch('https://onrender.com');
-                const data: Recipe[] = await response.json();
-                if (isMounted) {
-                    setRecipes(data);
-                }
-            } catch (error) {
-                console.log('Error fetching recipes', error);
-            }
-        };
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch(
+          "https://easy-cooking-backend.onrender.com",
+          { signal },
+        );
+        const data: Recipe[] = await response.json();
 
-        fetchRecipes();
+        setRecipes(data);
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
+        console.log("Error fetching recipes", error);
+      }
+    };
 
-        return () => {
-            isMounted = false;
-        };
-    }, [recipes]);
+    fetchRecipes();
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
-    console.log(recipes)
+  console.log(recipes);
 
-    // if (isLoading) {
-    //     return <div>Загрузка рецептов...</div>;
-    // }
+  // if (isLoading) {
+  //     return <div>Загрузка рецептов...</div>;
+  // }
 
-    return (
-        <Stack>
-        
-            {recipes.map((recipe) => (
-                <RecipeCard img={recipe.imgSource} title={recipe.title} key={recipe._id} />
-            ))}
-        </Stack>
-    );
+  return (
+    <Stack>
+      {/* <Filters /> */}
+      {recipes.map((recipe) => (
+        <RecipeCard
+          img={recipe.imgSource}
+          title={recipe.title}
+          key={recipe._id}
+        />
+      ))}
+    </Stack>
+  );
 };
-
