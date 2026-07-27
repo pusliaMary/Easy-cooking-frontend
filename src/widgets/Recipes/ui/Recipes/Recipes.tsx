@@ -1,7 +1,7 @@
 import { Stack } from "@/shared/ui/Stack/Stack";
 import { RecipeCard } from "../RecipeCard/RecipeCard";
 import { useEffect, useState } from "react";
-// import { Filters } from "@/features/AdminAuth/ui/Filters/ui/Filters";
+import { Filters } from "@/features/AdminAuth/ui/Filters/ui/Filters";
 
 interface Recipe {
   _id: string;
@@ -48,7 +48,7 @@ export const Recipes = () => {
 
   return (
     <Stack>
-      {/* <Filters /> */}
+      <Filters />
       {recipes.map((recipe) => (
         <RecipeCard
           img={recipe.imgSource}
