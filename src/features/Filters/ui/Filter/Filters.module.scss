@@ -9,7 +9,9 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  height: 200px;
+  min-height: 200px; 
+  height: auto;
+  position: relative;
 }
 
 
@@ -39,13 +41,14 @@
     border-radius: 8px;
     cursor: pointer;
 
-    /* Верхняя тень светлая (свет падает сверху), нижняя темная */
+    pointer-events: auto;
+
     box-shadow:
       inset 0px 2px 0px rgba(255, 255, 255, 0.4),
-      /* Светлый блик внутри */ inset 0px -2px 0px rgba(0, 0, 0, 0.3),
-      /* Тень внутри снизу */ 0px 4px 10px rgba(0, 0, 0, 0.2); /* Внешняя тень */
+      inset 0px -2px 0px rgba(0, 0, 0, 0.3),
+      0px 4px 10px rgba(0, 0, 0, 0.2);
 
-    /* Эффект нажатия */
+    
     transition: all 0.1s ease-out;
   }
 
@@ -54,6 +57,9 @@
     background-color: var(--green-light);
     width: fit-content;
     color: var(--grey-dark);
+
+    position: relative;
+  z-index: 10; 
   }
 
   .h2 {
@@ -74,7 +80,7 @@
 
   
   .button:active {
-    /* При нажатии кнопка "утапливается" */
+    
     box-shadow:
       inset 0px 1px 0px rgba(0, 0, 0, 0.4),
       0px 0px 0px rgba(0, 0, 0, 0.2);

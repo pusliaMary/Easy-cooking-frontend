@@ -3,12 +3,12 @@ import type { ElementType, ComponentPropsWithoutRef } from 'react';
 import { getStyles } from '../../lib/getStyle/getStyle';
 import styles from './Typography.module.scss';
 
-// Типы для возможных значений пропсов
+
 export type TypographyVariant = 'h1' | 'h2' | 'h3' | 'body16' | 'body14' | 'body12';
 export type TypographyWeight = 'normal' | 'bold';
 export type TypographyFont = 'lato' | 'poiretOne';
 
-// Маппинг тегов по умолчанию
+
 const DEFAULT_TAG_BY_VARIANT: Record<TypographyVariant, ElementType> = {
   h1: 'h1',
   h2: 'h2',
@@ -18,7 +18,7 @@ const DEFAULT_TAG_BY_VARIANT: Record<TypographyVariant, ElementType> = {
   body12: 'p',
 };
 
-// Собственные пропсы компонента Typography
+
 export interface TypographyOwnProps<T extends ElementType = ElementType> {
   variant?: TypographyVariant;
   children?: React.ReactNode;
@@ -30,7 +30,7 @@ export interface TypographyOwnProps<T extends ElementType = ElementType> {
   className?: string;
 }
 
-// Комбинируем собственные пропсы с валидными HTML-атрибутами выбранного тега
+
 export type TypographyProps<T extends ElementType> = TypographyOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof TypographyOwnProps<T>>;
 
@@ -45,7 +45,7 @@ export const Typography = <T extends ElementType = 'p'>({
   className,
   ...otherProps
 }: TypographyProps<T>) => {
-  // Определяем итоговый HTML-тег
+  
   const TextTag = as || DEFAULT_TAG_BY_VARIANT[variant] || 'p';
 
   const mode = {

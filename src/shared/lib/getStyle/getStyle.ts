@@ -1,7 +1,6 @@
 export const getStyles = (
     style: string, 
     mods: Record<string, boolean | undefined | null> = {}, 
-    // Разрешаем передавать массивы, содержащие undefined, null или false
     additional: (string | undefined | null | false)[] | string = []
 ) => {
     const modeStyle = Object.entries(mods)

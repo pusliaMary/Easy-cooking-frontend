@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const login = (userData: userData, token?: string) => {
         if (token) {
-            Cookies.set('authToken', token, { expires: 7 }); // Куки на 7 дней
+            Cookies.set('authToken', token, { expires: 7 });
         }
         setIsLoggedIn(true);
         setUser(userData);

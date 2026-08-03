@@ -1,5 +1,6 @@
 import { Stack } from '@/shared/ui/Stack/Stack'
 import { Typography } from '@/shared/ui/Typography'
+import styles from "./RecipeCard.module.scss";
 
 // RTK-QUERY logic
 
@@ -14,7 +15,7 @@ export const RecipeCard = ({ img, title }: RecipeCardProps) => {
     return (
         <Stack direction="column">
             <img src={img} alt='pic' width='300px'/>
-            <Typography>{title}</Typography>
+            <Typography className={styles.h3}>{title}</Typography>
         </Stack>
     )
 }
