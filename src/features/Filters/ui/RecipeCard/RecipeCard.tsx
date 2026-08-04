@@ -14,8 +14,9 @@ export const RecipeCard = ({ img, title }: RecipeCardProps) => {
 
     return (
         <Stack direction="column">
-            <img src={img} alt='pic' width='300px'/>
             <Typography className={styles.h3}>{title}</Typography>
+            <img src={img} alt='pic' width='300px'/>
+            
         </Stack>
     )
 }

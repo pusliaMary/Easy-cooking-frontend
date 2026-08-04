@@ -6,6 +6,7 @@ import styles from "./Filters.module.scss";
 import { getStyles } from "@/shared/lib/getStyle/getStyle";
 import { RecipeCard } from "../RecipeCard/RecipeCard";
 import { Typography } from "@/shared/ui/Typography";
+import { Skeleton } from "@/shared/ui/Skeleton";
 
 export type ProteinType = "meat" | "poultry" | "seafood" | "vegan";
 export type CategoryType =
@@ -358,9 +359,45 @@ export const Filters = () => {
         style={{ marginTop: "200px" }}
       >
         {isLoading && (
-          <Typography variant="h3" style={{ opacity: 0.6 }}>
-            Loading database (Server is waking up, please wait)...
-          </Typography>
+          <Stack
+            direction="column"
+            align="center"
+            gap={24}
+            style={{ width: "100%" }}
+          >
+            <Typography variant="h3" style={{ opacity: 0.6 }}>
+              Loading database (Server is waking up, please wait)...
+            </Typography>
+
+            {[1, 2].map((groupKey) => (
+              <Stack
+                direction="column"
+                align="center"
+                gap={16}
+                key={`group-skeleton-${groupKey}`}
+                style={{ width: "100%" }}
+              >
+                <Skeleton width={180} height={28} />
+
+                <Stack
+                  justify="around"
+                  gap={16}
+                  style={{ flexWrap: "wrap", width: "100%" }}
+                >
+                  {[1, 2, 3].map((cardKey) => (
+                    <Stack
+                      direction="column"
+                      gap={8}
+                      key={`card-skeleton-${groupKey}-${cardKey}`}
+                    >
+                      <Skeleton width={260} height={180} />
+                      <Skeleton width={200} height={20} />
+                    </Stack>
+                  ))}
+                </Stack>
+              </Stack>
+            ))}
+          </Stack>
         )}
 
         {!isLoading && visibleRecipes.length > 0 && (
@@ -374,25 +411,22 @@ export const Filters = () => {
               align="center"
               gap={16}
               key={group.mealValue}
-              style={{ width: "100%" }}
+              max
             >
               <Typography variant="h3">{group.mealLabel}</Typography>
 
-              <Stack
-                justify="around"
-                gap={16}
-                style={{ flexWrap: "wrap", width: "100%" }}
-              >
+              <Stack justify="around" gap={16} max wrap>
                 {group.recipes.map((recipe: RenderedRecipe) => (
                   <RecipeCard
-                    img={recipe.imgSource}
                     title={recipe.title}
+                    img={recipe.imgSource}
                     key={recipe.renderKey}
                   />
                 ))}
               </Stack>
             </Stack>
           ))}
+
         {!isLoading && uniqueIngredients.length > 0 && (
           <Stack
             direction="column"
@@ -457,7 +491,6 @@ export const Filters = () => {
                   style={{
                     fontSize: "16px",
                     lineHeight: "1.5",
-
                     fontWeight: step.isPriority ? "500" : "normal",
                   }}
                 >
