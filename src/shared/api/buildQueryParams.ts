@@ -9,3 +9,4 @@ export const buildQueryParams = (params = {}) => {
 
   return searchParams.toString();
 };
+

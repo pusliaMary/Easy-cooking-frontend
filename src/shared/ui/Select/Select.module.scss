@@ -1,0 +1,51 @@
+@import "@/app/styles/vars.scss";
+
+.label {
+    font-weight: 700;
+    font-family: var(--font-lato);
+}
+
+.buttonWrapper {
+    position: relative;
+
+    .selectField {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
+      padding: 1rem;
+      background: var(--white);
+      border: 1px solid var(--black-color);
+
+    .arrow {
+        transition: transform 0.2s ease-in-out;
+        color: var(--black-color);
+        position: relative;
+        z-index: 11;
+
+        &.arrowOpen {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .menu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: var(--white);
+        border: 1px solid var(--black-color);
+        z-index: 10;
+
+        .option {
+            padding: 1rem;
+            cursor: pointer;
+
+            &:hover,
+            &.selected {
+                background-color: var(--gray-light-color);
+                }
+            }
+        }
+}

@@ -7,6 +7,7 @@ import { getStyles } from "@/shared/lib/getStyle/getStyle";
 import { RecipeCard } from "../RecipeCard/RecipeCard";
 import { Typography } from "@/shared/ui/Typography";
 import { Skeleton } from "@/shared/ui/Skeleton";
+import { useGetRecipesQuery } from "@/entities/recipes";
 
 export type ProteinType = "meat" | "poultry" | "seafood" | "vegan";
 export type CategoryType =
@@ -57,10 +58,10 @@ const LOCAL_STORAGE_KEY = "easy_cooking_plan";
 export const Filters = () => {
   const targetRef = useRef<HTMLDivElement>(null);
 
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { data: fetchedRecipes = [], isLoading: isFetchLoading } = useGetRecipesQuery({});
 
-  const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>(() => {
+
+    const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) {
@@ -78,6 +79,8 @@ export const Filters = () => {
   const [chosenMeals, setChosenMeals] = useState<string[]>([]);
   const [chosenBases, setChosenBases] = useState<string[]>([]);
 
+  const isLoading = isFetchLoading;
+
   const toggleMeal = (value: string) => {
     setChosenMeals((prev) =>
       prev.includes(value)
@@ -94,38 +97,7 @@ export const Filters = () => {
     );
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    const fetchRecipes = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("https://easy-cooking-back.onrender.com", {
-          signal,
-        });
-        const data: Recipe[] = await response.json();
-
-        if (Array.isArray(data)) {
-          setRecipes(data);
-        }
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
-          return;
-        }
-        console.log("Error fetching recipes", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecipes();
-    return () => {
-      controller.abort();
-    };
-  }, []);
-
-  useEffect(() => {
+ useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(visibleRecipes));
   }, [visibleRecipes]);
 
@@ -148,21 +120,23 @@ export const Filters = () => {
       .filter(Boolean)
       .map((b) => String(b).trim().toLowerCase());
 
-    const baseFilteredRecipes = recipes.filter((recipe) => {
+    // 1. Явно указываем тип (recipe: Recipe)
+    const baseFilteredRecipes = fetchedRecipes.filter((recipe: Recipe) => {
       if (!recipe) return false;
-
       if (lowerBases.length === 0) return true;
 
+      // 2. Явно указываем тип для протеина (p: ProteinType)
       const hasMatchingProtein =
         Array.isArray(recipe.whatProtein) &&
-        recipe.whatProtein.some((p) => {
+        recipe.whatProtein.some((p: ProteinType) => {
           if (!p) return false;
           return lowerBases.includes(String(p).trim().toLowerCase());
         });
 
+      // 3. Явно указываем тип для ключевого слова (w: string)
       const hasMatchingKeyWord =
         Array.isArray(recipe.keyWords) &&
-        recipe.keyWords.some((w) => {
+        recipe.keyWords.some((w: string) => {
           if (!w) return false;
           return lowerBases.includes(String(w).trim().toLowerCase());
         });
@@ -178,17 +152,16 @@ export const Filters = () => {
 
       const mealKey = mealValue.toLowerCase().trim();
       const categoriesForThisMeal = MEAL_MAP[mealKey] || [];
-
       const originalMealInfo = filteredMeal.find((m) => m.value === mealValue);
       const mealLabel = originalMealInfo ? originalMealInfo.label : mealValue;
 
       const groupRecipes: RenderedRecipe[] = [];
-
       const localUsedIds = new Set<string>();
 
       categoriesForThisMeal.forEach((category) => {
+        // 4. Явно указываем тип для рецепта внутри циклов категорий (r: Recipe)
         let allowedRecipes = baseFilteredRecipes.filter(
-          (r) =>
+          (r: Recipe) =>
             r.category &&
             String(r.category).toLowerCase() === category.toLowerCase() &&
             r._id &&
@@ -197,7 +170,15 @@ export const Filters = () => {
 
         if (allowedRecipes.length === 0) {
           allowedRecipes = baseFilteredRecipes.filter(
-            (r) =>
+            (r: Recipe) =>
+              r.category &&
+              String(r.category).toLowerCase() === category.toLowerCase(),
+          );
+        }
+
+        if (allowedRecipes.length === 0) {
+          allowedRecipes = baseFilteredRecipes.filter(
+            (r: Recipe) =>
               r.category &&
               String(r.category).toLowerCase() === category.toLowerCase(),
           );
@@ -237,7 +218,8 @@ export const Filters = () => {
     }
 
     setVisibleRecipes(structuredPlan);
-  }, [recipes, chosenMeals, chosenBases, isLoading]);
+    // В зависимости вместо recipes передаем fetchedRecipes из RTK Query
+  }, [fetchedRecipes, chosenMeals, chosenBases, isLoading]); 
 
   const allIngredientNames = visibleRecipes.flatMap((group) =>
     group.recipes.flatMap((recipe) =>

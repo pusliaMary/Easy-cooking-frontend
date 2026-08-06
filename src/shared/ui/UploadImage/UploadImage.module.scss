@@ -1,0 +1,97 @@
+@use "@/app/styles/media-queries.scss" as *;
+@use "@/app/styles/mixin" as *;
+
+.wrapper {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+    width: 100%;
+    height: 100%;
+
+    @include mobile-xl {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dropArea {
+        width: 100%;
+        max-height: 270px;
+        aspect-ratio: 5 / 3;
+        @include dashed-border;
+        background-color: var(--gray-light-color);
+        transition: background-color 0.3s ease;
+        gap: 16px;
+        padding: 1rem;
+        cursor: pointer;
+        text-align: center;
+        grid-column: span 1;
+
+        &.disabled {
+            pointer-events: none;
+            text-align: center;
+            opacity: 0.5;
+            }
+
+        &.expand {
+            grid-column: span 2;
+        }
+
+        &.great {
+            max-height: 35vh;
+            aspect-ratio: 1 / 1;
+        }
+       
+
+        &.dragActive {
+            background: rgba(0, 56, 255, 0.1);
+        }
+
+        .fileButton {
+            color: #0038FF;
+        }
+
+        .errorMessage {
+            color: var(--error-color);
+        }
+    }
+
+    .previewItem {
+        width: 100%;
+        max-height: 270px;
+        aspect-ratio: 5 / 3;
+        position: relative;
+        overflow: hidden;
+
+        &.great {
+            max-height: 35vh;
+            aspect-ratio: 1 / 1;
+        }
+
+        .blurBg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(20px);
+            z-index: 0;
+            transform: scale(1.1);
+        }
+
+        .previewImage {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            z-index: 1;
+        }
+
+        .deleteButton {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            z-index: 2;
+        }
+    }
+}

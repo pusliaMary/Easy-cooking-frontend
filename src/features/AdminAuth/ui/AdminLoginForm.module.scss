@@ -1,0 +1,51 @@
+@use "@/app/styles/media-queries.scss" as *;
+
+
+.authContainer {
+    height: 100vh;
+    width: 100vw;
+}
+    
+.mainContent {
+    background: var(--gray-light-color);
+    padding: 2rem 2rem;
+    width: 100%;
+      @include mobile-xl{
+            max-width: 28rem;
+            padding: 2.25rem;
+        }
+
+        @include tablet-m {
+        max-width: 32rem; 
+        padding: 3rem;
+    }
+}
+
+.fieldContainer {
+    width: 100%;
+}
+
+.logo {
+    width: 5rem;
+}
+
+.welcomeText {
+    font-size: var(--font-size-sm); 
+    text-transform: var(--text-uppercase);
+    font-weight: 700;
+}
+
+.formWrapper {
+    width: 100%;
+    max-width: 400px;
+}
+
+.errorText {
+    color: var(--error-color);
+}
+
+.submitButton {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+}
+
