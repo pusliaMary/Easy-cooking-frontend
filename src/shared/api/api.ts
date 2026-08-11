@@ -5,7 +5,7 @@ import { getRouteAuth } from '../lib/getRoutes/getRoutes'
 
 
 const baseQuery = fetchBaseQuery({
-     baseUrl: apiUrl,
+    baseUrl: apiUrl,
     prepareHeaders: (headers) => {
         const token = Cookies.get("authToken");
         if (token) {

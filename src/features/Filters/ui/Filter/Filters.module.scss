@@ -9,12 +9,10 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  min-height: 200px; 
+  min-height: 200px;
   height: auto;
   position: relative;
 }
-
-
 
 .filtersImgBtn {
   overflow-x: auto;
@@ -24,78 +22,70 @@
   position: relative;
   scrollbar-width: thin;
   padding-bottom: 8px;
+}
 
-   
-    
-  }
+%button {
+  display: inline-block;
+  padding: 14px 28px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 
-  
+  pointer-events: auto;
 
-  %button {
-    display: inline-block;
-    padding: 14px 28px;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  box-shadow:
+    inset 0px 2px 0px rgba(255, 255, 255, 0.4),
+    inset 0px -2px 0px rgba(0, 0, 0, 0.3),
+    0px 4px 10px rgba(0, 0, 0, 0.2);
 
-    pointer-events: auto;
+  transition: all 0.1s ease-out;
+}
 
-    box-shadow:
-      inset 0px 2px 0px rgba(255, 255, 255, 0.4),
-      inset 0px -2px 0px rgba(0, 0, 0, 0.3),
-      0px 4px 10px rgba(0, 0, 0, 0.2);
+.primaryButton {
+  @extend %button;
+  background-color: var(--green-light);
+  width: fit-content;
+  color: var(--grey-dark);
 
-    
-    transition: all 0.1s ease-out;
-  }
+  position: relative;
+  z-index: 10;
+}
 
-  .primaryButton {
-    @extend %button;
-    background-color: var(--green-light);
-    width: fit-content;
-    color: var(--grey-dark);
+.h2 {
+  align-self: center;
+}
 
-    position: relative;
-  z-index: 10; 
-  }
+.mealButton {
+  @extend %button;
+  color: var(--white);
+  background-color: var(--orange-color);
+}
 
-  .h2 {
-    align-self: center;
-  }
-  
-  .mealButton {
-            @extend %button;
-            color: var(--white);
-            background-color: var(--orange-color);
-        }
+.filterBaseButton {
+  @extend %button;
+  background-color: var(--white);
+  color: var(--orange-color);
+}
 
-        .filterBaseButton {
-            @extend %button;
-            background-color: var(--white);
-            color: var(--orange-color);
-        }
+.button:active {
+  box-shadow:
+    inset 0px 1px 0px rgba(0, 0, 0, 0.4),
+    0px 0px 0px rgba(0, 0, 0, 0.2);
+  background-color: var(--terracot);
+  transform: translateY(2px);
+}
 
-  
-  .button:active {
-    
-    box-shadow:
-      inset 0px 1px 0px rgba(0, 0, 0, 0.4),
-      0px 0px 0px rgba(0, 0, 0, 0.2);
-      background-color: var(--terracot);
-    transform: translateY(2px);
-  }
+.mealButton:active,
+.filterBaseButton:active {
+  background-color: var(--terracot);
+}
 
-    .mealButton:active, .filterBaseButton:active {
-            
-            background-color: var(--terracot);
-        }
-
-    .filterBaseButton:active {
-        color: var(--white)
-    }
+.filterBaseButton:active {
+  color: var(--white);
+}
 
 .buttonLoadMore {
   color: var(--text-color);
@@ -124,22 +114,51 @@
   text-transform: var(--text-uppercase);
 }
 
-
 .mealButton.active {
   background-color: var(--terracot) !important;
   color: var(--white) !important;
-  box-shadow: 
-    inset 0px 4px 6px rgba(0, 0, 0, 0.4), 
-    0px 0px 0px rgba(0, 0, 0, 0);
+  box-shadow:
+    inset 0px 4px 6px var(--grey-color),
+    0px 0px 0px var(--grey-color);
   transform: translateY(2px);
 }
-
 
 .filterBaseButton.active {
   background-color: var(--terracot) !important;
   color: var(--white) !important;
-  box-shadow: 
-    inset 0px 4px 6px rgba(0, 0, 0, 0.4), 
-    0px 0px 0px rgba(0, 0, 0, 0);
+  box-shadow:
+    inset 0px 4px 6px var(--grey-color),
+    0px 0px 0px var(--grey-color);
   transform: translateY(2px);
+}
+
+.mealLabel {
+  color: var(--terracot)
+}
+
+.fetchError {
+  width: 100%;
+  max-width: 600px;
+  padding: 32px;
+  border: 1px solid var(--error-color);
+  border-radius: 12px;
+}
+
+.ingredientsSection {
+  margin-top: 40px;
+  padding: 24px;
+  border-top: 1px solid var(--grey-color);
+
+ .ingredientsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    width: 100%;
+    padding-left: 20px;
+    
+
+      .ingredientsItem {
+        list-style-type:circle;
+    }
+  }
 }

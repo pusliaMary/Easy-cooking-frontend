@@ -58,10 +58,14 @@ const LOCAL_STORAGE_KEY = "easy_cooking_plan";
 export const Filters = () => {
   const targetRef = useRef<HTMLDivElement>(null);
 
-  const { data: fetchedRecipes = [], isLoading: isFetchLoading } = useGetRecipesQuery({});
+  const {
+    data: fetchedRecipes = [],
+    isLoading: isFetchLoading,
+    isError: isFetchError,
+    error: fetchError,
+  } = useGetRecipesQuery({});
 
-
-    const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>(() => {
+  const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) {
@@ -97,7 +101,7 @@ export const Filters = () => {
     );
   };
 
- useEffect(() => {
+  useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(visibleRecipes));
   }, [visibleRecipes]);
 
@@ -120,12 +124,10 @@ export const Filters = () => {
       .filter(Boolean)
       .map((b) => String(b).trim().toLowerCase());
 
-    // 1. Явно указываем тип (recipe: Recipe)
     const baseFilteredRecipes = fetchedRecipes.filter((recipe: Recipe) => {
       if (!recipe) return false;
       if (lowerBases.length === 0) return true;
 
-      // 2. Явно указываем тип для протеина (p: ProteinType)
       const hasMatchingProtein =
         Array.isArray(recipe.whatProtein) &&
         recipe.whatProtein.some((p: ProteinType) => {
@@ -133,7 +135,6 @@ export const Filters = () => {
           return lowerBases.includes(String(p).trim().toLowerCase());
         });
 
-      // 3. Явно указываем тип для ключевого слова (w: string)
       const hasMatchingKeyWord =
         Array.isArray(recipe.keyWords) &&
         recipe.keyWords.some((w: string) => {
@@ -159,7 +160,6 @@ export const Filters = () => {
       const localUsedIds = new Set<string>();
 
       categoriesForThisMeal.forEach((category) => {
-        // 4. Явно указываем тип для рецепта внутри циклов категорий (r: Recipe)
         let allowedRecipes = baseFilteredRecipes.filter(
           (r: Recipe) =>
             r.category &&
@@ -218,8 +218,7 @@ export const Filters = () => {
     }
 
     setVisibleRecipes(structuredPlan);
-    // В зависимости вместо recipes передаем fetchedRecipes из RTK Query
-  }, [fetchedRecipes, chosenMeals, chosenBases, isLoading]); 
+  }, [fetchedRecipes, chosenMeals, chosenBases, isLoading]);
 
   const allIngredientNames = visibleRecipes.flatMap((group) =>
     group.recipes.flatMap((recipe) =>
@@ -340,14 +339,42 @@ export const Filters = () => {
         gap={32}
         style={{ marginTop: "200px" }}
       >
-        {isLoading && (
+        {isFetchError && (
           <Stack
             direction="column"
             align="center"
             gap={24}
-            style={{ width: "100%" }}
+            className={styles.fetchError}
           >
-            <Typography variant="h3" style={{ opacity: 0.6 }}>
+            <Typography variant="h2" style={{ color: "#c53030" }}>
+              Something went wrong
+            </Typography>
+
+            <Typography
+              variant="h3"
+              
+            >
+            {(fetchError as any)?.data?.message ||
+                (fetchError as any)?.message ||
+                "Failed to load database. Please try again later."}
+            </Typography>
+
+            {(fetchError as any)?.status && (
+              <Typography>
+                Status code: {(fetchError as any).status}
+              </Typography>
+            )}
+          </Stack>
+        )}
+
+        {isFetchLoading && !isFetchError && (
+          <Stack
+            direction="column"
+            align="center"
+            gap={24}
+            max
+          >
+            <Typography variant="h3">
               Loading database (Server is waking up, please wait)...
             </Typography>
 
@@ -357,14 +384,15 @@ export const Filters = () => {
                 align="center"
                 gap={16}
                 key={`group-skeleton-${groupKey}`}
-                style={{ width: "100%" }}
+                max
               >
                 <Skeleton width={180} height={28} />
 
                 <Stack
                   justify="around"
                   gap={16}
-                  style={{ flexWrap: "wrap", width: "100%" }}
+                  wrap
+                  max
                 >
                   {[1, 2, 3].map((cardKey) => (
                     <Stack
@@ -382,11 +410,12 @@ export const Filters = () => {
           </Stack>
         )}
 
-        {!isLoading && visibleRecipes.length > 0 && (
+        {!isFetchLoading && !isFetchError && visibleRecipes.length > 0 && (
           <Typography variant="h1">Here is your plan</Typography>
         )}
 
-        {!isLoading &&
+        {!isFetchLoading &&
+          !isFetchError &&
           visibleRecipes.map((group: MealGroup) => (
             <Stack
               direction="column"
@@ -395,7 +424,7 @@ export const Filters = () => {
               key={group.mealValue}
               max
             >
-              <Typography variant="h3">{group.mealLabel}</Typography>
+              <Typography variant="h2" className={styles.mealLabel}>{group.mealLabel}</Typography>
 
               <Stack justify="around" gap={16} max wrap>
                 {group.recipes.map((recipe: RenderedRecipe) => (
@@ -409,33 +438,22 @@ export const Filters = () => {
             </Stack>
           ))}
 
-        {!isLoading && uniqueIngredients.length > 0 && (
+        
+        {!isFetchLoading && !isFetchError && uniqueIngredients.length > 0 && (
           <Stack
             direction="column"
             align="start"
             gap={16}
-            style={{
-              width: "100%",
-              marginTop: "40px",
-              padding: "24px",
-              borderTop: "1px solid rgba(0,0,0,0.1)",
-            }}
+            max
+            className={styles.ingredientsSection}
           >
             <Typography variant="h2">Shopping list</Typography>
 
-            <ul
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                gap: "12px",
-                width: "100%",
-                paddingLeft: "20px",
-              }}
-            >
+            <ul className={styles.ingredientsList} >
               {uniqueIngredients.map((ingredientName, index) => (
                 <li
                   key={`${ingredientName}-${index}`}
-                  style={{ listStyleType: "disc", fontSize: "16px" }}
+                  className={styles.ingredientsItem}
                 >
                   {ingredientName}
                 </li>
@@ -444,28 +462,17 @@ export const Filters = () => {
           </Stack>
         )}
 
-        {!isLoading && allPreparationSteps.length > 0 && (
+        {!isFetchLoading && !isFetchError && allPreparationSteps.length > 0 && (
           <Stack
             direction="column"
-            align="start"
             gap={16}
-            style={{
-              width: "100%",
-              marginTop: "40px",
-              padding: "24px",
-              borderTop: "1px solid rgba(0,0,0,0.1)",
-            }}
+            className={styles.ingredientsSection}
+            max
           >
             <Typography variant="h2">Cooking plan step-by-step</Typography>
 
-            <ul
-              style={{
-                width: "100%",
-                paddingLeft: "20px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-              }}
+            <ol
+              className={styles.list}
             >
               {allPreparationSteps.map((step) => (
                 <li
@@ -479,7 +486,7 @@ export const Filters = () => {
                   {step.text}
                 </li>
               ))}
-            </ul>
+            </ol>
           </Stack>
         )}
       </Stack>
