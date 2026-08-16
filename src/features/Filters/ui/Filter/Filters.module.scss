@@ -22,6 +22,7 @@
   position: relative;
   scrollbar-width: thin;
   padding-bottom: 8px;
+  
 }
 
 %button {
@@ -144,21 +145,243 @@
   border-radius: 12px;
 }
 
+// Главный контейнер всей секции списка покупок
 .ingredientsSection {
-  margin-top: 40px;
-  padding: 24px;
-  border-top: 1px solid var(--grey-color);
+  margin-top: 60px;
+  padding: 40px 32px;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(40, 40, 40, 0.05);
+  border: 1px solid var(--grey-light);
+  width: 100%;
+  box-sizing: border-box;
 
- .ingredientsList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-    width: 100%;
-    padding-left: 20px;
-    
+  // Стиль для заголовка "Shopping list"
+  h2 {
+    font-family: var(--font-poiret-one);
+    font-size: var(--font-size-md);
+    color: var(--terracot);
+    text-transform: var(--text-uppercase);
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+    align-self: center;
 
-      .ingredientsItem {
-        list-style-type:circle;
+    // Эстетичная линия под заголовком
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--orange-color);
     }
+
+    @include mobile-l {
+      font-size: var(--font-size-sm);
+    }
+  }
+}
+
+.ingredientsList {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  
+  @include mobile-l {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+
+// Карточка одного ингредиента (вместо дефолтного li)
+.ingredientsItem {
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  color: var(--text-color);
+  background-color: var(--background-color); // Мягкий базовый фон
+  padding: 16px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+
+  // Эффект кастомной галочки-иконки слева от текста
+  &::before {
+    content: "";
+    display: inline-block;
+    min-width: 18px;
+    height: 18px;
+    border: 2px solid var(--orange-color);
+    border-radius: 5px;
+    background-color: var(--white);
+    transition: all 0.2s ease;
+  }
+
+  // Эффект при наведении на плашку
+  &:hover {
+    transform: translateY(-2px);
+    background-color: var(--white);
+    border-color: var(--orange-color);
+    box-shadow: 0px 6px 15px rgba(236, 149, 109, 0.15);
+
+    &::before {
+      border-color: var(--terracot);
+    }
+  }
+
+  @include mobile-l {
+    font-size: var(--mobile-font-size-md);
+    padding: 12px 16px;
+  }
+}
+
+/* 🌟 ИНТЕРАКТИВНЫЙ ВАЙБ (Опционально): класс для вычеркивания купленного ингредиента */
+.ingredientsItem.checked {
+  background-color: rgba(88, 210, 158, 0.1); // Мягкий зеленый фон (--green-light с прозрачностью)
+  color: var(--gray-color);
+  text-decoration: line-through;
+  border-color: rgba(88, 210, 158, 0.2);
+
+  &::before {
+    background-color: var(--green-light);
+    border-color: var(--green-light);
+    // Простая галочка внутри css-контентом
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C0svg%3E");
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(88, 210, 158, 0.2);
+  }
+}
+
+.cookingSection {
+  margin-top: 60px;
+  padding: 40px 32px;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(40, 40, 40, 0.05);
+  border: 1px solid var(--grey-light);
+  width: 100%;
+  box-sizing: border-box;
+
+  h2 {
+    font-family: var(--font-poiret-one);
+    font-size: var(--font-size-md);
+    color: var(--text-color);
+    text-transform: var(--text-uppercase);
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--terracot);
+    }
+
+    @include mobile-l {
+      font-size: var(--font-size-sm);
+    }
+  }
+}
+
+// Список-контейнер для карточек шагов
+.cookingList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; // Расстояние между карточками-шагами
+  counter-reset: step-counter; // Инициализируем счетчик CSS
+}
+
+// Стилизация карточки одного шага
+.cookingItem {
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height);
+  color: var(--text-color);
+  width: 100%;
+  
+  // Оформляем шаг как полноценную карточку
+  background-color: var(--white);
+  border: 1px solid var(--grey-light);
+  padding: 24px 28px;
+  border-radius: 16px;
+  
+  display: flex;
+  align-items: center; // Центрируем цифру и текст по вертикали
+  gap: 24px;
+  position: relative;
+  transition: all 0.25s ease-in-out;
+
+  // Элегантный эффект наведения на карточку шага
+  &:hover {
+    transform: translateX(4px); // Карточка слегка сдвигается вправо
+    border-color: var(--orange-color);
+    box-shadow: 0px 8px 20px rgba(236, 149, 109, 0.08);
+  }
+
+  // 🌟 КРУПНЫЕ ДИЗАЙНЕРСКИЕ ЦИФРЫ (01, 02, 03...)
+  &::before {
+    counter-increment: step-counter;
+    content: counter(step-counter, decimal-leading-zero);
+    font-family: var(--font-poiret-one);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--terracot);
+    min-width: 50px;
+    text-align: center;
+    border-right: 1px solid var(--grey-light); // Вертикальная черта после цифры
+    padding-right: 20px;
+    line-height: 1;
+  }
+
+  @include mobile-l {
+    font-size: var(--mobile-font-size-md);
+    padding: 16px 20px;
+    gap: 16px;
+    width: 50%;
+
+    &::before {
+      font-size: var(--mobile-font-size-lg);
+      min-width: 35px;
+      padding-right: 12px;
+    }
+  }
+}
+
+/* 🌟 КЛАСС ДЛЯ ПРИОРИТЕТНЫХ ШАГОВ (Важные этапы с протеином) */
+.priorityStep {
+  border-left: 5px solid var(--orange-color) !important; // Толстая фирменная полоса слева [1]
+  background-color: rgba(236, 149, 109, 0.03); // Едва заметный теплый фон плашки
+
+  &::before {
+    color: var(--terracot);
+    font-weight: bold;
   }
 }

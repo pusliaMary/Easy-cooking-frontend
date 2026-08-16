@@ -10,10 +10,6 @@ import { useAuth } from "../../AdminAuth/model/useAuth";
 import { useLoginAdminMutation } from "../../AdminAuth/api/authApi";
 import styles from "./AdminLoginForm.module.scss";
 
-// Импортируем логотип, если он лежит в ассетах (исправление ошибки отсутствия переменной)
-import logo from "@/shared/assets/logo.svg"; 
-
-// 1. Описываем интерфейс полей авторизации формы
 interface AdminLoginFormValues {
   username: "";
   password: "";
@@ -30,7 +26,7 @@ export const AdminLoginForm = () => {
       password: "",
     },
   });
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
   const [loginAdmin, { isLoading, error }] = useLoginAdminMutation();
@@ -39,8 +35,7 @@ export const AdminLoginForm = () => {
     try {
       const response = await loginAdmin(data).unwrap();
 
-      if (response.accessToken) {
-        Cookies.set("authToken", response.accessToken);
+      if (response.username) {
         login(response);
         navigate(getRouteAdmin());
       }
@@ -49,7 +44,6 @@ export const AdminLoginForm = () => {
     }
   };
 
-  // Выносим флаги ошибок сервера для чистоты TSX-разметки
   const isFetchError = (error as any)?.status === "FETCH_ERROR";
   const isAuthError = error && !isFetchError;
 
@@ -64,33 +58,29 @@ export const AdminLoginForm = () => {
       >
         <form onSubmit={handleSubmit(onSubmit)} className={styles.mainContent}>
           <Stack direction="column" justify="center" align="center" gap={16}>
-            <img src={logo} alt="logo" className={styles.logo} />
-
             <Stack direction="row" justify="end" max>
               <Typography variant="h1" className={styles.welcomeText}>
                 Welcome
               </Typography>
             </Stack>
 
-            {/* Глобальные ошибки сервера / авторизации */}
             {isFetchError && (
-              <Typography variant="body16" as="span" className={styles.errorText}>
+              <Typography as="span" className={styles.errorText}>
                 Server connection error
               </Typography>
             )}
 
             {isAuthError && (
-              <Typography variant="body16" as="span" className={styles.errorText}>
+              <Typography as="span" className={styles.errorText}>
                 Invalid username or password
               </Typography>
             )}
 
             <Typography variant="body14">
-              Please log in to access your admin dashboard and manage the system effectively.
+              Please log in to access your admin dashboard and manage the system
+              effectively.
             </Typography>
 
-            {/* === ИНПУТ ЛОГИНА === */}
-            {/* Передаем register напрямую. Наш новый инпут сам свяжет рефы, выведет label и ошибку */}
             <Input
               type="text"
               label="Login"
@@ -103,7 +93,6 @@ export const AdminLoginForm = () => {
               })}
             />
 
-            {/* === ИНПУТ ПАРОЛЯ === */}
             <Input
               type="password"
               label="Password"

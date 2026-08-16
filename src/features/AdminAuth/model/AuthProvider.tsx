@@ -1,35 +1,29 @@
 import { useState, useMemo, type ReactNode } from 'react';
-import Cookies from 'js-cookie';
 import { AuthContext } from './auth-context';
 
-export interface userData {
-    id: string,
-    email: string,
-    userName: string
+export interface UserData {
+    username: string;
 }
 
 interface AuthProviderProps {
     children: ReactNode;
 }
 
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(() =>
-        Boolean(Cookies.get('authToken'))
-    );
-    const [user, setUser] = useState<userData | null>(null)
+    const [user, setUser] = useState<UserData | null>(() => {
+        const savedUser = localStorage.getItem('authUser');
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
 
-    const login = (userData: userData, token?: string) => {
-        if (token) {
-            Cookies.set('authToken', token, { expires: 7 });
-        }
-        setIsLoggedIn(true);
+    const isLoggedIn = Boolean(user);
+
+    const login = (userData: UserData) => {
         setUser(userData);
-    }
+        localStorage.setItem('authUser', JSON.stringify(userData));
+    };
 
     const logout = () => {
-        Cookies.remove('authToken');
-        setIsLoggedIn(false);
+        localStorage.removeItem('authUser');
         setUser(null);
     };
 

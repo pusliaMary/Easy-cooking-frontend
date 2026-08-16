@@ -57,6 +57,17 @@ const LOCAL_STORAGE_KEY = "easy_cooking_plan";
 
 export const Filters = () => {
   const targetRef = useRef<HTMLDivElement>(null);
+  // 1. Добавьте стейт в начало компонента Filters к остальным useState:
+  const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
+
+  // 2. Добавьте функцию переключения статуса:
+  const togglePurchased = (name: string) => {
+    setPurchasedItems((prev) =>
+      prev.includes(name)
+        ? prev.filter((item) => item !== name)
+        : [...prev, name],
+    );
+  };
 
   const {
     data: fetchedRecipes = [],
@@ -264,11 +275,12 @@ export const Filters = () => {
     });
 
   return (
-    <Stack direction="column" max>
-      <Stack tag="section" justify="around" className={styles.filterSection}>
+    <Stack direction="column" max justify="center">
+      <Stack tag="section" justify="around" className={styles.filterSection} max>
         <Stack
           direction="column"
           justify="between"
+          align="center"
           ref={targetRef}
           className={getStyles(styles.filtersImgBtn, {}, [])}
         >
@@ -350,30 +362,20 @@ export const Filters = () => {
               Something went wrong
             </Typography>
 
-            <Typography
-              variant="h3"
-              
-            >
-            {(fetchError as any)?.data?.message ||
+            <Typography variant="h3">
+              {(fetchError as any)?.data?.message ||
                 (fetchError as any)?.message ||
                 "Failed to load database. Please try again later."}
             </Typography>
 
             {(fetchError as any)?.status && (
-              <Typography>
-                Status code: {(fetchError as any).status}
-              </Typography>
+              <Typography>Status code: {(fetchError as any).status}</Typography>
             )}
           </Stack>
         )}
 
         {isFetchLoading && !isFetchError && (
-          <Stack
-            direction="column"
-            align="center"
-            gap={24}
-            max
-          >
+          <Stack direction="column" align="center" gap={24} max>
             <Typography variant="h3">
               Loading database (Server is waking up, please wait)...
             </Typography>
@@ -388,12 +390,7 @@ export const Filters = () => {
               >
                 <Skeleton width={180} height={28} />
 
-                <Stack
-                  justify="around"
-                  gap={16}
-                  wrap
-                  max
-                >
+                <Stack justify="around" gap={16} wrap max>
                   {[1, 2, 3].map((cardKey) => (
                     <Stack
                       direction="column"
@@ -424,9 +421,11 @@ export const Filters = () => {
               key={group.mealValue}
               max
             >
-              <Typography variant="h2" className={styles.mealLabel}>{group.mealLabel}</Typography>
+              <Typography variant="h2" className={styles.mealLabel}>
+                {group.mealLabel}
+              </Typography>
 
-              <Stack justify="around" gap={16} max wrap>
+              <Stack justify="around" align='center' gap={16} max wrap>
                 {group.recipes.map((recipe: RenderedRecipe) => (
                   <RecipeCard
                     title={recipe.title}
@@ -438,26 +437,31 @@ export const Filters = () => {
             </Stack>
           ))}
 
-        
+        {/* 🌟 ПРАВИЛЬНАЯ ВЕРСТКА: Класс сетки должен быть строго на теге <ul> */}
         {!isFetchLoading && !isFetchError && uniqueIngredients.length > 0 && (
           <Stack
             direction="column"
             align="start"
             gap={16}
             max
-            className={styles.ingredientsSection}
+            className={styles.ingredientsSection} // Оставляем секцию здесь
           >
             <Typography variant="h2">Shopping list</Typography>
 
-            <ul className={styles.ingredientsList} >
-              {uniqueIngredients.map((ingredientName, index) => (
-                <li
-                  key={`${ingredientName}-${index}`}
-                  className={styles.ingredientsItem}
-                >
-                  {ingredientName}
-                </li>
-              ))}
+            {/* Тег ul теперь свободный и Grid внутри него сработает на 100% */}
+            <ul className={styles.ingredientsList}>
+              {uniqueIngredients.map((ingredientName, index) => {
+                const isChecked = purchasedItems?.includes(ingredientName);
+                return (
+                  <li
+                    key={`${ingredientName}-${index}`}
+                    className={`${styles.ingredientsItem} ${isChecked ? styles.checked : ""}`}
+                    onClick={() => togglePurchased(ingredientName)}
+                  >
+                    {ingredientName}
+                  </li>
+                );
+              })}
             </ul>
           </Stack>
         )}
@@ -466,24 +470,22 @@ export const Filters = () => {
           <Stack
             direction="column"
             gap={16}
-            className={styles.ingredientsSection}
+            className={styles.cookingSection}
             max
           >
             <Typography variant="h2">Cooking plan step-by-step</Typography>
 
-            <ol
-              className={styles.list}
-            >
+            <ol className={styles.cookingList}>
               {allPreparationSteps.map((step) => (
                 <li
                   key={step.key}
-                  style={{
-                    fontSize: "16px",
-                    lineHeight: "1.5",
-                    fontWeight: step.isPriority ? "500" : "normal",
-                  }}
+                  // 🌟 ДИНАМИЧЕСКИЙ КЛАСС: Если шаг приоритетный, добавляем стиль акцентной карточки [1]
+                  className={`${styles.cookingItem} ${step.isPriority ? styles.priorityStep : ""}`}
                 >
-                  {step.text}
+                  {/* Оборачиваем текст в Typography для сохранения общей структуры шрифтов */}
+                  <Typography as="span" style={{ width: "100%" }}>
+                    {step.text}
+                  </Typography>
                 </li>
               ))}
             </ol>

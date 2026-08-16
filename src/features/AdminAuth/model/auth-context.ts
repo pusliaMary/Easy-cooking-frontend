@@ -1,11 +1,11 @@
 import { createContext } from 'react';
 
-import { type userData } from './AuthProvider'
+import { type UserData } from './AuthProvider'
 
 export interface AuthContextType {
     isLoggedIn: boolean;
-    user: userData | null;
-    login: (userData: userData, token?: string) => void;
+    user: UserData | null;
+    login: (userData: UserData, token?: string) => void;
     logout: () => void;
 }
 

@@ -5,7 +5,7 @@ import { createApiConfig } from "@/shared/api/helper";
 const authApi = api.injectEndpoints({
   endpoints: (build) => ({
     loginAdmin: build.mutation({
-      query: (admin) => createApiConfig("POST", endpoints.auth.login, admin),
+      query: (admin) => createApiConfig(endpoints.auth.login, "POST", admin),
     }),
   }),
 });
