@@ -308,45 +308,43 @@
   }
 }
 
-// Список-контейнер для карточек шагов
+// Контейнер списка шагов
 .cookingList {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px; // Расстояние между карточками-шагами
-  counter-reset: step-counter; // Инициализируем счетчик CSS
+  
+  // 🌟 ОБЯЗАТЕЛЬНО: Flexbox позволяет свойству 'order' работать и двигать элементы
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px;
+  counter-reset: step-counter;
 }
 
-// Стилизация карточки одного шага
+// Карточка шага
 .cookingItem {
   font-family: var(--font-lato);
   font-size: var(--font-size-xs);
   line-height: var(--line-height);
   color: var(--text-color);
-  width: 100%;
-  
-  // Оформляем шаг как полноценную карточку
   background-color: var(--white);
   border: 1px solid var(--grey-light);
   padding: 24px 28px;
   border-radius: 16px;
-  
   display: flex;
-  align-items: center; // Центрируем цифру и текст по вертикали
+  align-items: center;
   gap: 24px;
   position: relative;
-  transition: all 0.25s ease-in-out;
+  
+  // 🌟 ДОБАВЛЯЕМ ТРАНЗИШН: Браузер будет плавно двигать карточку при изменении свойства order
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
 
-  // Элегантный эффект наведения на карточку шага
   &:hover {
-    transform: translateX(4px); // Карточка слегка сдвигается вправо
+    transform: translateX(4px);
     border-color: var(--orange-color);
     box-shadow: 0px 8px 20px rgba(236, 149, 109, 0.08);
   }
 
-  // 🌟 КРУПНЫЕ ДИЗАЙНЕРСКИЕ ЦИФРЫ (01, 02, 03...)
   &::before {
     counter-increment: step-counter;
     content: counter(step-counter, decimal-leading-zero);
@@ -356,32 +354,28 @@
     color: var(--terracot);
     min-width: 50px;
     text-align: center;
-    border-right: 1px solid var(--grey-light); // Вертикальная черта после цифры
+    border-right: 1px solid var(--grey-light);
     padding-right: 20px;
     line-height: 1;
   }
-
-  @include mobile-l {
-    font-size: var(--mobile-font-size-md);
-    padding: 16px 20px;
-    gap: 16px;
-    width: 50%;
-
-    &::before {
-      font-size: var(--mobile-font-size-lg);
-      min-width: 35px;
-      padding-right: 12px;
-    }
-  }
 }
 
-/* 🌟 КЛАСС ДЛЯ ПРИОРИТЕТНЫХ ШАГОВ (Важные этапы с протеином) */
-.priorityStep {
-  border-left: 5px solid var(--orange-color) !important; // Толстая фирменная полоса слева [1]
-  background-color: rgba(236, 149, 109, 0.03); // Едва заметный теплый фон плашки
+// Выполненный шаг
+.cookingItemDone {
+  opacity: 0.4;
+  background-color: var(--grey-light) !important;
+  border-color: var(--gray-color) !important;
+  
+  // Текст становится перечеркнутым плавно
+  span {
+    text-decoration: line-through;
+    color: var(--gray-color);
+    transition: color 0.3s;
+  }
 
   &::before {
-    color: var(--terracot);
-    font-weight: bold;
+    color: var(--gray-color) !important;
+    border-color: var(--gray-color) !important;
   }
 }
+

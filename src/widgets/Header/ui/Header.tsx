@@ -1,5 +1,5 @@
 import { Stack } from "@/shared/ui/Stack";
-import styles from "./Header.module.css";
+import styles from "./Header.module.scss";
 import { Typography } from "@/shared/ui/Typography";
 
 export const Header = () => {

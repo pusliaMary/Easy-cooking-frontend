@@ -54,18 +54,41 @@ const MEAL_MAP: Record<string, CategoryType[]> = {
 };
 
 const LOCAL_STORAGE_KEY = "easy_cooking_plan";
+const LOCAL_STORAGE_INGREDIENTS_KEY = "easy_cooking_purchased_ingredients";
+const LOCAL_STORAGE_STEPS_KEY = "easy_cooking_completed_steps";
 
 export const Filters = () => {
   const targetRef = useRef<HTMLDivElement>(null);
-  // 1. Добавьте стейт в начало компонента Filters к остальным useState:
-  const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
 
-  // 2. Добавьте функцию переключения статуса:
+  const [purchasedItems, setPurchasedItems] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(LOCAL_STORAGE_INGREDIENTS_KEY);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
+  const [completedSteps, setCompletedSteps] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(LOCAL_STORAGE_STEPS_KEY);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
   const togglePurchased = (name: string) => {
     setPurchasedItems((prev) =>
       prev.includes(name)
         ? prev.filter((item) => item !== name)
         : [...prev, name],
+    );
+  };
+
+  const toggleStepCompleted = (stepKey: string) => {
+    setCompletedSteps((prev) =>
+      prev.includes(stepKey)
+        ? prev.filter((key) => key !== stepKey)
+        : [...prev, stepKey],
     );
   };
 
@@ -116,10 +139,26 @@ export const Filters = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(visibleRecipes));
   }, [visibleRecipes]);
 
+  useEffect(() => {
+    localStorage.setItem(
+      LOCAL_STORAGE_INGREDIENTS_KEY,
+      JSON.stringify(purchasedItems),
+    );
+  }, [purchasedItems]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      LOCAL_STORAGE_STEPS_KEY,
+      JSON.stringify(completedSteps),
+    );
+  }, [completedSteps]);
+
   const ClearPlan = useCallback(() => {
     setVisibleRecipes([]);
     setChosenMeals([]);
     setChosenBases([]);
+    setPurchasedItems([]);
+    setCompletedSteps([]);
   }, []);
 
   const CreatePlan = useCallback(() => {
@@ -254,15 +293,14 @@ export const Filters = () => {
 
         return recipe.steps.map((stepText, index) => {
           const lowerStepText = stepText.toLowerCase();
-
           const stepMentionsProtein = currentProteinBases.some((protein) =>
             lowerStepText.includes(protein),
           );
 
           return {
-            text: stepText,
+            text: `${recipe.title} (Шаг ${index + 1}): ${stepText}`,
             isPriority: isProteinRecipe || stepMentionsProtein,
-            key: `${recipe._id || recipe.title}-step-${index}-${Math.random()}`,
+            key: `${recipe._id || recipe.title.replace(/\s+/g, "-")}-step-${index}`,
           };
         });
       }),
@@ -276,7 +314,12 @@ export const Filters = () => {
 
   return (
     <Stack direction="column" max justify="center">
-      <Stack tag="section" justify="around" className={styles.filterSection} max>
+      <Stack
+        tag="section"
+        justify="around"
+        className={styles.filterSection}
+        max
+      >
         <Stack
           direction="column"
           justify="between"
@@ -425,7 +468,7 @@ export const Filters = () => {
                 {group.mealLabel}
               </Typography>
 
-              <Stack justify="around" align='center' gap={16} max wrap>
+              <Stack justify="around" align="center" gap={16} max wrap>
                 {group.recipes.map((recipe: RenderedRecipe) => (
                   <RecipeCard
                     title={recipe.title}
@@ -437,18 +480,16 @@ export const Filters = () => {
             </Stack>
           ))}
 
-        {/* 🌟 ПРАВИЛЬНАЯ ВЕРСТКА: Класс сетки должен быть строго на теге <ul> */}
         {!isFetchLoading && !isFetchError && uniqueIngredients.length > 0 && (
           <Stack
             direction="column"
             align="start"
             gap={16}
             max
-            className={styles.ingredientsSection} // Оставляем секцию здесь
+            className={styles.ingredientsSection}
           >
             <Typography variant="h2">Shopping list</Typography>
 
-            {/* Тег ul теперь свободный и Grid внутри него сработает на 100% */}
             <ul className={styles.ingredientsList}>
               {uniqueIngredients.map((ingredientName, index) => {
                 const isChecked = purchasedItems?.includes(ingredientName);
@@ -467,29 +508,29 @@ export const Filters = () => {
         )}
 
         {!isFetchLoading && !isFetchError && allPreparationSteps.length > 0 && (
-          <Stack
-            direction="column"
-            gap={16}
-            className={styles.cookingSection}
-            max
-          >
+          <div className={styles.cookingSection}>
             <Typography variant="h2">Cooking plan step-by-step</Typography>
-
             <ol className={styles.cookingList}>
-              {allPreparationSteps.map((step) => (
-                <li
-                  key={step.key}
-                  // 🌟 ДИНАМИЧЕСКИЙ КЛАСС: Если шаг приоритетный, добавляем стиль акцентной карточки [1]
-                  className={`${styles.cookingItem} ${step.isPriority ? styles.priorityStep : ""}`}
-                >
-                  {/* Оборачиваем текст в Typography для сохранения общей структуры шрифтов */}
-                  <Typography as="span" style={{ width: "100%" }}>
-                    {step.text}
-                  </Typography>
-                </li>
-              ))}
+              {allPreparationSteps.map((step) => {
+                const isDone = completedSteps.includes(step.key);
+
+                return (
+                  <li
+                    key={step.key}
+                    className={`${styles.cookingItem} ${step.isPriority ? styles.priorityStep : ""} ${isDone ? styles.cookingItemDone : ""}`}
+                    style={{
+                      order: isDone ? 1 : 0,
+                    }}
+                    onClick={() => toggleStepCompleted(step.key)}
+                  >
+                    <span style={{ width: "100%", pointerEvents: "none" }}>
+                      {step.text}
+                    </span>
+                  </li>
+                );
+              })}
             </ol>
-          </Stack>
+          </div>
         )}
       </Stack>
     </Stack>
