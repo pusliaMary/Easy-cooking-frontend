@@ -1,0 +1,162 @@
+@use "@/app/styles/mixin.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+
+.filterSection {
+  @include section-style;
+
+  @include mobile-l {
+    .imageContainer {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  min-height: 200px;
+  height: auto;
+  position: relative;
+}
+
+.filtersImgBtn {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  display: flex;
+  position: relative;
+  scrollbar-width: thin;
+  padding-bottom: 8px;
+}
+
+%button {
+  display: inline-block;
+  padding: 14px 28px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  pointer-events: auto;
+
+  box-shadow:
+    inset 0px 2px 0px rgba(255, 255, 255, 0.4),
+    inset 0px -2px 0px rgba(0, 0, 0, 0.3),
+    0px 4px 10px rgba(0, 0, 0, 0.2);
+
+  transition: all 0.1s ease-out;
+}
+
+.primaryButton {
+  @extend %button;
+  background-color: var(--green-light);
+  width: fit-content;
+  color: var(--grey-dark);
+  position: relative;
+  z-index: 10;
+
+  /* АДАПТИВ: На экранах < 500px кнопка создания плана растягивается */
+  @media (max-width: 500px) {
+    width: 100% !important;
+    padding: 14px 20px;
+  }
+}
+
+/* Добавлен класс для кнопки Clear plan */
+.secondaryButton {
+  @extend %button;
+  background-color: transparent;
+  border: 2px solid var(--grey-light);
+  color: var(--gray-color);
+  box-shadow: none;
+
+  /* АДАПТИВ: На экранах < 500px кнопка очистки растягивается */
+  @media (max-width: 500px) {
+    width: 100% !important;
+    padding: 14px 20px;
+  }
+}
+
+.mealButton {
+  @extend %button;
+  color: var(--white);
+  background-color: var(--orange-color);
+}
+
+.filterBaseButton {
+  @extend %button;
+  background-color: var(--white);
+  color: var(--orange-color);
+}
+
+/* Исправлен селектор скроллбара (добавлена пропущенная буква 's') */
+.filtersImgBtn::-webkit-scrollbar {
+  border-radius: 5px;
+  height: 6px; /* Сделали более аккуратным на мобилках */
+  display: block;
+}
+
+.filtersImgBtn::-webkit-scrollbar-thumb {
+  background-color: var(--gray-color);
+  border-radius: 5px;
+}
+
+/* For Firefox */
+@supports (-moz-appearance: meterbar) {
+  .filtersImgBtn {
+    scrollbar-width: thin;
+  }
+}
+
+/* Глобальное поведение при активном нажатии */
+.mealButton:active,
+.filterBaseButton:active {
+  background-color: var(--terracot);
+}
+
+.filterBaseButton:active {
+  color: var(--white);
+}
+
+/* Стили для выбранных (активных) элементов */
+.mealButton.active,
+.filterBaseButton.active {
+  background-color: var(--terracot) !important;
+  color: var(--white) !important;
+  box-shadow:
+    inset 0px 4px 6px var(--grey-color),
+    0px 0px 0px var(--grey-color);
+  transform: translateY(2px);
+}
+
+/* АДАПТИВ: Контейнер для нижних кнопок управления */
+.actionButtonsGroup {
+  width: 100%;
+  display: flex;
+  gap: 16px;
+
+  /* На мобилках выстраиваем кнопки одну под другой */
+  @media (max-width: 500px) {
+    flex-direction: column !important;
+    gap: 12px;
+  }
+}
+
+.mainTitle {
+  font-family: var(--font-poiret-one);
+  font-size: var(--font-size-l); /* Крупный красивый размер на десктопе */
+  text-transform: var(--text-uppercase);
+  color: var(--text-color);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  width: 100%;
+  margin: 0 0 12px 0;
+
+  /* АДАПТИВ: Плавное уменьшение на планшетах и мобилках (меньше 820px) */
+  @include tablet-m {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    padding: 0 16px;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 1.5rem;
+  }
+}

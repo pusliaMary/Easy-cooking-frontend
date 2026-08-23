@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import { Stack } from "@/shared/ui/Stack/";
 import { Input } from "@/shared/ui/Input/Input";
 import { Button } from "@/shared/ui/Button";
@@ -11,8 +10,8 @@ import { useLoginAdminMutation } from "../../AdminAuth/api/authApi";
 import styles from "./AdminLoginForm.module.scss";
 
 interface AdminLoginFormValues {
-  username: "";
-  password: "";
+  username: string;
+  password: string;
 }
 
 export const AdminLoginForm = () => {
@@ -44,7 +43,9 @@ export const AdminLoginForm = () => {
     }
   };
 
-  const isFetchError = (error as any)?.status === "FETCH_ERROR";
+  // 2. ИСПРАВЛЕНО: Безопасная проверка статуса ошибки RTK Query без any
+  const isFetchError =
+    error && "status" in error && error.status === "FETCH_ERROR";
   const isAuthError = error && !isFetchError;
 
   return (

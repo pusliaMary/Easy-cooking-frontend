@@ -1,0 +1,74 @@
+@use "@/app/styles/mixin.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+
+.cookingPlanWrapper {
+  @include section-style;
+  background-color: var(--background-color);
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+.contentContainer {
+  width: 100%;
+  margin-top: 4rem;
+
+  @include tablet-m { margin-top: 6rem; }
+  @include desktop-m { margin-top: 8rem; }
+}
+
+.planTitle {
+  font-family: var(--font-poiret-one);
+  font-size: var(--font-size-l);
+  text-transform: var(--text-uppercase);
+  color: var(--text-color);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Замените текущий класс .mealLabel в CookingPlan.module.scss на этот: */
+.mealLabel {
+  font-family: var(--font-poiret-one);
+  font-size: var(--font-size-md);
+  text-transform: var(--text-uppercase);
+  color: var(--terracot);
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-bottom: 2px dashed var(--orange-color);
+  padding-bottom: 0.5rem;
+  
+  /* ИСПРАВЛЕНО: Линия теперь идет строго по ширине текста и центрируется */
+  width: fit-content; 
+  margin: 2rem auto 0 auto; 
+  text-align: center;
+}
+
+
+.fetchError {
+  width: 100%;
+  max-width: 600px;
+  padding: 32px;
+  background-color: var(--white);
+  border: 1px solid var(--error-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.recipesGrid {
+  display: grid;
+  width: 100%;
+  gap: 20px;
+  justify-content: center;
+  grid-template-columns: minmax(0, 300px);
+
+  @include mobile-l {
+    grid-template-columns: repeat(2, minmax(0, 320px)); /* Сделали ячейки объемнее под новые крупные карточки */
+    gap: 24px;
+  }
+
+  @include desktop-m {
+    grid-template-columns: repeat(3, minmax(0, 340px));
+    gap: 32px;
+  }
+}

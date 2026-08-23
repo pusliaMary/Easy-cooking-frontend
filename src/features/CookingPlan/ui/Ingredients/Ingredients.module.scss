@@ -1,0 +1,111 @@
+@use "@/app/styles/mixin.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+
+// Главный контейнер всей секции списка покупок
+.ingredientsSection {
+  margin-top: 60px;
+  padding: 30px 20px; /* Сделали чуть компактнее отступы для мобилок */
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(40, 40, 40, 0.05);
+  border: 1px solid var(--grey-light);
+  width: 100%;
+  box-sizing: border-box;
+
+  @include tablet-m {
+    padding: 40px 32px; /* На больших экранах возвращаем просторные отступы */
+  }
+}
+
+.ingredientsList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* Защита от распирания контентом */
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  /* ИСПРАВЛЕНО: Плавная сетка вместо резких 3 колонок на мобилке */
+  @include tablet-m {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* На планшетах 2 колонки */
+    gap: 16px;
+  }
+
+  @include desktop-m {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* Только на десктопе 3 колонки */
+  }
+}
+
+// Карточка одного ингредиента
+.ingredientsItem {
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  color: var(--text-color);
+  background-color: var(--background-color); 
+  padding: 14px 16px; /* Чуть уменьшили отступы, чтобы текст не вылезал */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+  word-break: break-word; /* Защита: длинные слова переносятся, а не ломают экран */
+
+  &::before {
+    content: "";
+    display: inline-block;
+    min-width: 18px; /* Гарантируем, что квадрат не сожмется */
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--orange-color);
+    border-radius: 5px;
+    background-color: var(--white);
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Защита от сжатия чекбокса */
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    background-color: var(--white);
+    border-color: var(--orange-color);
+    box-shadow: 0px 6px 15px rgba(236, 149, 109, 0.15);
+
+    &::before {
+      border-color: var(--terracot);
+    }
+  }
+
+  /* ИСПРАВЛЕНО: Наоборот, увеличиваем шрифт на десктопе, а на мобилке держим читаемым */
+  @include tablet-m {
+    font-size: var(--font-size-s);
+    padding: 16px 20px;
+  }
+}
+
+/* Класс для вычеркивания купленного ингредиента */
+.checked {
+  background-color: rgba(88, 210, 158, 0.1) !important; 
+  color: var(--gray-color) !important;
+  text-decoration: line-through;
+  border-color: rgba(88, 210, 158, 0.2) !important;
+
+  &::before {
+    background-color: var(--green-light);
+    border-color: var(--green-light);
+    /* ИСПРАВЛЕНО: Исправлена опечатка в теге закрытия SVG (<0svg> -> </svg>) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  &:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    border-color: rgba(88, 210, 158, 0.2) !important;
+    background-color: rgba(88, 210, 158, 0.1) !important;
+  }
+}

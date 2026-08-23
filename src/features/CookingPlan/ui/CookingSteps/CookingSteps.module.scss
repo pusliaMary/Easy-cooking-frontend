@@ -1,0 +1,191 @@
+@use "@/app/styles/mixin.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+
+/* Главный контейнер всей пошаговой секции (остается на всю ширину) */
+.cookingSection {
+  margin-top: 60px;
+  padding: 30px 20px;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(40, 40, 40, 0.05);
+  border: 1px solid var(--grey-light);
+  width: 100%;
+  box-sizing: border-box;
+
+  @include tablet-m {
+    padding: 40px 32px;
+  }
+
+  h2 {
+    font-family: var(--font-poiret-one);
+    font-size: var(--font-size-md);
+    text-transform: var(--text-uppercase);
+    color: var(--text-color);
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    width: 100%;
+    border-bottom: 2px solid var(--background-color);
+    padding-bottom: 0.5rem;
+    text-align: center; /* Отцентрируем и заголовок секции для общего баланса */
+  }
+}
+
+/* ИСПРАВЛЕНО: Сетка для блоков блюд теперь центрируется и сжимается */
+.recipesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  
+  /* Магия центрирования */
+  margin: 0 auto; 
+  
+  /* На мобилках во всю ширину, а на экранах > 820px жестко ограничиваем ширину, 
+     чтобы текст не расползался и читалcя легко */
+  @include tablet-m {
+    max-width: 42rem; /* Оптимальная ширина для комфортного чтения строк (~670px) */
+  }
+
+  @include desktop-m {
+    max-width: 48rem; /* Чуть просторнее на больших мониторах (~760px) */
+  }
+}
+
+/* Карточка ОДНОГО блюда */
+.recipeBlock {
+  background: var(--white);
+  border: 1px solid var(--grey-light);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  width: 100%; /* Занимает всю ширину отцентрированного родителя */
+  box-sizing: border-box;
+
+  @include tablet-m {
+    padding: 28px; /* Внутри карточки делаем больше воздуха на десктопе */
+  }
+}
+
+/* Название конкретного блюда над его шагами */
+.recipeTitle {
+  font-family: var(--font-poiret-one);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--terracot);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Зеленый бэдж "Готово!" */
+.doneBadge {
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xxs);
+  background-color: var(--green-light);
+  color: var(--white);
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.cookingList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Стиль строчки шага */
+.cookingItem {
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.02);
+
+  &:hover {
+    background-color: var(--grey-light);
+    transform: translateX(4px); /* Элегантный сдвиг вправо при наведении вместо прыжка вверх */
+  }
+
+  @include tablet-m {
+    font-size: var(--font-size-s);
+    padding: 16px 22px;
+  }
+}
+
+.stepNumber {
+  font-weight: 700;
+  color: var(--gray-color);
+  white-space: nowrap;
+}
+
+.stepText {
+  flex: 1;
+  line-height: 1.5; /* Комфортный межстрочный интервал для чтения */
+}
+
+/* Приоритетный шаг */
+.priorityStep {
+  background-color: rgba(236, 149, 109, 0.12);
+  border-left: 4px solid var(--terracot);
+  
+  .stepNumber {
+    color: var(--terracot);
+  }
+}
+
+/* Выполненный шаг */
+.cookingItemDone {
+  background-color: rgba(88, 210, 158, 0.05) !important;
+  color: var(--gray-color) !important;
+  text-decoration: line-through;
+  opacity: 0.6;
+  border-left: 4px solid transparent;
+
+  .stepNumber {
+    color: var(--gray-color);
+  }
+
+  &::after {
+    content: "";
+    display: inline-block;
+    min-width: 16px;
+    height: 16px;
+    background-color: var(--green-light);
+    border-radius: 50%;
+    margin-left: 12px;
+    align-self: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+    background-size: 10px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  &:hover {
+    transform: none !important;
+  }
+}
+
+/* Полностью готовое блюдо */
+.recipeBlockDone {
+  border-color: rgba(88, 210, 158, 0.3);
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: none;
+
+  .recipeTitle {
+    color: var(--gray-color);
+  }
+}

@@ -28,3 +28,14 @@ export interface Recipe {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface RenderedRecipe extends Recipe {
+  renderKey: string;
+}
+
+export interface MealGroup {
+  mealValue: string;
+  mealLabel: string;
+  recipes: RenderedRecipe[];
+}
+

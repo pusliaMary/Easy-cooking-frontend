@@ -1,51 +1,84 @@
 @use "@/app/styles/media-queries.scss" as *;
 
-
 .authContainer {
     height: 100vh;
     width: 100vw;
-}
-    
-.mainContent {
-    background: var(--gray-light-color);
-    padding: 2rem 2rem;
-    width: 100%;
-      @include mobile-xl{
-            max-width: 28rem;
-            padding: 2.25rem;
-        }
-
-        @include tablet-m {
-        max-width: 32rem; 
-        padding: 3rem;
-    }
-}
-
-.fieldContainer {
-    width: 100%;
-}
-
-.logo {
-    width: 5rem;
-}
-
-.welcomeText {
-    font-size: var(--font-size-sm); 
-    text-transform: var(--text-uppercase);
-    font-weight: 700;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .formWrapper {
     width: 100%;
-    max-width: 400px;
+    padding: 0 1.5rem;
+    /* Увеличиваем общую ширину карточки формы, чтобы инпуты стали длиннее и солиднее */
+    max-width: 28rem; 
+
+    @include mobile-xl {
+        max-width: 32rem;
+    }
+
+    @include tablet-m {
+        max-width: 36rem; 
+    }
+}
+    
+.mainContent {
+    background: var(--white); /* Белый фон сделает форму чище и контрастнее */
+    padding: 2.5rem 2rem;
+    width: 100%;
+    border-radius: 12px; /* Современное мягкое скругление */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Глубокая мягкая тень */
+
+    @include mobile-xl {
+        padding: 3.5rem 3rem;
+    }
+}
+
+.welcomeText {
+    width: 100%;
+    text-align: center; /* ИСПРАВЛЕНО: Теперь заголовок строго по центру */
+    font-family: var(--font-poiret-one); 
+    font-size: var(--font-size-l); /* ИСПРАВЛЕНО: Сделали заголовок крупным и заметным */
+    text-transform: var(--text-uppercase);
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+/* Стилизуем инпуты внутри формы, чтобы они были большими и чистыми */
+.input {
+    width: 100%;
+    font-size: var(--font-size-s) !important; /* ИСПРАВЛЕНО: Крупный текст для ввода */
 }
 
 .errorText {
     color: var(--error-color);
+    font-size: var(--font-size-xs); /* ИСПРАВЛЕНО: Текст ошибки крупнее и читаемее */
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    width: 100%;
 }
 
 .submitButton {
-    text-decoration: underline;
-    text-underline-offset: 6px;
-}
+    width: 100%; /* Кнопка во всю ширину для баланса */
+    padding: 1rem !important; /* Делаем кнопку массивной и удобной для клика */
+    font-size: var(--font-size-s) !important; /* ИСПРАВЛЕНО: Крупный текст кнопки */
+    background-color: var(--terracot) !important; /* Фирменный цвет для главного действия */
+    color: var(--white) !important;
+    border-radius: 6px;
+    text-transform: var(--text-uppercase);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none; /* Убираем подчеркивание, массивной кнопке оно не нужно */
+    transition: background-color 0.2s ease, transform 0.1s ease;
 
+    &:hover {
+        background-color: #c5432a !important; /* Чуть темнее при наведении */
+    }
+
+    &:active {
+        transform: scale(0.98); /* Эффект нажатия */
+    }
+}

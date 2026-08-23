@@ -4,13 +4,23 @@ import { buildQueryParams } from "@/shared/api/buildQueryParams";
 import { endpoints } from "@/shared/api/endpoints";
 import type { Recipe } from "../model/types";
 
-// Переменная со значением "/recipes"
 const url = endpoints.path.recipes;
+
+// 1. Описываем строгий тип для возможных параметров фильтрации рецептов
+export interface GetRecipesParams {
+  limit?: number;
+  page?: number;
+  search?: string;
+  category?: string;
+  // Добавьте сюда другие параметры, которые поддерживает ваш бэкенд.
+  // Используем Record<string, string | number | boolean | undefined>, чтобы запретить any
+  [key: string]: string | number | boolean | undefined; 
+}
 
 export const recipesApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // 1. Получение рецептов (Идет на: /api/recipes)
-    getRecipes: builder.query<Recipe[], Record<string, any> | void>({
+    // Заменяем Record<string, any> на созданный интерфейс GetRecipesParams
+    getRecipes: builder.query<Recipe[], GetRecipesParams | void>({
       query: (params) => {
         const queryString = params ? buildQueryParams(params) : "";
         const path = queryString ? `${url}?${queryString}` : url;
@@ -20,19 +30,16 @@ export const recipesApi = api.injectEndpoints({
       providesTags: ["Recipes"],
     }),
 
-    // 2. Сохранение рецепта (Идет на: /api/recipes/saveRecipe) - ИСПРАВЛЕНО
     saveRecipe: builder.mutation<Recipe, Partial<Recipe>>({
       query: (newRecipe) => createApiConfig(`${url}/saveRecipe`, "POST", newRecipe),
       invalidatesTags: ["Recipes"],
     }),
 
-    // 3. Удаление рецепта (Идет на: /api/recipes/deleteRecipe) - ИСПРАВЛЕНО
     deleteRecipe: builder.mutation<string, { _id: string }>({
       query: (body) => createApiConfig(`${url}/deleteRecipe`, "DELETE", body),
       invalidatesTags: ["Recipes"],
     }),
 
-    // 4. Редактирование рецепта (Идет на: /api/recipes/editRecipe) - ИСПРАВЛЕНО
     editRecipe: builder.mutation<Recipe, Partial<Recipe> & { _id: string }>({
       query: (updatedRecipe) =>
         createApiConfig(`${url}/editRecipe`, "PUT", updatedRecipe),
