@@ -1,6 +1,6 @@
 import { forwardRef, useId } from "react";
 import type { ComponentPropsWithRef, ChangeEvent, FocusEvent } from "react";
-import { getStyles } from "../../lib/getStyle/getStyle";
+import { getStyles } from "@/shared/lib";
 import styles from "./Input.module.scss";
 import { Stack } from "../Stack/Stack";
 import { Typography } from "../Typography";

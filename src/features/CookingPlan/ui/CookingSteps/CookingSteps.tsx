@@ -98,7 +98,7 @@ export const CookingSteps = ({
                   className={`${styles.cookingItem} ${step.isPriority ? styles.priorityStep : ""} ${step.isDone ? styles.cookingItemDone : ""}`}
                   onClick={() => toggleStepCompleted(step.key)}
                 >
-                  <span className={styles.stepNumber}>Шаг {step.index}</span>
+                  <span className={styles.stepNumber}>Step {step.index}</span>
                   <span className={styles.stepText}>{step.text}</span>
                 </li>
               ))}

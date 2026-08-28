@@ -6,7 +6,7 @@ import {
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { apiUrl } from "./endpoints";
-import { getRouteAuth } from "../lib/getRoutes/getRoutes";
+import { getRouteAuth } from "../lib";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${apiUrl}/api`,

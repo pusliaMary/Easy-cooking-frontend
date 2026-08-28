@@ -11,6 +11,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.12.0
         version: 2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
+      '@techlabteam/useful-hooks':
+        specifier: ^1.1.5
+        version: 1.1.5(react-router-dom@7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
       auth0-js:
         specifier: ^10.2.0
         version: 10.2.0
@@ -682,6 +685,12 @@ packages:
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
 
+  '@techlabteam/useful-hooks@1.1.5':
+    resolution: {integrity: sha512-6wlfJNmCrN+oSbnj/+56oI4EItoy04pwHp0ftpFbXg8h3o0MlMkg21TTB7iPA131g9cCh+2DlE8sdoTwmf51eg==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-router-dom: ^6.0.0 || ^7.0.0
+
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
 
@@ -935,6 +944,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
@@ -2696,6 +2706,11 @@ snapshots:
   '@standard-schema/spec@1.1.0': {}
 
   '@standard-schema/utils@0.3.0': {}
+
+  '@techlabteam/useful-hooks@1.1.5(react-router-dom@7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      react: 19.2.7
+      react-router-dom: 7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
   '@tybys/wasm-util@0.10.3':
     dependencies:

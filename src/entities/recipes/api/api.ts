@@ -2,24 +2,30 @@ import { api } from "@/shared/api/api";
 import { createApiConfig } from "@/shared/api/helper";
 import { buildQueryParams } from "@/shared/api/buildQueryParams";
 import { endpoints } from "@/shared/api/endpoints";
-import type { Recipe } from "../model/types";
+import type { Recipe, CategoryType, ProteinType } from "../model/types";
 
 const url = endpoints.path.recipes;
 
-// 1. Описываем строгий тип для возможных параметров фильтрации рецептов
 export interface GetRecipesParams {
   limit?: number;
   page?: number;
-  search?: string;
-  category?: string;
-  // Добавьте сюда другие параметры, которые поддерживает ваш бэкенд.
-  // Используем Record<string, string | number | boolean | undefined>, чтобы запретить any
-  [key: string]: string | number | boolean | undefined; 
+  sort?: string;
+
+  title?: string;
+  category?: CategoryType;
+  containsProtein?: boolean;
+  containsFiber?: boolean;
+  
+  whatProtein?: ProteinType | ProteinType[];
+  keyWords?: string | string[];
+  "ingredients.name"?: string | string[];
+
+  [key: string]: string | number | boolean | string[] | ProteinType[] | undefined; 
 }
 
 export const recipesApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // Заменяем Record<string, any> на созданный интерфейс GetRecipesParams
+    // Используем созданный интерфейс GetRecipesParams вместо Record/void
     getRecipes: builder.query<Recipe[], GetRecipesParams | void>({
       query: (params) => {
         const queryString = params ? buildQueryParams(params) : "";

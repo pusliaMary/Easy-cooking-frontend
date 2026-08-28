@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ElementType, ComponentPropsWithoutRef } from 'react';
-import { getStyles } from '../../lib/getStyle/getStyle';
+import { getStyles } from "@/shared/lib";
 import styles from './Typography.module.scss';
 
 

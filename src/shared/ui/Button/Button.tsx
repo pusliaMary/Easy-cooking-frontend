@@ -1,5 +1,5 @@
 import { forwardRef, type ComponentPropsWithRef } from "react";
-import { getStyles } from "@/shared/lib/getStyle/getStyle";
+import { getStyles } from "@/shared/lib";
 import styles from "./Button.module.scss";
 import { Ellipsis } from "lucide-react";
 import React from 'react';

@@ -12,7 +12,6 @@
 .formWrapper {
     width: 100%;
     padding: 0 1.5rem;
-    /* Увеличиваем общую ширину карточки формы, чтобы инпуты стали длиннее и солиднее */
     max-width: 28rem; 
 
     @include mobile-xl {

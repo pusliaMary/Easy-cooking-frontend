@@ -1,7 +1,7 @@
 import AuthPage from '@/pages/AuthPage'
 import MainPage from '@/pages/MainPage'
 import AdminPage from '@/pages/AdminPage'
-import { getRouteMain, getRouteAuth, getRouteAdmin } from '@/shared'
+import { getRouteMain, getRouteAuth, getRouteAdmin } from '@/shared/lib'
 
 export interface routeConfig {
     path: string;

@@ -3,7 +3,7 @@ import type {  TextareaHTMLAttributes } from 'react';
 import type { UseFormRegisterReturn } from 'react-hook-form';
 import { Stack } from '../Stack/Stack';
 import styles from './TextArea.module.scss';
-import { getStyles } from '../../lib/getStyle/getStyle';
+import { getStyles } from "@/shared/lib";
 import { Typography } from '../Typography'; 
 
 export interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {

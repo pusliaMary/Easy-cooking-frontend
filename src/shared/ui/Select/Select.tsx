@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { Stack } from "../Stack/Stack";
-import { getStyles } from "@/shared/lib/getStyle/getStyle";
+import { getStyles } from "@/shared/lib";
 import { Typography } from "../Typography";
 import styles from "./Select.module.scss";
 

@@ -1,0 +1,16 @@
+@use "@/app/styles/vars.scss" as *;
+@use "@/app/styles/media-queries.scss" as *;
+
+
+
+.inputForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+
+    .errorMessage {
+        color: var(--error-color);
+    }
+}

@@ -1,8 +1,11 @@
+import { AdminPanelLayout } from "@/widgets/AdminPanelLayout";
+
 const AdminPage = () => {
-    return (
-        <>
-        </>
-    )
+  return (
+  <>
+    <AdminPanelLayout />
+  </>
+  )
 }
 
-export default AdminPage
+export default AdminPage;

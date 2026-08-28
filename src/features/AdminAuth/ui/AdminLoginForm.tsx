@@ -4,7 +4,7 @@ import { Stack } from "@/shared/ui/Stack/";
 import { Input } from "@/shared/ui/Input/Input";
 import { Button } from "@/shared/ui/Button";
 import { Typography } from "@/shared/ui/Typography";
-import { getRouteAdmin } from "@/shared/lib/getRoutes/getRoutes";
+import { getRouteAdmin } from "@/shared/lib";
 import { useAuth } from "../../AdminAuth/model/useAuth";
 import { useLoginAdminMutation } from "../../AdminAuth/api/authApi";
 import styles from "./AdminLoginForm.module.scss";

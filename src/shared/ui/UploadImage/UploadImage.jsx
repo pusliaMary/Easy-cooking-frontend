@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Download, Trash2 } from "lucide-react";
 import styles from "./UploadImage.module.scss";
 import { Typography } from "../Typography";
-import { getStyles } from "../../lib";
+import { getStyles } from "@/shared/lib";
 import { Stack } from "../Stack/Stack";
 
 const MAX_FILE_SIZE_MB = 60;

@@ -1,0 +1,64 @@
+@use "@/app/styles/media-queries.scss" as *;
+
+.sidebar {
+  display: flex;
+  width: 320px;
+  height: 100vh;
+  background: #f6f6f6;
+  padding: 4rem 0;
+  top: 0;
+  left: 0;
+  position: fixed;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 20;
+
+  @include tablet-m {
+    transform: none;
+  }
+
+  .logo {
+    width: 82px;
+  }
+
+  .menu {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    li {
+      width: 100%;
+    }
+
+    .link {
+      display: block;
+      width: 100%;
+      font-size: 20px;
+      padding: 20px 45px;
+      text-align: left;
+      transition: background 0.3s ease-in-out;
+
+      &:hover,
+      &.active {
+        background: #fefefe;
+      }
+    }
+  }
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.burger {
+  position: fixed;
+  background-color: #f6f6f6;
+  height: 50px;
+  padding: 1rem;
+  z-index: 21;
+}
+
+

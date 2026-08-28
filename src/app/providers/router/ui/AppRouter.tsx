@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/AdminAuth/model/useAuth"
-import { getRouteAuth } from "@/shared";
+import { getRouteAuth } from '@/shared/lib';
 import { Suspense } from "react";
 import { routeConfig } from "../lib/data";
 

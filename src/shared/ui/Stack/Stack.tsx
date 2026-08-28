@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import type { ReactNode, ComponentPropsWithRef } from "react";
-import { getStyles } from "../../lib/getStyle/getStyle";
+import { getStyles } from "@/shared/lib";
 import styles from "./Stack.module.scss";
 
 type StackTag = "div" | "section" | "article" | "aside" | "main" | "nav" | "header";

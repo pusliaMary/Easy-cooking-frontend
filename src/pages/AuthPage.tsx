@@ -1,9 +1,10 @@
-import { AdminLoginForm } from "@/features/AdminAuth/ui/AdminLoginForm"
+import { AdminLoginForm } from "@/features/AdminAuth"
+
 
 const AuthPage = () => {
     return (
         <>
-        <AdminLoginForm />
+            <AdminLoginForm />
         </>
     )
 }
