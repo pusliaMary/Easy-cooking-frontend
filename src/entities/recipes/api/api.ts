@@ -36,7 +36,7 @@ export const recipesApi = api.injectEndpoints({
       providesTags: ["Recipes"],
     }),
 
-    saveRecipe: builder.mutation<Recipe, Partial<Recipe>>({
+    createRecipe: builder.mutation<Recipe, Partial<Recipe>>({
       query: (newRecipe) => createApiConfig(`${url}/saveRecipe`, "POST", newRecipe),
       invalidatesTags: ["Recipes"],
     }),
@@ -56,7 +56,7 @@ export const recipesApi = api.injectEndpoints({
 
 export const {
   useGetRecipesQuery,
-  useSaveRecipeMutation,
+  useCreateRecipeMutation,
   useDeleteRecipeMutation,
   useEditRecipeMutation,
 } = recipesApi;

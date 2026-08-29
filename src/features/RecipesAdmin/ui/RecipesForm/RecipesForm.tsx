@@ -6,7 +6,6 @@ import { UploadImage } from "@/shared/ui/UploadImage";
 import styles from "./ContactsForm.module.scss";
 import { Typography } from "@/shared/ui/Typography";
 
-
 export const ContactsForm = ({ form, onSubmit, isSubmitting }) => {
   const { control, register, handleSubmit, formState: { errors }} = form;
 

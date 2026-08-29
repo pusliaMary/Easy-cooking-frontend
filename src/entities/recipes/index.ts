@@ -1,6 +1,6 @@
-import { useGetRecipesQuery } from  './api/api';
+import { useGetRecipesQuery, useCreateRecipeMutation, useDeleteRecipeMutation, useEditRecipeMutation } from  './api/api';
 
-export { useGetRecipesQuery };
+export { useGetRecipesQuery, useCreateRecipeMutation, useDeleteRecipeMutation, useEditRecipeMutation };
 
 export type { Recipe, ProteinType, CategoryType, IngredientItem, MealGroup, RenderedRecipe } from './model/types';
 
