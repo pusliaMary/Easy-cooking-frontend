@@ -1,18 +1,18 @@
-import { Controller } from "react-hook-form";
-import { Input } from "@/shared/ui/Input/Input";
-import { Stack } from "@/shared/ui/Stack";
-import { Button } from "@/shared/ui/Button";
-import { UploadImage } from "@/shared/ui/UploadImage";
+// import { Controller } from "react-hook-form";
+// import { Input } from "@/shared/ui/Input/Input";
+// import { Stack } from "@/shared/ui/Stack";
+// import { Button } from "@/shared/ui/Button";
+// import { UploadImage } from "@/shared/ui/UploadImage";
 import styles from "./ContactsForm.module.scss";
-import { Typography } from "@/shared/ui/Typography";
+// import { Typography } from "@/shared/ui/Typography";
 
 export const ContactsForm = ({ form, onSubmit, isSubmitting }) => {
-  const { control, register, handleSubmit, formState: { errors }} = form;
+ // const { control, register, handleSubmit, formState: { errors }} = form;
 
   return (
     
     <form onSubmit={handleSubmit(onSubmit)} className={styles.inputForm}>
-      <Controller
+      {/* <Controller
         name="images"
         control={control}
         defaultValue={[]}
@@ -120,7 +120,7 @@ export const ContactsForm = ({ form, onSubmit, isSubmitting }) => {
         >
           Submit
         </Button>
-      </Stack>
+      </Stack> */}
     </form>
     
   );

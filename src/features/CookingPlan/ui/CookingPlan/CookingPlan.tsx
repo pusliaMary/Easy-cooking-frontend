@@ -34,31 +34,36 @@ const getErrorMessage = (error: FetchBaseQueryError | SerializedError | undefine
   return "Failed to load database. Please try again later.";
 };
 
+// Хелпер для безопасного чтения из localStorage
+const getLocalStorageData = <T,>(key: string, initialValue: T): T => {
+  if (typeof window === "undefined") return initialValue;
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : initialValue;
+  } catch (e) {
+    console.error(e);
+    return initialValue;
+  }
+};
+
 export const CookingPlan = () => {
   const [chosenBases, setChosenBases] = useState<string[]>([]);
-  const [purchasedItems, setPurchasedItems] = useState<string[]>([]);
-  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
-  const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>([]);
+  
+  // Инициализируем состояние прямо при создании, без useEffect
+  const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>(() => 
+    getLocalStorageData<MealGroup[]>(LOCAL_STORAGE_KEY, [])
+  );
+  const [purchasedItems, setPurchasedItems] = useState<string[]>(() => 
+    getLocalStorageData<string[]>(LOCAL_STORAGE_INGREDIENTS_KEY, [])
+  );
+  const [completedSteps, setCompletedSteps] = useState<string[]>(() => 
+    getLocalStorageData<string[]>(LOCAL_STORAGE_STEPS_KEY, [])
+  );
 
   const { data, isLoading: isFetchLoading, isError: isFetchError, error: fetchError } = useGetRecipesQuery({});
   const fetchedRecipes: Recipe[] = data ?? [];
 
-  useEffect(() => {
-    const savedPlan = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const savedIngredients = localStorage.getItem(LOCAL_STORAGE_INGREDIENTS_KEY);
-    const savedSteps = localStorage.getItem(LOCAL_STORAGE_STEPS_KEY);
-
-    if (savedPlan) {
-      try { setVisibleRecipes(JSON.parse(savedPlan)); } catch (e) { console.error(e); }
-    }
-    if (savedIngredients) {
-      try { setPurchasedItems(JSON.parse(savedIngredients)); } catch (e) { console.error(e); }
-    }
-    if (savedSteps) {
-      try { setCompletedSteps(JSON.parse(savedSteps)); } catch (e) { console.error(e); }
-    }
-  }, []);
-
+  // Эффекты для сохранения данных в localStorage остаются прежними
   useEffect(() => {
     if (visibleRecipes.length > 0) {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(visibleRecipes));
@@ -74,9 +79,7 @@ export const CookingPlan = () => {
   }, [completedSteps]);
 
   return (
-    
     <Stack direction="column" max justify="center" className={styles.cookingPlanWrapper}>
-      {/* Компонент фильтров теперь самодостаточен и содержит свой заголовок внутри */}
       <Filters
         fetchedRecipes={fetchedRecipes}
         isLoading={isFetchLoading}
@@ -124,8 +127,7 @@ export const CookingPlan = () => {
 
         {!isFetchLoading && !isFetchError && visibleRecipes.map((group: MealGroup) => (
           <Stack direction="column" align="center" gap={16} key={group.mealValue} max>
-            <Typography  className={styles.mealLabel}>{group.mealLabel}</Typography>
-            {/* Отрендерим карточки через нашу крутую CSS-сетку, чтобы они не скакали */}
+            <Typography className={styles.mealLabel}>{group.mealLabel}</Typography>
             <div className={styles.recipesGrid}>
               {group.recipes.map((recipe: RenderedRecipe) => (
                 <RecipeCard title={recipe.title} img={recipe.imgSource} key={recipe.renderKey} />

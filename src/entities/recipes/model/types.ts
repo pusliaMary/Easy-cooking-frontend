@@ -1,14 +1,8 @@
-// src/entities/recipes/model/types.ts
+import { proteins, categories } from './filters'
 
-export type ProteinType = "meat" | "poultry" | "seafood" | "vegan";
+export type ProteinType = typeof proteins[number]
 
-export type CategoryType =
-  | "salad"
-  | "soup"
-  | "garnish"
-  | "mainCourse"
-  | "dessert"
-  | "drink";
+export type CategoryType = typeof categories[number]
 
 export interface IngredientItem {
   name: string;

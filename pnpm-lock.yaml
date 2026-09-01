@@ -47,6 +47,9 @@ importers:
       react-use-auth:
         specifier: 2.1.0-14
         version: 2.1.0-14(@types/react@19.2.17)(auth0-js@10.2.0)(firebase@8.10.1)(firebaseui@4.8.1(firebase@8.10.1))(netlify-identity-widget@1.9.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      zod:
+        specifier: ^4.5.4
+        version: 4.5.4
     devDependencies:
       '@babel/core':
         specifier: ^7.29.7
@@ -2115,6 +2118,9 @@ packages:
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
+  zod@4.5.4:
+    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
+
 allowBuilds:
   core-js: true
   protobufjs: true
@@ -4146,3 +4152,5 @@ snapshots:
       zod: 4.4.3
 
   zod@4.4.3: {}
+
+  zod@4.5.4: {}

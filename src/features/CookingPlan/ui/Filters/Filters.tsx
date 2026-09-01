@@ -61,8 +61,6 @@ export const Filters = ({
     );
   };
 
-  // Filters.tsx
-
 const CreatePlan = useCallback(() => {
   if (isLoading) return;
 
@@ -177,7 +175,7 @@ const CreatePlan = useCallback(() => {
     setChosenBases([]);
     setPurchasedItems([]);
     setCompletedSteps([]);
-  }, []);
+  }, [setChosenBases, setCompletedSteps, setPurchasedItems, setVisibleRecipes]);
 
    return (
     

@@ -22,7 +22,8 @@
     "react-hook-form": "^7.81.0",
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.0",
-    "react-use-auth": "2.1.0-14"
+    "react-use-auth": "2.1.0-14",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
