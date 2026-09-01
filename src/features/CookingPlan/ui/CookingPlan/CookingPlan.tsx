@@ -34,7 +34,6 @@ const getErrorMessage = (error: FetchBaseQueryError | SerializedError | undefine
   return "Failed to load database. Please try again later.";
 };
 
-// Хелпер для безопасного чтения из localStorage
 const getLocalStorageData = <T,>(key: string, initialValue: T): T => {
   if (typeof window === "undefined") return initialValue;
   try {
@@ -49,7 +48,6 @@ const getLocalStorageData = <T,>(key: string, initialValue: T): T => {
 export const CookingPlan = () => {
   const [chosenBases, setChosenBases] = useState<string[]>([]);
   
-  // Инициализируем состояние прямо при создании, без useEffect
   const [visibleRecipes, setVisibleRecipes] = useState<MealGroup[]>(() => 
     getLocalStorageData<MealGroup[]>(LOCAL_STORAGE_KEY, [])
   );
@@ -63,7 +61,6 @@ export const CookingPlan = () => {
   const { data, isLoading: isFetchLoading, isError: isFetchError, error: fetchError } = useGetRecipesQuery({});
   const fetchedRecipes: Recipe[] = data ?? [];
 
-  // Эффекты для сохранения данных в localStorage остаются прежними
   useEffect(() => {
     if (visibleRecipes.length > 0) {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(visibleRecipes));

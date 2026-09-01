@@ -15,29 +15,35 @@ export interface GetRecipesParams {
   category?: CategoryType;
   containsProtein?: boolean;
   containsFiber?: boolean;
-  
+
   whatProtein?: ProteinType | ProteinType[];
   keyWords?: string | string[];
   "ingredients.name"?: string | string[];
 
-  [key: string]: string | number | boolean | string[] | ProteinType[] | undefined; 
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | string[]
+    | ProteinType[]
+    | undefined;
 }
 
 export const recipesApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // Используем созданный интерфейс GetRecipesParams вместо Record/void
     getRecipes: builder.query<Recipe[], GetRecipesParams | void>({
       query: (params) => {
         const queryString = params ? buildQueryParams(params) : "";
         const path = queryString ? `${url}?${queryString}` : url;
-        
-        return createApiConfig(path, "GET"); 
+
+        return createApiConfig(path, "GET");
       },
       providesTags: ["Recipes"],
     }),
 
     createRecipe: builder.mutation<Recipe, Partial<Recipe>>({
-      query: (newRecipe) => createApiConfig(`${url}/saveRecipe`, "POST", newRecipe),
+      query: (newRecipe) =>
+        createApiConfig(`${url}/saveRecipe`, "POST", newRecipe),
       invalidatesTags: ["Recipes"],
     }),
 

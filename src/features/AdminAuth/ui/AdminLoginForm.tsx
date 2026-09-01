@@ -43,7 +43,6 @@ export const AdminLoginForm = () => {
     }
   };
 
-  // 2. ИСПРАВЛЕНО: Безопасная проверка статуса ошибки RTK Query без any
   const isFetchError =
     error && "status" in error && error.status === "FETCH_ERROR";
   const isAuthError = error && !isFetchError;
