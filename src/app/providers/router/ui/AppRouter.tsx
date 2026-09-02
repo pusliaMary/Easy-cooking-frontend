@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { routeConfig } from "../lib/data";
 
 interface AppRouteProps {
-    auth: boolean,
+    authOnly?: boolean,
     path: string,
     page: React.JSX.Element
     
@@ -18,18 +18,19 @@ export const AppRouter = () => {
     const location = useLocation();
 
     const renderRouteElement = (route: AppRouteProps) => {
-        if (route.auth && !isLoggedIn) {
+        
+        if (route.authOnly && !isLoggedIn) {
             return (
                 <Navigate 
                     to={getRouteAuth()}
-                    state={{from: location}}
+                    state={{ from: location }}
                     replace
                 />
-            )
+            );
         }
 
-        return route.page
-    }
+        return route.page;
+    };
 
     return (
         <Suspense>

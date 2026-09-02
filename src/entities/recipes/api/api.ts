@@ -70,5 +70,5 @@ export const {
   useCreateRecipeMutation,
   useDeleteRecipeMutation,
   useEditRecipeMutation,
-  useUploadImageMutation, // Экспортируем сгенерированный хук для админки
+  useUploadImageMutation,
 } = recipesApi;

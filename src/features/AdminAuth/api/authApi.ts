@@ -7,18 +7,7 @@ const authApi = api.injectEndpoints({
     loginAdmin: build.mutation({
       query: (admin) => createApiConfig(endpoints.auth.login, "POST", admin),
     }),
-    logoutAdmin: build.mutation<void, void>({
-      query: () => createApiConfig(endpoints.auth.logout, "DELETE"),
-    }),
-    
-    checkMe: build.query<{ username: string }, void>({
-      query: () => createApiConfig("/me", "GET"),
-    }),
   }),
 });
 
-export const { 
-  useLoginAdminMutation, 
-  useLogoutAdminMutation, 
-  useCheckMeQuery
-} = authApi;
+export const { useLoginAdminMutation } = authApi;
