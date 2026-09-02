@@ -57,6 +57,11 @@ export const recipesApi = api.injectEndpoints({
         createApiConfig(`${url}/editRecipe`, "PUT", updatedRecipe),
       invalidatesTags: ["Recipes"],
     }),
+
+    uploadImage: builder.mutation<{ url: string }, FormData>({
+      query: (formData) => 
+        createApiConfig(`${url}/uploadImage`, "POST", formData),
+    }),
   }),
 });
 
@@ -65,4 +70,5 @@ export const {
   useCreateRecipeMutation,
   useDeleteRecipeMutation,
   useEditRecipeMutation,
+  useUploadImageMutation, // Экспортируем сгенерированный хук для админки
 } = recipesApi;

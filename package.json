@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
     "@reduxjs/toolkit": "^2.12.0",
     "@techlabteam/useful-hooks": "^1.1.5",
     "auth0-js": "^10.2.0",

@@ -21,8 +21,7 @@ const baseQueryWithReauth: BaseQueryFn<
   const result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 401) {
-    localStorage.removeItem("authUser");
-
+    // Убрали localStorage.removeItem("authUser"); — теперь стейтом рулит AuthProvider и бэкенд
     if (typeof window !== "undefined") {
       window.location.href = getRouteAuth();
     }

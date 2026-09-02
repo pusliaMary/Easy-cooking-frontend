@@ -7,20 +7,18 @@ import { Typography } from "../Typography";
 import { getStyles } from "@/shared/lib";
 import { Stack } from "../Stack/Stack";
 
-const MAX_FILE_SIZE_MB = 60;
-const ALLOWED_FORMATS = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-
+// ==========================================
+// 1. Интерфейсы и типы компонента
+// ==========================================
 export interface UploadedImageFile {
   id: string;
   file: File;
   preview: string;
-  _id?: string;
 }
 
 export interface UploadImageProps {
   value?: UploadedImageFile[];
   onChange?: (value: UploadedImageFile[]) => void;
-  onRemoveImage?: (id: string) => void;
   maxFiles?: number;
   expandWhenEmpty?: boolean;
   great?: boolean;
@@ -30,12 +28,13 @@ export interface UploadImageRef {
   focus: () => void;
 }
 
+import { MAX_FILE_SIZE_MB, MAX_FILE_SIZE_BYTES, ACCEPTED_IMAGE_TYPES } from "./lib/constants";
+
 export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
   (
     {
       value = [],
       onChange,
-      onRemoveImage,
       maxFiles = 10,
       expandWhenEmpty,
       great,
@@ -65,10 +64,9 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       let error = "";
 
       selectedFiles.forEach((file) => {
-        if (!ALLOWED_FORMATS.includes(file.type)) {
-          error =
-            "Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed.";
-        } else if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+          error = "Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed.";
+        } else if (file.size > MAX_FILE_SIZE_BYTES) {
           error = `File size exceeds ${MAX_FILE_SIZE_MB}MB limit.`;
         } else {
           validFiles.push({
@@ -126,12 +124,11 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
 
     const removeImage = (id: string): void => {
       const fileToRemove = value.find((file) => file.id === id);
+      
       if (fileToRemove?.preview) {
         URL.revokeObjectURL(fileToRemove.preview);
       }
-      if (fileToRemove?._id && typeof onRemoveImage === "function") {
-        onRemoveImage(fileToRemove._id);
-      }
+      
       if (onChange) {
         const updatedFiles = value.filter((file) => file.id !== id);
         onChange(updatedFiles);
@@ -177,7 +174,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
               onChange={handleChange}
               hidden
               disabled={disabled}
-              accept={ALLOWED_FORMATS.join(",")}
+              accept={ACCEPTED_IMAGE_TYPES.join(",")}
             />
           </Stack>
           {errorMessage && (

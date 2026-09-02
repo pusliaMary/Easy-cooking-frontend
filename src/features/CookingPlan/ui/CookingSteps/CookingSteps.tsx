@@ -88,7 +88,7 @@ export const CookingSteps = ({
           >
             <h3 className={styles.recipeTitle}>
               {recipe.title}
-              {recipe.isRecipeFullyDone && <span className={styles.doneBadge}>Готово!</span>}
+              {recipe.isRecipeFullyDone && <span className={styles.doneBadge}>Done!</span>}
             </h3>
 
             <ol className={styles.cookingList}>

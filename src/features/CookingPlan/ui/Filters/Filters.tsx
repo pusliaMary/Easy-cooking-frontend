@@ -27,8 +27,8 @@ interface FiltersProps {
 
 const MEAL_MAP: Record<string, CategoryType[]> = {
   breakfast: ["salad", "soup", "garnish", "mainCourse", "dessert", "drink"],
-  supper: ["salad", "soup", "mainCourse"],
-  dinner: ["salad", "mainCourse"],
+  supper: ["salad", "soup", "mainCourse", "dessert", "drink"],
+  dinner: ["salad", "mainCourse", "dessert"],
 };
 
 export const Filters = ({

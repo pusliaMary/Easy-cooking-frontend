@@ -30,18 +30,18 @@ export const AdminLoginForm = () => {
   const navigate = useNavigate();
   const [loginAdmin, { isLoading, error }] = useLoginAdminMutation();
 
-  const onSubmit = async (data: AdminLoginFormValues) => {
-    try {
-      const response = await loginAdmin(data).unwrap();
+const onSubmit = async (data: AdminLoginFormValues) => {
+  try {
+    const response = await loginAdmin(data).unwrap();
 
-      if (response.username) {
-        login(response);
-        navigate(getRouteAdmin());
-      }
-    } catch (err) {
-      console.error("Login error:", err);
+    if (response.username) {
+      login(response);
+      navigate(getRouteAdmin());
     }
-  };
+  } catch (err) {
+    console.error("Login error:", err);
+  }
+};
 
   const isFetchError =
     error && "status" in error && error.status === "FETCH_ERROR";

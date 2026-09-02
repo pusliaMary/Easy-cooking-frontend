@@ -1,22 +1,19 @@
-import { categories, proteins } from "@/entities/recipes";
 import { z } from "zod";
+import { categories, proteins } from "@/entities/recipes";
+import {
+  MAX_FILE_SIZE_BYTES,
+  MAX_FILE_SIZE_MB,
+  ACCEPTED_IMAGE_TYPES,
+} from "@/shared/ui/UploadImage/lib/constants";
 
 const titleRegex = /^[A-Za-zА-Яа-яЁё0-9\s.,\-"'«»!?:()]+$/;
 
-const MAX_FILE_SIZE = 6 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-];
-
-export const recipeZodShema = z
+export const recipeZodSchema = z
   .object({
-    category: z
-      .array(z.enum(categories))
-      .min(1, "Choose at least one category"),
+    category: z.enum(categories, {
+      message: "Choose a category",
+    }),
+
     title: z
       .string()
       .trim()
@@ -24,11 +21,15 @@ export const recipeZodShema = z
       .max(80, "Title must be less than 80 characters")
       .regex(titleRegex, "Title contains invalid characters"),
 
-    containsProtein: z.boolean().default(false),
+   containsProtein: z.boolean({
+      message: "Protein status is required",
+    }),
 
-    whatProtein: z.array(z.enum(proteins)).default([]),
+    whatProtein: z.array(z.enum(proteins)),
 
-    containsFiber: z.boolean(),
+    containsFiber: z.boolean({
+      message: "Fiber status is required",
+    }),
 
     ingredients: z
       .array(
@@ -37,10 +38,10 @@ export const recipeZodShema = z
             .string()
             .trim()
             .min(3, "Ingredient name cannot be empty")
-            .max(100, "Ingredient name is too long"),
+            .max(100),
         }),
       )
-      .min(1, "Add at least three ingredients"),
+      .min(3, "Add at least three ingredients"),
 
     steps: z
       .array(
@@ -49,7 +50,7 @@ export const recipeZodShema = z
             .string()
             .trim()
             .min(10, "Step description cannot be empty")
-            .max(500, "Step description is too long"),
+            .max(500),
         }),
       )
       .min(2, "Add at least two steps"),
@@ -61,21 +62,31 @@ export const recipeZodShema = z
             .string()
             .trim()
             .min(15, "Keyword's name cannot be empty")
-            .max(500, "Keyword's name is too long"),
+            .max(500),
         }),
       )
       .min(2, "Add at least two keywords"),
 
     uploadImage: z
-      .instanceof(File, { message: "Image is required" })
-      .refine((file) => file.size <= MAX_FILE_SIZE, "Max image size is 5MB")
-      .refine(
-        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-        "Only .jpg, .jpeg, .png and .webp formats are supported",
+      .array(
+        z.object({
+          id: z.string(),
+          preview: z.string(),
+          file: z
+            .instanceof(File)
+            .refine(
+              (file) => file.size <= MAX_FILE_SIZE_BYTES,
+              `Max image size is ${MAX_FILE_SIZE_MB}MB`,
+            )
+            .refine(
+              (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+              "Unsupported format",
+            ),
+        }),
       )
-    
-    })
-
+      .min(1, "Image is required")
+      .max(1, "Only one image is allowed"),
+  })
   .superRefine((data, ctx) => {
     if (data.containsProtein && data.whatProtein.length === 0) {
       ctx.addIssue({
@@ -85,3 +96,5 @@ export const recipeZodShema = z
       });
     }
   });
+
+export type RecipeFormInput = z.infer<typeof recipeZodSchema>;
