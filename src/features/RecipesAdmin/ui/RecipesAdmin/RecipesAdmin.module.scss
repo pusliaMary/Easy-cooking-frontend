@@ -1,0 +1,22 @@
+@use "@/app/styles/media-queries.scss" as *;
+
+.adminWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  
+  // Перебиваем внешние отступы, которые могли наследоваться, 
+  // чтобы форма не ужималась
+  form {
+    width: 100%;
+    max-width: 600px; // Ограничиваем ширину для удобства чтения
+    margin: 0 auto;
+  }
+
+  // На экранах tablet-m и выше контролируем, чтобы контент не прижимался к краям
+  @include tablet-m {
+    padding: 0 1rem;
+  }
+}

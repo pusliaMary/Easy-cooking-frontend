@@ -4,9 +4,13 @@ export interface NavigationItem {
 }
 
 export const adminPanelNavigation = {
-  recipes: {
-    key: 'recipes',
-    label: 'Recipes',
+  recipesList: {
+    key: 'recipesList',
+    label: 'Recipes List',
+  },
+  createRecipe: {
+    key: 'createRecipe',
+    label: 'Add New Recipe',
   },
 } as const satisfies Record<string, NavigationItem>;
 

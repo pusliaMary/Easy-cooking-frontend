@@ -11,7 +11,7 @@ import type { RecipeFormInput } from "../../lib/recipeZodSchema";
 import styles from "./RecipesForm.module.scss";
 
 interface RecipesFormProps {
-  onSubmit: (data: RecipeFormInput) => void;
+  onSubmit: (data: RecipeFormInput, resetForm: () => void) => void;
   isSubmitting: boolean;
   defaultValues?: Partial<RecipeFormInput>;
 }
@@ -25,11 +25,10 @@ export const RecipesForm = ({
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<RecipeFormInput>({
-    resolver: zodResolver(recipeZodSchema, undefined, {
-      raw: true, // Это заставит React Hook Form валидировать структуру Input, игнорируя конфликт с Output
-    }),
+    resolver: zodResolver(recipeZodSchema, undefined, { raw: true }),
     defaultValues: {
       title: "",
       category: undefined,
@@ -44,90 +43,93 @@ export const RecipesForm = ({
     },
   });
 
-  const {
-    fields: ingredientFields,
-    append: appendIngredient,
-    remove: removeIngredient,
-  } = useFieldArray({
+  const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
     control,
     name: "ingredients",
   });
 
-  const {
-    fields: stepFields,
-    append: appendStep,
-    remove: removeStep,
-  } = useFieldArray({
+  const { fields: stepFields, append: appendStep, remove: removeStep } = useFieldArray({
     control,
     name: "steps",
   });
 
-  const {
-    fields: keywordFields,
-    append: appendKeyword,
-    remove: removeKeyword,
-  } = useFieldArray({
+  const { fields: keywordFields, append: appendKeyword, remove: removeKeyword } = useFieldArray({
     control,
     name: "keyWords",
   });
 
-  const containsProteinWatch = useWatch({
-    control,
-    name: "containsProtein",
-  });
+  const containsProteinWatch = useWatch({ control, name: "containsProtein" });
+
+  const handleLocalSubmit = (data: RecipeFormInput) => {
+    onSubmit(data, () => reset());
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <form onSubmit={handleSubmit(handleLocalSubmit)} className={styles.form}>
       <Stack direction="column" gap={24} align="stretch">
-        {/* Title */}
+        
+        {/* Title Field */}
         <Stack direction="column" gap={8} align="stretch">
           <Typography as="label">Recipe Title</Typography>
           <input
             type="text"
             {...register("title")}
             className={errors.title ? styles.inputError : ""}
+            disabled={isSubmitting}
+            placeholder="Enter recipe title"
           />
           {errors.title && (
             <Typography as="span" className={styles.error}>
-              {errors.title.message}
+              ⚠️ {errors.title.message}
             </Typography>
           )}
         </Stack>
 
-        {/* Category */}
+        {/* Category Field */}
         <Stack direction="column" gap={8} align="stretch">
           <Typography as="label">Category</Typography>
           <select
             {...register("category")}
             className={errors.category ? styles.inputError : ""}
+            disabled={isSubmitting}
           >
             <option value="">-- Choose --</option>
             {categories.map((cat) => (
               <option key={cat} value={cat}>
-                {cat}
+                {cat.toUpperCase()}
               </option>
             ))}
           </select>
           {errors.category && (
             <Typography as="span" className={styles.error}>
-              {errors.category.message}
+              ⚠️ {errors.category.message}
             </Typography>
           )}
         </Stack>
 
-        {/* Checkboxes */}
-        <Stack direction="row" gap={16} align="center">
-          <label>
-            <input type="checkbox" {...register("containsProtein")} /> Contains
-            Protein
-          </label>
-          <label>
-            <input type="checkbox" {...register("containsFiber")} /> Contains
-            Fiber
-          </label>
+        {/* Binary Checkboxes Fields */}
+        <Stack direction="column" gap={8} align="stretch">
+          <Stack direction="row" gap={16} align="center">
+            <label>
+              <input type="checkbox" {...register("containsProtein")} disabled={isSubmitting} /> Contains Protein
+            </label>
+            <label>
+              <input type="checkbox" {...register("containsFiber")} disabled={isSubmitting} /> Contains Fiber
+            </label>
+          </Stack>
+          {errors.containsProtein && (
+            <Typography as="span" className={styles.error}>
+              ⚠️ {errors.containsProtein.message}
+            </Typography>
+          )}
+          {errors.containsFiber && (
+            <Typography as="span" className={styles.error}>
+              ⚠️ {errors.containsFiber.message}
+            </Typography>
+          )}
         </Stack>
 
-        {/* What Protein */}
+        {/* What Protein Fields */}
         {containsProteinWatch && (
           <Stack direction="column" gap={8} align="stretch">
             <Typography as="label">What Protein?</Typography>
@@ -138,6 +140,7 @@ export const RecipesForm = ({
                     type="checkbox"
                     value={prot}
                     {...register("whatProtein")}
+                    disabled={isSubmitting}
                   />{" "}
                   {prot}
                 </label>
@@ -145,109 +148,149 @@ export const RecipesForm = ({
             </Stack>
             {errors.whatProtein && (
               <Typography as="span" className={styles.error}>
-                {errors.whatProtein.message}
+                ⚠️ {errors.whatProtein.message}
               </Typography>
             )}
           </Stack>
         )}
-
-        {/* Ingredients */}
+{/* Ingredients Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Ingredients</Typography>
+          
+          {/* General array rules errors (e.g., "Add at least three ingredients") */}
+          {errors.ingredients?.message && (
+            <Typography as="span" className={styles.error}>
+              ⚠️ {errors.ingredients.message}
+            </Typography>
+          )}
+
           {ingredientFields.map((field, index) => (
-            <Stack key={field.id} direction="row" gap={8} align="center">
-              <input
-                type="text"
-                {...register(`ingredients.${index}.name`)}
-                className={
-                  errors.ingredients?.[index]?.name ? styles.inputError : ""
-                }
-              />
-              {ingredientFields.length > 3 && (
-                <button type="button" onClick={() => removeIngredient(index)}>
-                  <Trash2 size={18} color="red" />
-                </button>
+            <Stack key={field.id} direction="column" gap={8} align="stretch">
+              <Stack direction="row" gap={8} align="center">
+                <input
+                  type="text"
+                  {...register(`ingredients.${index}.name`)}
+                  className={errors.ingredients?.[index]?.name ? styles.inputError : ""}
+                  disabled={isSubmitting}
+                  placeholder={`Ingredient #${index + 1}`}
+                />
+                {ingredientFields.length > 3 && (
+                  <button type="button" onClick={() => removeIngredient(index)} disabled={isSubmitting}>
+                    <Trash2 size={18} color="red" />
+                  </button>
+                )}
+              </Stack>
+              {/* Individual empty or length mismatch hints */}
+              {errors.ingredients?.[index]?.name && (
+                <Typography as="span" className={styles.error}>
+                  ⚠️ {errors.ingredients[index]?.name?.message}
+                </Typography>
               )}
             </Stack>
           ))}
-          {errors.ingredients?.root && (
-            <Typography as="span" className={styles.error}>
-              {errors.ingredients.root.message}
-            </Typography>
-          )}
+          
           <button
             type="button"
             onClick={() => appendIngredient({ name: "" })}
             className={styles.addButton}
+            disabled={isSubmitting}
           >
             <Plus size={16} /> Add Ingredient
           </button>
         </Stack>
 
-        {/* Steps */}
+        {/* Steps Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Steps</Typography>
+
+          {/* General array rules errors (e.g., "Add at least two steps") */}
+          {errors.steps?.message && (
+            <Typography as="span" className={styles.error}>
+              ⚠️ {errors.steps.message}
+            </Typography>
+          )}
+
           {stepFields.map((field, index) => (
-            <Stack key={field.id} direction="row" gap={8} align="center">
-              <textarea
-                {...register(`steps.${index}.name`)}
-                className={errors.steps?.[index]?.name ? styles.inputError : ""}
-              />
-              {stepFields.length > 2 && (
-                <button type="button" onClick={() => removeStep(index)}>
-                  <Trash2 size={18} color="red" />
-                </button>
+            <Stack key={field.id} direction="column" gap={8} align="stretch">
+              <Stack direction="row" gap={8} align="center">
+                <textarea
+                  {...register(`steps.${index}.name`)}
+                  className={errors.steps?.[index]?.name ? styles.inputError : ""}
+                  disabled={isSubmitting}
+                  placeholder={`Step Description #${index + 1}`}
+                />
+                {stepFields.length > 2 && (
+                  <button type="button" onClick={() => removeStep(index)} disabled={isSubmitting}>
+                    <Trash2 size={18} color="red" />
+                  </button>
+                )}
+              </Stack>
+              {/* Individual step character count hints */}
+              {errors.steps?.[index]?.name && (
+                <Typography as="span" className={styles.error}>
+                  ⚠️ {errors.steps[index]?.name?.message}
+                </Typography>
               )}
             </Stack>
           ))}
-          {errors.steps?.root && (
-            <Typography as="span" className={styles.error}>
-              {errors.steps.root.message}
-            </Typography>
-          )}
+          
           <button
             type="button"
             onClick={() => appendStep({ name: "" })}
             className={styles.addButton}
+            disabled={isSubmitting}
           >
             <Plus size={16} /> Add Step
           </button>
         </Stack>
 
-        {/* Keywords */}
+        {/* Keywords Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Keywords</Typography>
+
+          {/* General array rules errors (e.g., "Add at least two keywords") */}
+          {errors.keyWords?.message && (
+            <Typography as="span" className={styles.error}>
+              ⚠️ {errors.keyWords.message}
+            </Typography>
+          )}
+
           {keywordFields.map((field, index) => (
-            <Stack key={field.id} direction="row" gap={8} align="center">
-              <input
-                type="text"
-                {...register(`keyWords.${index}.name`)}
-                className={
-                  errors.keyWords?.[index]?.name ? styles.inputError : ""
-                }
-              />
-              {keywordFields.length > 2 && (
-                <button type="button" onClick={() => removeKeyword(index)}>
-                  <Trash2 size={18} color="red" />
-                </button>
+            <Stack key={field.id} direction="column" gap={8} align="stretch">
+              <Stack direction="row" gap={8} align="center">
+                <input
+                  type="text"
+                  {...register(`keyWords.${index}.name`)}
+                  className={errors.keyWords?.[index]?.name ? styles.inputError : ""}
+                  disabled={isSubmitting}
+                  placeholder={`Keyword #${index + 1}`}
+                />
+                {keywordFields.length > 2 && (
+                  <button type="button" onClick={() => removeKeyword(index)} disabled={isSubmitting}>
+                    <Trash2 size={18} color="red" />
+                  </button>
+                )}
+              </Stack>
+              {/* Individual keyword criteria hints */}
+              {errors.keyWords?.[index]?.name && (
+                <Typography as="span" className={styles.error}>
+                  ⚠️ {errors.keyWords[index]?.name?.message}
+                </Typography>
               )}
             </Stack>
           ))}
-          {errors.keyWords?.root && (
-            <Typography as="span" className={styles.error}>
-              {errors.keyWords.root.message}
-            </Typography>
-          )}
+          
           <button
             type="button"
             onClick={() => appendKeyword({ name: "" })}
             className={styles.addButton}
+            disabled={isSubmitting}
           >
             <Plus size={16} /> Add Keyword
           </button>
         </Stack>
 
-        {/* Upload Image */}
+        {/* Upload Image Field */}
         <Stack direction="column" gap={8} align="stretch">
           <Typography as="label">Recipe Image</Typography>
           <Controller
@@ -258,16 +301,18 @@ export const RecipesForm = ({
                 value={field.value}
                 onChange={field.onChange}
                 maxFiles={1}
+                disabled={isSubmitting}
               />
             )}
           />
           {errors.uploadImage && (
             <Typography as="span" className={styles.error}>
-              {errors.uploadImage.message}
+              ⚠️ {errors.uploadImage.message}
             </Typography>
           )}
         </Stack>
 
+        {/* Submit Actions */}
         <button
           type="submit"
           disabled={isSubmitting}

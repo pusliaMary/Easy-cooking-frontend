@@ -26,9 +26,9 @@ interface FiltersProps {
 }
 
 const MEAL_MAP: Record<string, CategoryType[]> = {
-  breakfast: ["salad", "soup", "garnish", "mainCourse", "dessert", "drink"],
-  supper: ["salad", "soup", "mainCourse", "dessert", "drink"],
-  dinner: ["salad", "mainCourse", "dessert"],
+  breakfast: ["salad", "soup", "garnish", "main Course", "dessert", "drink"],
+  supper: ["salad", "soup", "main Course", "dessert", "drink"],
+  dinner: ["salad", "main Course", "dessert"],
 };
 
 export const Filters = ({
@@ -42,7 +42,6 @@ export const Filters = ({
   setCompletedSteps,
 }: FiltersProps) => {
   const targetRef = useRef<HTMLDivElement>(null);
-
   const [chosenMeals, setChosenMeals] = useState<string[]>([]);
 
   const toggleMeal = (value: string) => {
@@ -61,113 +60,112 @@ export const Filters = ({
     );
   };
 
-const CreatePlan = useCallback(() => {
-  if (isLoading) return;
+  const CreatePlan = useCallback(() => {
+    if (isLoading) return;
 
-  if (chosenMeals.length === 0) {
-    alert("Please select at least one meal. Meal-bases are optional.");
-    setVisibleRecipes([]);
-    return;
-  }
+    if (chosenMeals.length === 0) {
+      alert("Please select at least one meal. Meal-bases are optional.");
+      setVisibleRecipes([]);
+      return;
+    }
 
-  const lowerBases = chosenBases
-    .filter(Boolean)
-    .map((b) => String(b).trim().toLowerCase());
+    const lowerBases = chosenBases
+      .filter(Boolean)
+      .map((b) => String(b).trim().toLowerCase());
 
-  // 1. Первичная фильтрация по белкам / ключевым словам
-  const baseFilteredRecipes = fetchedRecipes.filter((recipe: Recipe) => {
-    if (!recipe) return false;
-    if (lowerBases.length === 0) return true;
+    // 1. Первичная фильтрация по белкам / ключевым словам
+    const baseFilteredRecipes = fetchedRecipes.filter((recipe: Recipe) => {
+      if (!recipe) return false;
 
-    const hasMatchingProtein =
-      Array.isArray(recipe.whatProtein) &&
-      recipe.whatProtein.some((p: ProteinType) => {
-        if (!p) return false;
-        return lowerBases.includes(String(p).trim().toLowerCase());
-      });
+      // ОБНОВЛЕНИЕ: Напитки и десерты добавляются независимо от выбранной основы (мясо, веган и т.д.)
+      const isDrinkOrDessert = 
+        recipe.category === "drink" || 
+        recipe.category === "dessert";
+        
+      if (isDrinkOrDessert) return true;
 
-    const hasMatchingKeyWord =
-      Array.isArray(recipe.keyWords) &&
-      recipe.keyWords.some((w: string) => {
-        if (!w) return false;
-        return lowerBases.includes(String(w).trim().toLowerCase());
-      });
+      // Для остальных категорий (основные блюда, супы и т.д.) применяется стандартный фильтр
+      if (lowerBases.length === 0) return true;
 
-    return hasMatchingProtein || hasMatchingKeyWord;
-  });
+      const hasMatchingProtein =
+        Array.isArray(recipe.whatProtein) &&
+        recipe.whatProtein.some((p: ProteinType) => {
+          if (!p) return false;
+          return lowerBases.includes(String(p).trim().toLowerCase());
+        });
 
-  const structuredPlan: MealGroup[] = [];
-  const MEAL_ORDER = ["breakfast", "supper", "dinner"];
-  
-  // ИСПРАВЛЕНИЕ 1: Глобальный Set уникальности для всего дневного меню.
-  // Вынесен из цикла приемов пищи на самый верх!
-  const globalUsedIds = new Set<string>();
+      const hasMatchingKeyWord =
+        Array.isArray(recipe.keyWords) &&
+        recipe.keyWords.some((w: string) => {
+          if (!w) return false;
+          return lowerBases.includes(String(w).trim().toLowerCase());
+        });
 
-  MEAL_ORDER.forEach((mealValue) => {
-    if (!chosenMeals.includes(mealValue)) return;
+      return hasMatchingProtein || hasMatchingKeyWord;
+    });
 
-    const mealKey = mealValue.toLowerCase().trim();
-    const categoriesForThisMeal = MEAL_MAP[mealKey] || [];
-    const originalMealInfo = filteredMeal.find((m) => m.value === mealValue);
-    const mealLabel = originalMealInfo ? originalMealInfo.label : mealValue;
+    const structuredPlan: MealGroup[] = [];
+    const MEAL_ORDER = ["breakfast", "supper", "dinner"];
+    const globalUsedIds = new Set<string>();
 
-    const groupRecipes: RenderedRecipe[] = [];
+    MEAL_ORDER.forEach((mealValue) => {
+      if (!chosenMeals.includes(mealValue)) return;
 
-    categoriesForThisMeal.forEach((category) => {
-      // ИСПРАВЛЕНИЕ 2: Ищем рецепты, строго сверяясь с глобальным Set-ом
-      const allowedRecipes = baseFilteredRecipes.filter(
-        (r: Recipe) =>
-          r.category &&
-          String(r.category).toLowerCase() === category.toLowerCase() &&
-          r._id &&
-          !globalUsedIds.has(String(r._id)),
-      );
+      const mealKey = mealValue.toLowerCase().trim();
+      const categoriesForThisMeal = MEAL_MAP[mealKey] || [];
+      const originalMealInfo = filteredMeal.find((m) => m.value === mealValue);
+      const mealLabel = originalMealInfo ? originalMealInfo.label : mealValue;
 
-      // ИСПРАВЛЕНИЕ 3: Все резервные "if (allowedRecipes.length === 0)", 
-      // которые затирали уникальность и плодили дубликаты — ПОЛНОСТЬЮ УДАЛЕНЫ.
-      // Если уникальных рецептов этой категории больше нет, мы просто идем дальше.
+      const groupRecipes: RenderedRecipe[] = [];
 
-      if (allowedRecipes.length > 0) {
-        const randomIndex = Math.floor(Math.random() * allowedRecipes.length);
-        const chosenRecipe = allowedRecipes[randomIndex];
+      categoriesForThisMeal.forEach((category) => {
+        const allowedRecipes = baseFilteredRecipes.filter(
+          (r: Recipe) =>
+            r.category &&
+            String(r.category).toLowerCase() === category.toLowerCase() &&
+            r._id &&
+            !globalUsedIds.has(String(r._id)),
+        );
 
-        if (chosenRecipe._id) {
-          globalUsedIds.add(String(chosenRecipe._id));
+        if (allowedRecipes.length > 0) {
+          const randomIndex = Math.floor(Math.random() * allowedRecipes.length);
+          const chosenRecipe = allowedRecipes[randomIndex];
+
+          if (chosenRecipe._id) {
+            globalUsedIds.add(String(chosenRecipe._id));
+          }
+
+          const uniqueId =
+            typeof crypto !== "undefined" && crypto.randomUUID
+              ? crypto.randomUUID()
+              : Math.random().toString(36).substring(2, 9);
+
+          groupRecipes.push({
+            ...chosenRecipe,
+            renderKey: `${mealValue}-${chosenRecipe._id || "recipe"}-${uniqueId}`,
+          });
         }
+      });
 
-        const uniqueId =
-          typeof crypto !== "undefined" && crypto.randomUUID
-            ? crypto.randomUUID()
-            : Math.random().toString(36).substring(2, 9);
-
-        groupRecipes.push({
-          ...chosenRecipe,
-          renderKey: `${mealValue}-${chosenRecipe._id || "recipe"}-${uniqueId}`,
+      if (groupRecipes.length > 0) {
+        structuredPlan.push({
+          mealValue,
+          mealLabel,
+          recipes: groupRecipes,
         });
       }
     });
 
-    if (groupRecipes.length > 0) {
-      structuredPlan.push({
-        mealValue,
-        mealLabel,
-        recipes: groupRecipes,
-      });
+    if (structuredPlan.length === 0) {
+      alert("План не создан! Нет доступных уникальных рецептов для выбранных критериев.");
+      setVisibleRecipes([]);
+      return;
     }
-  });
 
-  if (structuredPlan.length === 0) {
-    alert("План не создан! Нет доступных уникальных рецептов для выбранных критериев.");
-    return;
-  }
-
-  // Очищаем прошлый прогресс чекбоксов, так как генерируется абсолютно новый план
-  setCompletedSteps([]);
-  setPurchasedItems([]);
-
-  setVisibleRecipes(structuredPlan);
-}, [fetchedRecipes, chosenMeals, chosenBases, isLoading, setVisibleRecipes, setCompletedSteps, setPurchasedItems]);
-
+    setCompletedSteps([]);
+    setPurchasedItems([]);
+    setVisibleRecipes(structuredPlan);
+  }, [fetchedRecipes, chosenMeals, chosenBases, isLoading, setVisibleRecipes, setCompletedSteps, setPurchasedItems]);
 
   const ClearPlan = useCallback(() => {
     setVisibleRecipes([]);
@@ -177,83 +175,79 @@ const CreatePlan = useCallback(() => {
     setCompletedSteps([]);
   }, [setChosenBases, setCompletedSteps, setPurchasedItems, setVisibleRecipes]);
 
-   return (
-    
+  return (
+    <Stack tag="section" justify="around" className={styles.filterSection} max>
+      <Stack
+        direction="column"
+        justify="between"
+        align="center"
+        ref={targetRef}
+        className={getStyles(styles.filtersImgBtn, {}, [])}
+      >
+        {filteredMeal.map(({ label, value }: FilterItem) => {
+          const isSelected = chosenMeals.includes(value);
+          return (
+            <Button
+              key={value}
+              className={`${styles.mealButton} ${isSelected ? styles.active : ""}`}
+              size="sm"
+              onClick={() => toggleMeal(value)}
+              disabled={isLoading}
+            >
+              {label.toUpperCase()}
+            </Button>
+          );
+        })}
+      </Stack>
 
-      <Stack tag="section" justify="around" className={styles.filterSection} max>
+      <Stack direction="column" justify="between" align="center" gap={16}>
         <Stack
-          direction="column"
           justify="between"
-          align="center"
-          ref={targetRef}
+          align="start"
           className={getStyles(styles.filtersImgBtn, {}, [])}
         >
-          {filteredMeal.map(({ label, value }: FilterItem) => {
-            const isSelected = chosenMeals.includes(value);
+          {filteredRecipeBase.map(({ label, value }: FilterItem) => {
+            const isSelected = chosenBases.includes(value);
             return (
               <Button
                 key={value}
-                className={`${styles.mealButton} ${isSelected ? styles.active : ""}`}
-                size="sm"
-                onClick={() => toggleMeal(value)}
+                className={`${styles.filterBaseButton} ${isSelected ? styles.active : ""}`}
+                onClick={() => toggleBase(value)}
                 disabled={isLoading}
               >
-                {label.toUpperCase()}
+                {label}
               </Button>
             );
           })}
         </Stack>
 
-        <Stack direction="column" justify="between" align="center" gap={16}>
-          <Stack
-            justify="between"
-            align="start"
-            className={getStyles(styles.filtersImgBtn, {}, [])}
+        <div className={styles.actionButtonsGroup}>
+          <Button
+            className={styles.primaryButton}
+            variant="primary"
+            size="sm"
+            onClick={CreatePlan}
+            disabled={isLoading}
           >
-            {filteredRecipeBase.map(({ label, value }: FilterItem) => {
-              const isSelected = chosenBases.includes(value);
-              return (
-                <Button
-                  key={value}
-                  className={`${styles.filterBaseButton} ${isSelected ? styles.active : ""}`}
-                  onClick={() => toggleBase(value)}
-                  disabled={isLoading}
-                >
-                  {label}
-                </Button>
-              );
-            })}
-          </Stack>
+            {isLoading
+              ? "Connecting to server..."
+              : visibleRecipes.length > 0
+                ? "Recreate your plan"
+                : "Get your recipes"}
+          </Button>
 
-          <div className={styles.actionButtonsGroup}>
-            <Button
-              className={styles.primaryButton}
-              variant="primary"
-              size="sm"
-              onClick={CreatePlan}
-              disabled={isLoading}
+          {visibleRecipes.length > 0 && (
+            <Button 
+              className={styles.secondaryButton} 
+              variant="secondary" 
+              size="sm" 
+              onClick={ClearPlan}
             >
-              {isLoading
-                ? "Connecting to server..."
-                : visibleRecipes.length > 0
-                  ? "Recreate your plan"
-                  : "Get your recipes"}
+              Clear plan
             </Button>
-
-            {visibleRecipes.length > 0 && (
-              <Button 
-                className={styles.secondaryButton} 
-                variant="secondary" 
-                size="sm" 
-                onClick={ClearPlan}
-              >
-                Clear plan
-              </Button>
-            )}
-          </div>
-        </Stack>
+          )}
+        </div>
       </Stack>
-    
+    </Stack>
   );
-;
 };

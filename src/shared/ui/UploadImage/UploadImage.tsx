@@ -6,9 +6,10 @@ import styles from "./UploadImage.module.scss";
 import { Typography } from "../Typography";
 import { getStyles } from "@/shared/lib";
 import { Stack } from "../Stack/Stack";
+import { MAX_FILE_SIZE_MB, MAX_FILE_SIZE_BYTES, ACCEPTED_IMAGE_TYPES } from "./lib/constants";
 
 // ==========================================
-// 1. Интерфейсы и типы компонента
+// 1. Interfaces and Types
 // ==========================================
 export interface UploadedImageFile {
   id: string;
@@ -22,13 +23,12 @@ export interface UploadImageProps {
   maxFiles?: number;
   expandWhenEmpty?: boolean;
   great?: boolean;
+  disabled?: boolean; // FIXED: Added support for external disabled state
 }
 
 export interface UploadImageRef {
   focus: () => void;
 }
-
-import { MAX_FILE_SIZE_MB, MAX_FILE_SIZE_BYTES, ACCEPTED_IMAGE_TYPES } from "./lib/constants";
 
 export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
   (
@@ -38,6 +38,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       maxFiles = 10,
       expandWhenEmpty,
       great,
+      disabled: externalDisabled = false, // FIXED: Destructured external prop with default value
     },
     ref,
   ) => {
@@ -45,16 +46,20 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-    const disabled = value.length >= maxFiles;
+    // FIXED: Renamed internal variable and combined both constraints
+    const isLimitReached = value.length >= maxFiles;
+    const isDisabled = externalDisabled || isLimitReached;
 
     useImperativeHandle(ref, () => ({
       focus: () => {
-        fileInputRef.current?.click();
+        if (!isDisabled) {
+          fileInputRef.current?.click();
+        }
       },
     }));
 
     const handleAreaClick = (): void => {
-      if (!disabled) {
+      if (!isDisabled) {
         fileInputRef.current?.click();
       }
     };
@@ -82,7 +87,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-      if (e.target.files && e.target.files.length > 0 && !disabled) {
+      if (e.target.files && e.target.files.length > 0 && !isDisabled) {
         const validFiles = validateFiles(Array.from(e.target.files));
 
         if (validFiles.length > 0 && onChange) {
@@ -97,7 +102,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     };
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>): void => {
-      if (!disabled) {
+      if (!isDisabled) {
         e.preventDefault();
         setDragActive(true);
       }
@@ -109,7 +114,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     };
 
     const handleDrop = (e: DragEvent<HTMLDivElement>): void => {
-      if (!disabled) {
+      if (!isDisabled) {
         e.preventDefault();
         setDragActive(false);
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -123,6 +128,8 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     };
 
     const removeImage = (id: string): void => {
+      if (externalDisabled) return; // FIXED: Prevent image deletion if form is submitting
+
       const fileToRemove = value.find((file) => file.id === id);
       
       if (fileToRemove?.preview) {
@@ -137,7 +144,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
 
     const mode: Record<string, boolean | undefined> = {
       [styles.dragActive]: dragActive,
-      [styles.disabled]: disabled,
+      [styles.disabled]: isDisabled, // FIXED: Using combined disabled logic for styling classes
       [styles.expand]: expandWhenEmpty && value.length === 0,
       [styles.great]: great,
     };
@@ -156,7 +163,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
           onDrop={handleDrop}
         >
           <Stack direction="column" align="center" justify="center" gap={16}>
-            <Download color={disabled ? "#ccc" : "black"} size={30} />
+            <Download color={isDisabled ? "#ccc" : "black"} size={30} />
             <Typography>
               Drag & Drop or{" "}
               <Typography as="span" className={styles.fileButton}>
@@ -173,7 +180,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
               ref={fileInputRef}
               onChange={handleChange}
               hidden
-              disabled={disabled}
+              disabled={isDisabled} // FIXED: Applying combined variable to input
               accept={ACCEPTED_IMAGE_TYPES.join(",")}
             />
           </Stack>
@@ -188,8 +195,12 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
             <img src={preview} alt={id} className={styles.blurBg} />
             <img src={preview} alt={id} className={styles.previewImage} />
             <button
-              onClick={() => removeImage(id)}
+              onClick={(e) => {
+                e.stopPropagation(); // Safe protection from triggering field click events
+                removeImage(id);
+              }}
               className={styles.deleteButton}
+              disabled={externalDisabled} // FIXED: Disabling the delete button during submission
             >
               <Trash2 size={35} color="black" />
             </button>

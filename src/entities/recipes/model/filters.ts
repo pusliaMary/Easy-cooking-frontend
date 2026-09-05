@@ -4,7 +4,7 @@ export const categories = [
   "salad",
   "soup",
   "garnish",
-  "mainCourse",
+  "main Course",
   "dessert",
   "drink",
 ] as const;
