@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { SideBar } from '../Sidebar/ui/Sidebar';
-import { Stack } from '@/shared/ui/Stack';
 import { Toast } from '@/shared/ui/Toast';
 import { getEditFeaturesMap, defaultFeature } from '../../lib/editFeaturesMap';
 import type { TabKey } from '../../lib/tabs';
@@ -16,13 +15,16 @@ export const AdminPanelLayout = () => {
   const featuresMap = getEditFeaturesMap(handleTabClick);
 
   return (
-    <Stack className={style.adminContainer} align="stretch">
+    <div className={style.layoutWrapper}>
+      {/* Сайдбар идет первым флекс-элементом */}
       <SideBar activeFeature={activeFeature} onTabClick={handleTabClick} />
-      <Stack tag="main" align="center" justify="center" className={style.mainContent}>
+      
+      {/* Блок main идет вторым и занимает ВСЁ оставшееся пространство рядом */}
+      <main className={style.mainContent}>
         {featuresMap[activeFeature] || <div>Feature not found</div>}
-      </Stack>
+      </main>
       
       <Toast />
-    </Stack>
+    </div>
   );
 };

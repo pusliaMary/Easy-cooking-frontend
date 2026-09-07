@@ -1,31 +1,40 @@
 @use "@/app/styles/mixin.scss" as *;
 @use "@/app/styles/media-queries.scss" as *;
 
-// Стилизация полей ввода
+// Стилизация полей ввода (инпуты, селекты, текстовые области)
 input[type="text"],
 select,
 textarea {
   width: 100%;
-  padding: 0.85rem 1rem;
+  // Увеличили паддинги, чтобы инпуты стали объемнее под больший шрифт
+  padding: 1.1rem 1.25rem; 
   background-color: var(--white);
   border: 1px solid var(--grey-light);
   border-radius: 6px;
   color: var(--text-color);
   font-family: var(--font-lato);
-  font-size: var(--font-size-xs);
+  
+  // УВЕЛИЧЕНО: Было --font-size-xs (1rem), стало --font-size-s (1.25rem)
+  font-size: var(--font-size-s); 
   transition: border-color 0.3s ease;
 
-  // Интеграция вашей кастомной логики плейсхолдеров
   @include placeholder-support; 
 
   &:focus {
     outline: none;
     border-color: var(--green-dark-color);
   }
+
+  // Адаптив под мобильные устройства
+  @include mobile-xl {
+    // УВЕЛИЧЕНО: На мобильных было совсем мелко, ставим комфортный --mobile-font-size-md (0.8rem)
+    font-size: var(--mobile-font-size-md);
+    padding: 0.85rem 1rem;
+  }
 }
 
 textarea {
-  min-height: 120px;
+  min-height: 140px; // Чуть увеличили базовую высоту для удобства
   resize: vertical;
 }
 
@@ -34,35 +43,51 @@ textarea {
   border-color: var(--error-color) !important;
 }
 
+// Текст ошибки под инпутом
 .error {
   color: var(--error-color);
   font-family: var(--font-lato);
-  font-size: var(--font-size-xxs);
-  margin-top: 0.25rem;
+  // УВЕЛИЧЕНО: Было --font-size-xxs (0.75rem), стало --font-size-xs (1rem)
+  font-size: var(--font-size-xs);
+  margin-top: 0.4rem;
   display: block;
+  font-weight: var(--font-weight-semibold);
+
+  @include mobile-xl {
+    font-size: var(--mobile-font-size-md);
+  }
 }
 
+// Заголовки секций внутри формы (например: Ingredients, Steps)
 h3 {
   font-family: var(--font-poiret-one);
-  font-size: var(--font-size-sm);
+  // УВЕЛИЧЕНО: Было --font-size-sm (1.5rem), стало --font-size-m (1.75rem)
+  font-size: var(--font-size-m);
   color: var(--text-color);
   text-transform: var(--text-uppercase);
+  font-weight: var(--font-weight-semibold);
   border-bottom: 1px solid var(--grey-light);
-  padding-bottom: 0.5rem;
-  margin-top: 1rem;
+  padding-bottom: 0.75rem;
+  margin-top: 2rem;
+  letter-spacing: 0.03em;
+
+  @include mobile-xl {
+    // На мобилках делаем крупнее
+    font-size: var(--font-size-s);
+  }
 }
 
-// Общая обертка для кнопок-иконок удаления строк
+// Общая обертка для кнопок-иконок удаления строк (крестики/корзины)
 button[type="button"]:has(svg) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
+  padding: 0.75rem; // Увеличили область клика
   border-radius: 6px;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: rgba(220, 80, 52, 0.1); // Полупрозрачный терракотовый
+    background-color: rgba(220, 80, 52, 0.1); 
   }
 }
 
@@ -71,36 +96,44 @@ button[type="button"]:has(svg) {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.9rem 1.25rem; // Чуть увеличили кнопку
   color: var(--green-dark-color);
   font-family: var(--font-lato);
-  font-size: var(--font-size-xxs);
+  // УВЕЛИЧЕНО: Было --font-size-xxs (0.75rem), стало --font-size-xs (1rem)
+  font-size: var(--font-size-xs);
   text-transform: var(--text-uppercase);
   font-weight: var(--font-weight-semibold);
   border: 1px dashed var(--green-dark-color);
   border-radius: 6px;
   width: fit-content;
   transition: all 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     background-color: rgba(113, 157, 110, 0.05);
   }
+
+  @include mobile-xl {
+    font-size: var(--mobile-font-size-md);
+  }
 }
 
-// Кнопка сохранения рецепта
+// Кнопка сохранения рецепта (Submit)
 .submitButton {
   width: 100%;
-  padding: 1.25rem;
+  padding: 1.4rem; // Было 1.25rem, сделали кнопку весомее
   background-color: var(--green-light);
   color: var(--white);
   font-family: var(--font-poiret-one);
-  font-size: var(--font-size-sm);
+  // УВЕЛИЧЕНО: Было --font-size-sm (1.5rem), стало --font-size-m (1.75rem)
+  font-size: var(--font-size-m);
   font-weight: var(--font-weight-semibold);
   text-transform: var(--text-uppercase);
   letter-spacing: 0.05em;
   border-radius: 8px;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 
   &:hover:not(:disabled) {
     background-color: var(--green-dark-color);
@@ -109,5 +142,10 @@ button[type="button"]:has(svg) {
   &:disabled {
     background-color: var(--gray-color);
     cursor: not-allowed;
+  }
+
+  @include mobile-xl {
+    font-size: var(--font-size-sm);
+    padding: 1.1rem;
   }
 }
