@@ -20,7 +20,7 @@ export const SideBar = ({ activeFeature, onTabClick }: SideBarProps) => {
   const sidebarTabs = Object.values(adminPanelNavigation);
   const { isOpen, toggle, close } = useToggle();
   const width = useWindowWidth();
-  const isMobile = width <= 820; // Синхронизировано с брейкпоинтом $tablet-m (820px) в ваших медиа-запросах
+  const isMobile = width <= 820;
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -54,23 +54,28 @@ export const SideBar = ({ activeFeature, onTabClick }: SideBarProps) => {
         className={getStyles(style.sidebar, { [style.open]: isOpen }, [])}
       >
         <ul className={style.menu}>
-          {sidebarTabs.map(({ key, label }) => (
-            <li key={key}>
-              <Button
-                onClick={() => {
-                  onTabClick(key);
-                  close();
-                }}
-                className={getStyles(
-                  style.link,
-                  { [style.active]: activeFeature === key },
-                  []
-                )}
-              >
-                {label}
-              </Button>
-            </li>
-          ))}
+          {sidebarTabs.map(({ key, label }) => {
+            // Подсвечиваем Recipes List, даже когда мы внутри экрана добавления рецепта
+            const isActive = activeFeature === key || (key === 'recipesList' && activeFeature === 'createRecipe');
+
+            return (
+              <li key={key}>
+                <Button
+                  onClick={() => {
+                    onTabClick(key as TabKey);
+                    close();
+                  }}
+                  className={getStyles(
+                    style.link,
+                    { [style.active]: isActive },
+                    []
+                  )}
+                >
+                  {label}
+                </Button>
+              </li>
+            );
+          })}
         </ul>
         <Button size="sm" variant="primary" onClick={handleLogout}>
           Sign Out
