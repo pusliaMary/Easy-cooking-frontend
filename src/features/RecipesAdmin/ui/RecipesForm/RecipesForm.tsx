@@ -7,20 +7,57 @@ import { UploadImage } from "@/shared/ui/UploadImage";
 import { categories, proteins } from "@/entities/recipes/model/filters";
 import { recipeZodSchema } from "../../lib/recipeZodSchema";
 import type { RecipeFormInput } from "../../lib/recipeZodSchema";
+import type { Recipe } from "@/entities/recipes";
 
 import styles from "./RecipesForm.module.scss";
 
 interface RecipesFormProps {
-  onSubmit: (data: RecipeFormInput, resetForm: () => void) => void;
+  onSuccess: () => void;
+  isEdit: boolean;
   isSubmitting: boolean;
-  defaultValues?: Partial<RecipeFormInput>;
+  initialData?: Recipe;
+  // ДОБАВЬТЕ ЭТУ СТРОКУ: Форма должна знать, какую функцию вызывать при сабмите
+  onSubmit: (data: RecipeFormInput, resetForm: () => void) => void; 
 }
+
+
+const mapRecipeToFormInput = (recipe: Recipe): Partial<RecipeFormInput> => {
+  return {
+    category: recipe.category,
+    title: recipe.title,
+    containsProtein: recipe.containsProtein,
+    whatProtein: recipe.whatProtein || [],
+    containsFiber: recipe.containsFiber,
+    ingredients: recipe.ingredients?.map((ing) => ({ name: ing.name })) || [],
+    steps: recipe.steps?.map((step) => ({ name: step })) || [],
+    keyWords: recipe.keyWords?.map((word) => ({ name: word })) || [],
+    uploadImage: recipe.imgSource 
+      ? [{ id: "existing-image", preview: recipe.imgSource }] 
+      : [],
+  };
+};
 
 export const RecipesForm = ({
   onSubmit,
   isSubmitting,
-  defaultValues,
+  isEdit,
+  initialData,
 }: RecipesFormProps) => {
+  
+  const defaultValues = isEdit && initialData 
+    ? mapRecipeToFormInput(initialData) 
+    : {
+        title: "",
+        category: undefined,
+        containsProtein: false,
+        whatProtein: [],
+        containsFiber: false,
+        ingredients: [{ name: "" }, { name: "" }, { name: "" }],
+        steps: [{ name: "" }, { name: "" }],
+        keyWords: [{ name: "" }, { name: "" }],
+        uploadImage: [],
+      };
+
   const {
     register,
     control,
@@ -29,18 +66,7 @@ export const RecipesForm = ({
     formState: { errors },
   } = useForm<RecipeFormInput>({
     resolver: zodResolver(recipeZodSchema, undefined, { raw: true }),
-    defaultValues: {
-      title: "",
-      category: undefined,
-      containsProtein: false,
-      whatProtein: [],
-      containsFiber: false,
-      ingredients: [{ name: "" }, { name: "" }, { name: "" }],
-      steps: [{ name: "" }, { name: "" }],
-      keyWords: [{ name: "" }, { name: "" }],
-      uploadImage: [],
-      ...defaultValues,
-    },
+    defaultValues: defaultValues as RecipeFormInput,
   });
 
   const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
@@ -153,11 +179,10 @@ export const RecipesForm = ({
             )}
           </Stack>
         )}
-{/* Ingredients Array Fields */}
+        {/* Ingredients Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Ingredients</Typography>
           
-          {/* General array rules errors (e.g., "Add at least three ingredients") */}
           {errors.ingredients?.message && (
             <Typography as="span" className={styles.error}>
               ⚠️ {errors.ingredients.message}
@@ -180,7 +205,6 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
-              {/* Individual empty or length mismatch hints */}
               {errors.ingredients?.[index]?.name && (
                 <Typography as="span" className={styles.error}>
                   ⚠️ {errors.ingredients[index]?.name?.message}
@@ -203,7 +227,6 @@ export const RecipesForm = ({
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Steps</Typography>
 
-          {/* General array rules errors (e.g., "Add at least two steps") */}
           {errors.steps?.message && (
             <Typography as="span" className={styles.error}>
               ⚠️ {errors.steps.message}
@@ -225,7 +248,6 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
-              {/* Individual step character count hints */}
               {errors.steps?.[index]?.name && (
                 <Typography as="span" className={styles.error}>
                   ⚠️ {errors.steps[index]?.name?.message}
@@ -248,7 +270,6 @@ export const RecipesForm = ({
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Keywords</Typography>
 
-          {/* General array rules errors (e.g., "Add at least two keywords") */}
           {errors.keyWords?.message && (
             <Typography as="span" className={styles.error}>
               ⚠️ {errors.keyWords.message}
@@ -271,7 +292,6 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
-              {/* Individual keyword criteria hints */}
               {errors.keyWords?.[index]?.name && (
                 <Typography as="span" className={styles.error}>
                   ⚠️ {errors.keyWords[index]?.name?.message}
@@ -318,7 +338,7 @@ export const RecipesForm = ({
           disabled={isSubmitting}
           className={styles.submitButton}
         >
-          {isSubmitting ? "Saving..." : "Save Recipe"}
+          {isSubmitting ? "Saving..." : isEdit ? "Update Recipe" : "Save Recipe"}
         </button>
       </Stack>
     </form>

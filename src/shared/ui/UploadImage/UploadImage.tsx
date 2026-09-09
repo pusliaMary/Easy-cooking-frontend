@@ -13,7 +13,7 @@ import { MAX_FILE_SIZE_MB, MAX_FILE_SIZE_BYTES, ACCEPTED_IMAGE_TYPES } from "./l
 // ==========================================
 export interface UploadedImageFile {
   id: string;
-  file: File;
+  file?: File;
   preview: string;
 }
 
@@ -64,7 +64,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       }
     };
 
-    const validateFiles = (selectedFiles: File[]): UploadedImageFile[] => {
+        const validateFiles = (selectedFiles: File[]): UploadedImageFile[] => {
       const validFiles: UploadedImageFile[] = [];
       let error = "";
 
@@ -76,7 +76,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
         } else {
           validFiles.push({
             id: uuidv4(),
-            file,
+            file, // Здесь по-прежнему передается железный File, что полностью валидно
             preview: URL.createObjectURL(file),
           });
         }
@@ -85,7 +85,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       setErrorMessage(error || undefined);
       return validFiles;
     };
-
+    
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
       if (e.target.files && e.target.files.length > 0 && !isDisabled) {
         const validFiles = validateFiles(Array.from(e.target.files));

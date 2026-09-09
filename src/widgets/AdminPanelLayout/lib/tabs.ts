@@ -3,7 +3,7 @@ export interface NavigationItem {
   label: string;
 }
 
-// В этом объекте остаются ТОЛЬКО те табы, которые должны рендериться в сайдбаре
+// В сайдбаре по-прежнему только список
 export const adminPanelNavigation = {
   recipesList: {
     key: 'recipesList',
@@ -11,5 +11,5 @@ export const adminPanelNavigation = {
   },
 } as const satisfies Record<string, NavigationItem>;
 
-// Добавляем 'createRecipe' в объединенный тип, чтобы он был валидным ключом для вкладок
-export type TabKey = keyof typeof adminPanelNavigation | 'createRecipe';
+// Добавляем 'editRecipe' в пул доступных экранов
+export type TabKey = keyof typeof adminPanelNavigation | 'createRecipe' | 'editRecipe';

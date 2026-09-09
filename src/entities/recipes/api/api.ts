@@ -4,22 +4,19 @@ import { buildQueryParams } from "@/shared/api/buildQueryParams";
 import { endpoints } from "@/shared/api/endpoints";
 import type { Recipe, CategoryType, ProteinType } from "../model/types";
 
-const url = endpoints.path.recipes; // This represents "/recipes"
+const url = endpoints.path.recipes; // "/recipes"
 
 export interface GetRecipesParams {
   limit?: number;
   page?: number;
   sort?: string;
-
   title?: string;
   category?: CategoryType;
   containsProtein?: boolean;
   containsFiber?: boolean;
-
   whatProtein?: ProteinType | ProteinType[];
   keyWords?: string | string[];
   "ingredients.name"?: string | string[];
-
   [key: string]:
     | string
     | number
@@ -41,28 +38,38 @@ export const recipesApi = api.injectEndpoints({
       providesTags: ["Recipes"],
     }),
 
-    // FIXED: Changed from `${url}/saveRecipe` to clean root `${url}`
+    // НОВЫЙ ЭНДПОИНТ: Получение одного рецепта по ID для предзаполнения формы
+    getRecipeById: builder.query<Recipe, string>({
+      query: (id) => createApiConfig(`${url}/${id}`, "GET"),
+      providesTags: (_result, _error, id) => [{ type: "Recipes", id }],
+    }),
+
     createRecipe: builder.mutation<Recipe, Partial<Recipe>>({
       query: (newRecipe) =>
         createApiConfig(`${url}`, "POST", newRecipe),
       invalidatesTags: ["Recipes"],
     }),
 
-    // FIXED: ID is now injected into the URL parameters path string safely: `/api/recipes/:id`
     deleteRecipe: builder.mutation<string, { _id: string }>({
       query: ({ _id }) => 
         createApiConfig(`${url}/${_id}`, "DELETE"),
       invalidatesTags: ["Recipes"],
     }),
 
-    // FIXED: ID is pulled into parameters path, while remaining data forms the request body payload
-    editRecipe: builder.mutation<Recipe, Partial<Recipe> & { _id: string }>({
-      query: ({ _id, ...updatedRecipeData }) =>
-        createApiConfig(`${url}/${_id}`, "PUT", updatedRecipeData),
-      invalidatesTags: ["Recipes"],
+        editRecipe: builder.mutation<Recipe, Partial<Recipe> & { _id: string }>({
+      query: ({ _id, ...updatedRecipeData }) => {
+        // Подставляем _id в URL, как прописано в роутере Express: "/recipes/:id"
+        const pathWithId = `${url}/${_id}`; 
+        
+        // Передаем pathWithId аргументом в хелпер, метод PUT и payload в body
+        return createApiConfig(pathWithId, "PUT", updatedRecipeData);
+      },
+      invalidatesTags: (_result, _error, { _id }) => [
+        "Recipes", 
+        { type: "Recipes", id: _id }
+      ],
     }),
 
-    // CORRECT: This path string perfectly matches your backend endpoint definition
     uploadImage: builder.mutation<{ url: string }, FormData>({
       query: (formData) => 
         createApiConfig(`${url}/uploadImage`, "POST", formData),
@@ -70,8 +77,10 @@ export const recipesApi = api.injectEndpoints({
   }),
 });
 
+// Экспортируем новый хук useGetRecipeByIdQuery
 export const {
   useGetRecipesQuery,
+  useGetRecipeByIdQuery, // <-- Добавлен сюда
   useCreateRecipeMutation,
   useDeleteRecipeMutation,
   useEditRecipeMutation,

@@ -6,15 +6,41 @@ import type { TabKey } from './tabs';
 
 export const defaultFeature: TabKey = adminPanelNavigation.recipesList.key;
 
-export const getEditFeaturesMap = (onChangeTab: (key: TabKey) => void): Record<TabKey, ReactNode> => ({
+interface GetEditFeaturesMapParams {
+  onChangeTab: (key: TabKey) => void;
+  onSelectRecipe: (id: string | null) => void;
+  selectedRecipeId: string | null;
+}
+
+export const getEditFeaturesMap = ({
+  onChangeTab,
+  onSelectRecipe,
+  selectedRecipeId,
+}: GetEditFeaturesMapParams): Record<TabKey, ReactNode> => ({
   recipesList: (
     <RecipePreview
-      onAddNewClick={() => onChangeTab('createRecipe')} 
+      onAddNewClick={() => {
+        onSelectRecipe(null); // Сбрасываем id при создании нового
+        onChangeTab('createRecipe');
+      }} 
+      onEditClick={(id) => {
+        onSelectRecipe(id); // Запоминаем id рецепта для редактирования
+        onChangeTab('editRecipe');
+      }}
     />
   ),
   createRecipe: (
     <RecipesAdmin 
       onSuccess={() => onChangeTab(adminPanelNavigation.recipesList.key)} 
+    />
+  ),
+  editRecipe: (
+    <RecipesAdmin 
+      recipeId={selectedRecipeId} // Передаем id в форму (компонент должен уметь принимать recipeId)
+      onSuccess={() => {
+        onSelectRecipe(null);
+        onChangeTab(adminPanelNavigation.recipesList.key);
+      }} 
     />
   ),
 });

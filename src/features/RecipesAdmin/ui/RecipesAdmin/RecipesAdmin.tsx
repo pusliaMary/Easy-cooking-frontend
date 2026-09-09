@@ -1,92 +1,101 @@
+import { 
+  useGetRecipeByIdQuery, 
+  useCreateRecipeMutation, 
+  useEditRecipeMutation 
+} from '@/entities/recipes/api/api';
 import { RecipesForm } from '../RecipesForm/RecipesForm';
-import { useCreateRecipeMutation, useUploadImageMutation } from "@/entities/recipes/api/api"; 
-import type { RecipeFormInput } from "../../lib/recipeZodSchema";
+import type { RecipeFormInput } from '../../lib/recipeZodSchema';
+import type { Recipe } from '@/entities/recipes'; // Импортируем интерфейс Recipe из ваших типов
+import style from './RecipesAdmin.module.scss';
 
-// Явная типизация для структуры ошибки, возвращаемой с вашего Express-бэкенда
-interface BackendErrorData {
-  message?: string;
+export interface RecipesAdminProps {
+  onSuccess: () => void;
+  recipeId?: string | null;
 }
 
-interface RTKQuerySerializedError {
-  status: number;
-  data?: BackendErrorData;
-}
+export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
+  const isEditMode = Boolean(recipeId);
 
-interface RecipesAdminProps {
-  onSuccess?: () => void;
-}
+  // 1. Получение данных рецепта (пропускаем, если создание)
+  const { data: recipeData, isLoading, isError } = useGetRecipeByIdQuery(
+    recipeId ?? '',
+    { skip: !isEditMode }
+  );
 
-export const RecipesAdmin = ({ onSuccess }: RecipesAdminProps) => {
-  // Указываем строгие типы для мутаций вместо дефолтных дженериков
-  const [uploadImage, { isLoading: isImageUploading }] = useUploadImageMutation();
-  const [createRecipe, { isLoading: isRecipeSaving }] = useCreateRecipeMutation();
+  // 2. Мутации для сохранения
+  const [createRecipe, { isLoading: isCreating }] = useCreateRecipeMutation();
+  const [editRecipe, { isLoading: isEditing }] = useEditRecipeMutation();
 
-  const handleFormSubmit = async (data: RecipeFormInput, resetForm?: () => void) => {
+  const isSubmitting = isCreating || isEditing;
+
+  // 3. Функция отправки формы с полной трансформацией данных
+  const handleSubmitForm = async (data: RecipeFormInput, resetForm: () => void) => {
     try {
-      const targetFile = data.uploadImage?.[0]?.file;
-      if (!targetFile) {
-        alert("Image file is missing!");
-        return;
-      }
+      // Извлекаем и трансформируем массивы объектов { name: string } в плоские массивы строк string[]
+      const stepsArray: string[] = data.steps?.map((step) => step.name).filter(Boolean) || [];
+      const keywordsArray: string[] = data.keyWords?.map((word) => word.name).filter(Boolean) || [];
+      const imageString: string = data.uploadImage?.[0]?.preview || "";
 
-      // 1. Подготовка бинарных данных изображения для FormData
-      const fileData = new FormData();
-      fileData.append("image", targetFile);
-
-      // 2. Отправка изображения на сервер
-      const uploadResult = await uploadImage(fileData).unwrap();
-      const imgSourceUrl = uploadResult?.url;
-
-      if (!imgSourceUrl) {
-        throw new Error("The server did not return a valid image URL.");
-      }
-
-      // 3. Формирование плоской структуры данных для бэкенда
-      const newRecipePayload = {
+      // Собираем чистый объект, полностью соответствующий интерфейсу Recipe
+      const baseRecipeData = {
         title: data.title,
         category: data.category,
         containsProtein: data.containsProtein,
-        whatProtein: data.containsProtein ? data.whatProtein : [],
         containsFiber: data.containsFiber,
-        ingredients: data.ingredients,
-        steps: data.steps.map((step) => step.name.trim()),
-        keyWords: data.keyWords.map((keyword) => keyword.name.trim()),
-        imgSource: imgSourceUrl,
+        whatProtein: data.containsProtein ? data.whatProtein : [],
+        ingredients: data.ingredients || [], // Оставляем как есть, так как бэкенд ждет { name: string }[]
+        steps: stepsArray,         // Передаем чистый string[]
+        keyWords: keywordsArray,   // Передаем чистый string[]
+        imgSource: imageString,    // Передаем чистый string
       };
 
-      // 4. Отправка метаданных рецепта в базу данных
-      await createRecipe(newRecipePayload).unwrap();
-      
-      alert("Recipe created successfully!");
-      
-      if (resetForm) resetForm();
-      if (onSuccess) onSuccess();
-
-    } catch (error: unknown) { // FIXED: Изменено с any на unknown для безопасности типов
-      console.error("Failed to process recipe submission:", error);
-      
-      let serverMessage = "An unexpected error occurred.";
-
-      // Безопасное приведение типов (Type Guard) для извлечения ошибки из RTK Query / Axios
-      if (error && typeof error === 'object' && 'data' in error) {
-        const rtkError = error as RTKQuerySerializedError;
-        if (rtkError.data?.message) {
-          serverMessage = rtkError.data.message;
-        }
-      } else if (error instanceof Error) {
-        // Обычные клиентские ошибки (например, throw new Error)
-        serverMessage = error.message;
+      if (isEditMode && recipeId) {
+        // Явно типизируем объект для мутации обновления: Partial<Recipe> & { _id: string }
+        const updatePayload: Partial<Recipe> & { _id: string } = {
+          _id: recipeId,
+          ...baseRecipeData,
+        };
+        await editRecipe(updatePayload).unwrap();
+      } else {
+        // Явно типизируем объект для мутации создания: Partial<Recipe>
+        const createPayload: Partial<Recipe> = baseRecipeData;
+        await createRecipe(createPayload).unwrap();
       }
       
-      alert(`Submission failed: ${serverMessage}`);
+      resetForm(); 
+      onSuccess(); 
+    } catch (error) {
+      console.error('Failed to save recipe:', error);
     }
   };
 
-  const isSubmitting = isImageUploading || isRecipeSaving;
+  if (isEditMode && isLoading) {
+    return (
+      <div className={style.adminWrapper}>
+        <div>Loading recipe data for editing...</div>
+      </div>
+    );
+  }
+
+  if (isEditMode && isError) {
+    return (
+      <div className={style.adminWrapper}>
+        <div style={{ color: 'var(--error-color)' }}>
+          Failed to load recipe data. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "24px", maxWidth: "600px", margin: "0 auto", width: "100%" }}>
-      <RecipesForm onSubmit={handleFormSubmit} isSubmitting={isSubmitting} />
+    <div className={style.adminWrapper}>
+      <RecipesForm 
+        onSuccess={onSuccess}
+        isEdit={isEditMode}
+        initialData={recipeData}
+        onSubmit={handleSubmitForm} 
+        isSubmitting={isSubmitting} 
+      />
     </div>
   );
 };

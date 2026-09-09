@@ -1,7 +1,7 @@
 import { useGetRecipesQuery, useDeleteRecipeMutation } from "@/entities/recipes";
 import { Stack } from "@/shared/ui/Stack/Stack";
 import { Typography } from "@/shared/ui/Typography";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Pencil } from "lucide-react"; // Добавили Pencil
 import { getStyles } from "@/shared/lib";
 import styles from "./RecipePreview.module.scss";
 
@@ -12,9 +12,10 @@ interface RTKQuerySerializedError {
 
 interface RecipePreviewListProps {
   onAddNewClick: () => void;
+  onEditClick: (id: string) => void; // Добавили проп для редактирования
 }
 
-export const RecipePreview = ({ onAddNewClick }: RecipePreviewListProps) => {
+export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListProps) => {
   const { data: recipes = [], isLoading, isError } = useGetRecipesQuery({});
   const [deleteRecipe] = useDeleteRecipeMutation();
 
@@ -35,16 +36,19 @@ export const RecipePreview = ({ onAddNewClick }: RecipePreviewListProps) => {
     }
   };
 
+  const handleEdit = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation(); // Останавливаем всплытие события, чтобы не кликалась вся карточка
+    onEditClick(id);
+  };
+
   return (
-    <Stack direction="column" gap={24} align="stretch" className={styles.container} max>
-      {/* Поправлено: используем кастомные пропсы variant и font */}
+    <Stack direction="column" gap={24} align="stretch" wrap className={styles.container} max>
       <Typography variant="h1" font="poiretOne" className={styles.title}>
         Recipes Workspace
       </Typography>
 
       {isLoading && <Typography variant="body16">Loading recipes database...</Typography>}
       
-      {/* Поправлено: убран инлайн-стиль цвета ошибки */}
       {isError && (
         <Typography variant="body16" className={styles.errorMessage}>
           Error loading recipes.
@@ -52,7 +56,6 @@ export const RecipePreview = ({ onAddNewClick }: RecipePreviewListProps) => {
       )}
 
       {!isLoading && !isError && (
-        /* ИСПРАВЛЕНО: Теперь карточки лежат в Stack с direction="row" и wrap={true} */
         <Stack direction="row" wrap gap={24} align="start" className={styles.recipesGrid} max>
           
           {/* КАРТОЧКА №1: ДОБАВИТЬ РЕЦЕПТ */}
@@ -68,7 +71,6 @@ export const RecipePreview = ({ onAddNewClick }: RecipePreviewListProps) => {
                 </div>
               </Stack>
             </div>
-            {/* Поправлено: используем валидный variant="h3" */}
             <Typography variant="h3" className={styles.h3}>
               Add New Recipe
             </Typography>
@@ -89,14 +91,26 @@ export const RecipePreview = ({ onAddNewClick }: RecipePreviewListProps) => {
                 />
                 <div className={styles.imageOverlay} />
                 
-                <button 
-                  type="button" 
-                  className={styles.deleteBtn}
-                  onClick={(e) => recipe._id && handleDelete(e, recipe._id)}
-                  title="Delete Recipe"
-                >
-                  <Trash2 size={16} color="white" />
-                </button>
+                {/* ИСПРАВЛЕНО: Группируем кнопки управления в один ряд */}
+                <div className={styles.actionsWrapper}>
+                  <button 
+                    type="button" 
+                    className={styles.editBtn}
+                    onClick={(e) => recipe._id && handleEdit(e, recipe._id)}
+                    title="Edit Recipe"
+                  >
+                    <Pencil size={16} color="white" />
+                  </button>
+
+                  <button 
+                    type="button" 
+                    className={styles.deleteBtn}
+                    onClick={(e) => recipe._id && handleDelete(e, recipe._id)}
+                    title="Delete Recipe"
+                  >
+                    <Trash2 size={16} color="white" />
+                  </button>
+                </div>
               </div>
               
               <Typography variant="h3" className={styles.h3}>

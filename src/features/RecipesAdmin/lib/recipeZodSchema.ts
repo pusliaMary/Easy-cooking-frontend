@@ -21,7 +21,7 @@ export const recipeZodSchema = z
       .max(80, "Title must be less than 80 characters")
       .regex(titleRegex, "Title contains invalid characters"),
 
-   containsProtein: z.boolean({
+    containsProtein: z.boolean({
       message: "Protein status is required",
     }),
 
@@ -61,7 +61,7 @@ export const recipeZodSchema = z
           name: z
             .string()
             .trim()
-            .min(15, "Keyword's name cannot be empty")
+            .min(3, "Keyword's name cannot be empty")
             .max(500),
         }),
       )
@@ -72,6 +72,7 @@ export const recipeZodSchema = z
         z.object({
           id: z.string(),
           preview: z.string(),
+          // ИСПРАВЛЕНО: Сделали .optional(), чтобы старая картинка по ссылке проходила валидацию
           file: z
             .instanceof(File)
             .refine(
@@ -81,7 +82,8 @@ export const recipeZodSchema = z
             .refine(
               (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
               "Unsupported format",
-            ),
+            )
+            .optional(), 
         }),
       )
       .min(1, "Image is required")
