@@ -119,7 +119,7 @@ export const CookingPlan = () => {
         )}
 
         {!isFetchLoading && !isFetchError && visibleRecipes.length > 0 && (
-          <Typography variant="h1" className={styles.planTitle}>Here is your plan</Typography>
+          <Typography variant="h2" className={styles.planTitle}>Here is your plan</Typography>
         )}
 
         {!isFetchLoading && !isFetchError && visibleRecipes.map((group: MealGroup) => (

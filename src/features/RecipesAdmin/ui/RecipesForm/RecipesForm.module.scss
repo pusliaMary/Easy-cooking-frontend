@@ -1,20 +1,17 @@
 @use "@/app/styles/mixin.scss" as *;
 @use "@/app/styles/media-queries.scss" as *;
 
-// Стилизация полей ввода (инпуты, селекты, текстовые области)
 input[type="text"],
 select,
 textarea {
   width: 100%;
-  // Увеличили паддинги, чтобы инпуты стали объемнее под больший шрифт
+  
   padding: 1.1rem 1.25rem; 
   background-color: var(--white);
   border: 1px solid var(--grey-light);
   border-radius: 6px;
   color: var(--text-color);
   font-family: var(--font-lato);
-  
-  // УВЕЛИЧЕНО: Было --font-size-xs (1rem), стало --font-size-s (1.25rem)
   font-size: var(--font-size-s); 
   transition: border-color 0.3s ease;
 
@@ -25,30 +22,32 @@ textarea {
     border-color: var(--green-dark-color);
   }
 
-  // Адаптив под мобильные устройства
   @include mobile-xl {
-    // УВЕЛИЧЕНО: На мобильных было совсем мелко, ставим комфортный --mobile-font-size-md (0.8rem)
     font-size: var(--mobile-font-size-md);
+    padding: 0.85rem 1rem;
+  }
+
+  @include desktop-m {
+    font-size: var(--font-size-s);
     padding: 0.85rem 1rem;
   }
 }
 
 textarea {
-  min-height: 140px; // Чуть увеличили базовую высоту для удобства
+  min-height: 140px;
   resize: vertical;
 }
 
-// Подсветка ошибок инпутов
+
 .inputError {
   border-color: var(--error-color) !important;
 }
 
-// Текст ошибки под инпутом
+
 .error {
   color: var(--error-color);
   font-family: var(--font-lato);
-  // УВЕЛИЧЕНО: Было --font-size-xxs (0.75rem), стало --font-size-xs (1rem)
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-m);
   margin-top: 0.4rem;
   display: block;
   font-weight: var(--font-weight-semibold);
@@ -58,11 +57,9 @@ textarea {
   }
 }
 
-// Заголовки секций внутри формы (например: Ingredients, Steps)
 h3 {
   font-family: var(--font-poiret-one);
-  // УВЕЛИЧЕНО: Было --font-size-sm (1.5rem), стало --font-size-m (1.75rem)
-  font-size: var(--font-size-m);
+    font-size: var(--font-size-l);
   color: var(--text-color);
   text-transform: var(--text-uppercase);
   font-weight: var(--font-weight-semibold);
@@ -72,12 +69,10 @@ h3 {
   letter-spacing: 0.03em;
 
   @include mobile-xl {
-    // На мобилках делаем крупнее
     font-size: var(--font-size-s);
   }
 }
 
-// Общая обертка для кнопок-иконок удаления строк (крестики/корзины)
 button[type="button"]:has(svg) {
   display: flex;
   align-items: center;
@@ -90,16 +85,13 @@ button[type="button"]:has(svg) {
     background-color: rgba(220, 80, 52, 0.1); 
   }
 }
-
-// Кнопка добавления нового элемента ("Add Ingredient"...)
 .addButton {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.9rem 1.25rem; // Чуть увеличили кнопку
+  padding: 0.9rem 1.25rem;
   color: var(--green-dark-color);
   font-family: var(--font-lato);
-  // УВЕЛИЧЕНО: Было --font-size-xxs (0.75rem), стало --font-size-xs (1rem)
   font-size: var(--font-size-xs);
   text-transform: var(--text-uppercase);
   font-weight: var(--font-weight-semibold);
@@ -118,14 +110,12 @@ button[type="button"]:has(svg) {
   }
 }
 
-// Кнопка сохранения рецепта (Submit)
 .submitButton {
   width: 100%;
-  padding: 1.4rem; // Было 1.25rem, сделали кнопку весомее
+  padding: 1.4rem;
   background-color: var(--green-light);
   color: var(--white);
   font-family: var(--font-poiret-one);
-  // УВЕЛИЧЕНО: Было --font-size-sm (1.5rem), стало --font-size-m (1.75rem)
   font-size: var(--font-size-m);
   font-weight: var(--font-weight-semibold);
   text-transform: var(--text-uppercase);

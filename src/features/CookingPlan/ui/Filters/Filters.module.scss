@@ -3,15 +3,17 @@
 
 .filterSection {
   @include section-style;
+  flex-direction: column;
 
   @include mobile-l {
+    flex-direction: row;
+
     .imageContainer {
       grid-template-columns: repeat(3, 1fr);
     }
   }
   min-height: 200px;
   height: auto;
-  position: relative;
 }
 
 .filtersImgBtn {
@@ -21,12 +23,12 @@
   display: flex;
   position: relative;
   scrollbar-width: thin;
-  padding-bottom: 8px;
+  padding-bottom: 30px;
 }
 
 %button {
   display: inline-block;
-  padding: 14px 28px;
+  padding: 14px 14px;
   font-weight: bold;
   text-align: center;
   text-decoration: none;
@@ -46,19 +48,51 @@
 .primaryButton {
   @extend %button;
   background-color: var(--green-light);
-  width: fit-content;
-  color: var(--grey-dark);
+  color: var(--grey);
+
+  width: 100% !important;
+  padding: 14px 20px;
   position: relative;
   z-index: 10;
+  align-self: center;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
 
-  /* АДАПТИВ: На экранах < 500px кнопка создания плана растягивается */
-  @media (max-width: 500px) {
-    width: 100% !important;
-    padding: 14px 20px;
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 20px rgba(220, 80, 52, 0.22),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: var(--white);
+    transform: translateY(0);
+    box-shadow:
+      0 4px 12px rgba(220, 80, 52, 0.15),
+      0 2px 4px rgba(0, 0, 0, 0.06);
+    border: 2px solid var(--terracot);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(220, 80, 52, 0.12); // Тень почти исчезает
+  }
+
+  @include mobile-l {
+    font-size: 24px;
+  }
+
+  @include mobile-xl {
+    width: fit-content !important;
   }
 }
 
-/* Добавлен класс для кнопки Clear plan */
 .secondaryButton {
   @extend %button;
   background-color: transparent;
@@ -66,7 +100,6 @@
   color: var(--gray-color);
   box-shadow: none;
 
-  /* АДАПТИВ: На экранах < 500px кнопка очистки растягивается */
   @media (max-width: 500px) {
     width: 100% !important;
     padding: 14px 20px;
@@ -77,18 +110,26 @@
   @extend %button;
   color: var(--white);
   background-color: var(--orange-color);
+  font-size: var(--font-size-s);
+  margin-bottom: 10px;
+
+  
 }
 
 .filterBaseButton {
   @extend %button;
   background-color: var(--white);
   color: var(--orange-color);
+  font-size: var(--font-size-xs);
+
+@include mobile-l {
+    font-size: var(--font-size-s);
+  }
 }
 
-/* Исправлен селектор скроллбара (добавлена пропущенная буква 's') */
 .filtersImgBtn::-webkit-scrollbar {
   border-radius: 5px;
-  height: 6px; /* Сделали более аккуратным на мобилках */
+  height: 6px;
   display: block;
 }
 
@@ -97,14 +138,12 @@
   border-radius: 5px;
 }
 
-/* For Firefox */
 @supports (-moz-appearance: meterbar) {
   .filtersImgBtn {
     scrollbar-width: thin;
   }
 }
 
-/* Глобальное поведение при активном нажатии */
 .mealButton:active,
 .filterBaseButton:active {
   background-color: var(--terracot);
@@ -114,7 +153,6 @@
   color: var(--white);
 }
 
-/* Стили для выбранных (активных) элементов */
 .mealButton.active,
 .filterBaseButton.active {
   background-color: var(--terracot) !important;
@@ -125,13 +163,12 @@
   transform: translateY(2px);
 }
 
-/* АДАПТИВ: Контейнер для нижних кнопок управления */
 .actionButtonsGroup {
   width: 100%;
   display: flex;
   gap: 16px;
+  justify-content: center;
 
-  /* На мобилках выстраиваем кнопки одну под другой */
   @media (max-width: 500px) {
     flex-direction: column !important;
     gap: 12px;
@@ -140,7 +177,7 @@
 
 .mainTitle {
   font-family: var(--font-poiret-one);
-  font-size: var(--font-size-l); /* Крупный красивый размер на десктопе */
+  font-size: var(--font-size-l);
   text-transform: var(--text-uppercase);
   color: var(--text-color);
   font-weight: 700;
@@ -149,7 +186,6 @@
   width: 100%;
   margin: 0 0 12px 0;
 
-  /* АДАПТИВ: Плавное уменьшение на планшетах и мобилках (меньше 820px) */
   @include tablet-m {
     font-size: 1.8rem;
     letter-spacing: 1px;

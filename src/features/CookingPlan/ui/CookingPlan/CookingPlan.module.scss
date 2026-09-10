@@ -4,7 +4,6 @@
 .cookingPlanWrapper {
   @include section-style;
   background-color: var(--background-color);
-  min-height: 100vh;
   padding-bottom: 5rem;
 }
 
@@ -18,30 +17,36 @@
 
 .planTitle {
   font-family: var(--font-poiret-one);
-  font-size: var(--font-size-l);
+  font-size: var(--font-size-m);
   text-transform: var(--text-uppercase);
   color: var(--text-color);
   font-weight: 700;
   letter-spacing: 2px;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
+
+  @include mobile-l {
+    margin-bottom: 2rem;
+    font-size: var(--font-size-l);
+  }
 }
 
-/* Замените текущий класс .mealLabel в CookingPlan.module.scss на этот: */
 .mealLabel {
   font-family: var(--font-poiret-one);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-s);
   text-transform: var(--text-uppercase);
   color: var(--terracot);
   font-weight: 600;
   letter-spacing: 1px;
   border-bottom: 2px dashed var(--orange-color);
-  padding-bottom: 0.5rem;
-  
-  /* ИСПРАВЛЕНО: Линия теперь идет строго по ширине текста и центрируется */
   width: fit-content; 
-  margin: 2rem auto 0 auto; 
   text-align: center;
+
+  @include mobile-l {
+    margin: 2rem auto 0 auto; 
+    font-size: var(--font-size-l);
+    padding-bottom: 0.5rem;
+  }
 }
 
 

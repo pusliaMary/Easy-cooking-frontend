@@ -205,6 +205,7 @@ export const Filters = ({
           justify="between"
           align="start"
           className={getStyles(styles.filtersImgBtn, {}, [])}
+          gap={8}
         >
           {filteredRecipeBase.map(({ label, value }: FilterItem) => {
             const isSelected = chosenBases.includes(value);

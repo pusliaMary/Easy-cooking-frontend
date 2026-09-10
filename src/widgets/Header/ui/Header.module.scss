@@ -5,36 +5,30 @@
 .header {
   @include section-style;
 
-  padding: 55px 0px;
-  justify-self: center;
-
-   text-transform: var(--text-uppercase);
-    font-size: 36px;
-
+  padding: 20px 10px;
+    
   @include mobile-xl {
     padding: 20px 40px;
   }
 
   @include desktop-m {
     box-shadow: none;
+    padding: 55px 0px;
+
   }
 
 }
 
 .mobileTitle {
     text-transform: var(--text-uppercase);
-    font-size: 36px;
+    font-size: var(--font-size-s);
     color: var(--green-dark-color);
     
-    span {
-        color: var(--red-color);
-    }
+    
 
     @include mobile-l {
         font-size: 3rem;
     }
 
-    @include tablet-m {
-        display: none;
-    }
+    
 }

@@ -77,7 +77,7 @@ export const CookingSteps = ({
 
   return (
     <Stack direction="column" align="start" gap={24} className={styles.cookingSection}>
-      <Typography variant="h2">Cooking plan step-by-step</Typography>
+      <Typography variant="h2" className={styles.stepsLabel}>Cooking plan step-by-step</Typography>
       
       <div className={styles.recipesContainer}>
         {recipesWithSteps.map((recipe) => (

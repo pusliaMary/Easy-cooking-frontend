@@ -55,7 +55,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
 
     return (
         <Stack direction="column" gap={8} max={max}>
-            {/* ИСПРАВЛЕНО: label теперь отдельный элемент, инпут не вложен в него */}
             {label && (
                 <label className={styles.label} htmlFor={id}>
                     {label}
@@ -67,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
                 id={id}
                 ref={setRefs}
                 disabled={disabled}
-                aria-label={ariaLabel || label} // Хорошая практика для скринридеров
+                aria-label={ariaLabel || label}
                 {...register}
                 {...otherProps}
             />

@@ -17,6 +17,10 @@
   }
 }
 
+.ingredientsLabel {
+  font-size: var(--font-size-s);
+}
+
 .ingredientsList {
   display: grid;
   grid-template-columns: minmax(0, 1fr); /* Защита от распирания контентом */

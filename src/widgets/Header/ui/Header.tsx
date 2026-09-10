@@ -9,6 +9,9 @@ export const Header = () => {
             align="center"
             className={styles.header}
             id="header"
+            justify="center"
+            max
+            
         >
         <Typography variant="h1" className={styles.mobileTitle}>
             What do you want to eat?

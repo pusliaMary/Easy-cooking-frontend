@@ -96,7 +96,7 @@ export const RecipesForm = ({
         
         {/* Title Field */}
         <Stack direction="column" gap={8} align="stretch">
-          <Typography as="label">Recipe Title</Typography>
+          <Typography as="h3">Recipe Title</Typography>
           <input
             type="text"
             {...register("title")}
@@ -113,7 +113,7 @@ export const RecipesForm = ({
 
         {/* Category Field */}
         <Stack direction="column" gap={8} align="stretch">
-          <Typography as="label">Category</Typography>
+          <Typography as="h3" variant='h3'>Category</Typography>
           <select
             {...register("category")}
             className={errors.category ? styles.inputError : ""}
@@ -312,7 +312,7 @@ export const RecipesForm = ({
 
         {/* Upload Image Field */}
         <Stack direction="column" gap={8} align="stretch">
-          <Typography as="label">Recipe Image</Typography>
+          <Typography as="h3">Recipe Image</Typography>
           <Controller
             name="uploadImage"
             control={control}

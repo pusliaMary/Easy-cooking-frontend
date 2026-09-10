@@ -20,7 +20,6 @@ export const Ingredients = ({ isLoading, isError, visibleRecipes, setPurchasedIt
     );
   };
 
-  // Оптимизация через useMemo — вычисляется только при изменении visibleRecipes
   const uniqueIngredients = useMemo(() => {
     const allIngredientNames = visibleRecipes.flatMap((group) =>
       group.recipes.flatMap((recipe) =>
@@ -34,7 +33,7 @@ export const Ingredients = ({ isLoading, isError, visibleRecipes, setPurchasedIt
 
   return (
     <Stack direction="column" align="start" gap={16} max className={styles.ingredientsSection}>
-      <Typography variant="h2">Shopping list</Typography>
+      <Typography variant="h2" className={styles.ingredientsLabel}>Shopping list</Typography>
       <ul className={styles.ingredientsList}>
         {uniqueIngredients.map((ingredientName) => {
           const isChecked = purchasedItems?.includes(ingredientName);
