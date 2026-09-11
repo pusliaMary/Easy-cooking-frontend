@@ -1,2 +1,3 @@
-export * from "./Toast";
-export { toast } from 'react-toastify';
+export { Toast } from './Toast';
+export { toast } from './model';
+export type { CustomToastOptions } from './model';

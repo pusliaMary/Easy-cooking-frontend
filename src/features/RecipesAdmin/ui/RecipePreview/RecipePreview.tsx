@@ -1,8 +1,9 @@
 import { useGetRecipesQuery, useDeleteRecipeMutation } from "@/entities/recipes";
 import { Stack } from "@/shared/ui/Stack/Stack";
 import { Typography } from "@/shared/ui/Typography";
-import { Plus, Trash2, Pencil } from "lucide-react"; // Добавили Pencil
+import { Plus, Trash2, Pencil } from "lucide-react"; 
 import { getStyles } from "@/shared/lib";
+import { toast } from "@/shared/ui/Toast";
 import styles from "./RecipePreview.module.scss";
 
 interface RTKQuerySerializedError {
@@ -12,32 +13,40 @@ interface RTKQuerySerializedError {
 
 interface RecipePreviewListProps {
   onAddNewClick: () => void;
-  onEditClick: (id: string) => void; // Добавили проп для редактирования
+  onEditClick: (id: string) => void; 
 }
 
 export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListProps) => {
   const { data: recipes = [], isLoading, isError } = useGetRecipesQuery({});
   const [deleteRecipe] = useDeleteRecipeMutation();
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
+  // Функция удаления теперь принимает title рецепта для персонализации уведомлений
+  const handleDelete = async (e: React.MouseEvent, id: string, title?: string) => {
     e.stopPropagation(); 
-    if (window.confirm("Are you sure you want to delete this recipe?")) {
+    
+    if (window.confirm(`Are you sure you want to delete "${title || 'this recipe'}"?`)) {
       try {
         await deleteRecipe({ _id: id }).unwrap();
+        
+        // Информативный тоаст с названием удаленного рецепта
+        toast.success(`Recipe "${title || 'Unknown'}" deleted successfully.`);
       } catch (err: unknown) {
         console.error("Delete failed:", err);
         let msg = "Failed to delete recipe.";
+        
         if (err && typeof err === 'object' && 'data' in err) {
           const rtkError = err as RTKQuerySerializedError;
           if (rtkError.data?.message) msg = rtkError.data.message;
         }
-        alert(msg);
+        
+        // Тоаст ошибки вместо нативного alert
+        toast.error(msg);
       }
     }
   };
 
   const handleEdit = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation(); // Останавливаем всплытие события, чтобы не кликалась вся карточка
+    e.stopPropagation(); 
     onEditClick(id);
   };
 
@@ -91,7 +100,6 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
                 />
                 <div className={styles.imageOverlay} />
                 
-                {/* ИСПРАВЛЕНО: Группируем кнопки управления в один ряд */}
                 <div className={styles.actionsWrapper}>
                   <button 
                     type="button" 
@@ -105,7 +113,7 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
                   <button 
                     type="button" 
                     className={styles.deleteBtn}
-                    onClick={(e) => recipe._id && handleDelete(e, recipe._id)}
+                    onClick={(e) => recipe._id && handleDelete(e, recipe._id, recipe.title)}
                     title="Delete Recipe"
                   >
                     <Trash2 size={16} color="white" />

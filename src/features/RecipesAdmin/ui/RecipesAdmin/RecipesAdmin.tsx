@@ -1,12 +1,21 @@
 import { 
   useGetRecipeByIdQuery, 
   useCreateRecipeMutation, 
-  useEditRecipeMutation 
+  useEditRecipeMutation
 } from '@/entities/recipes/api/api';
 import { RecipesForm } from '../RecipesForm/RecipesForm';
 import type { RecipeFormInput } from '../../lib/recipeZodSchema';
 import type { Recipe } from '@/entities/recipes'; // Импортируем интерфейс Recipe из ваших типов
 import style from './RecipesAdmin.module.scss';
+import { toast } from '@/shared/ui/Toast';
+
+interface RTKQueryError {
+  status?: number;
+  data?: {
+    message?: string;
+  };
+  message?: string;
+}
 
 export interface RecipesAdminProps {
   onSuccess: () => void;
@@ -16,22 +25,20 @@ export interface RecipesAdminProps {
 export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
   const isEditMode = Boolean(recipeId);
 
-  // 1. Получение данных рецепта (пропускаем, если создание)
   const { data: recipeData, isLoading, isError } = useGetRecipeByIdQuery(
     recipeId ?? '',
     { skip: !isEditMode }
   );
 
-  // 2. Мутации для сохранения
   const [createRecipe, { isLoading: isCreating }] = useCreateRecipeMutation();
   const [editRecipe, { isLoading: isEditing }] = useEditRecipeMutation();
 
   const isSubmitting = isCreating || isEditing;
 
-  // 3. Функция отправки формы с полной трансформацией данных
+  
   const handleSubmitForm = async (data: RecipeFormInput, resetForm: () => void) => {
     try {
-      // Извлекаем и трансформируем массивы объектов { name: string } в плоские массивы строк string[]
+      
       const stepsArray: string[] = data.steps?.map((step) => step.name).filter(Boolean) || [];
       const keywordsArray: string[] = data.keyWords?.map((word) => word.name).filter(Boolean) || [];
       const imageString: string = data.uploadImage?.[0]?.preview || "";
@@ -56,16 +63,27 @@ export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
           ...baseRecipeData,
         };
         await editRecipe(updatePayload).unwrap();
+        toast.success(`Recipe "${data.title}" updated successfully.`);
       } else {
         // Явно типизируем объект для мутации создания: Partial<Recipe>
         const createPayload: Partial<Recipe> = baseRecipeData;
         await createRecipe(createPayload).unwrap();
+        toast.success(`Recipe "${data.title}" created successfully!`);
       }
       
       resetForm(); 
       onSuccess(); 
     } catch (error) {
       console.error('Failed to save recipe:', error);
+      const rtkError = error as RTKQueryError;
+      const backendMessage = rtkError.data?.message || rtkError.message;
+      
+      // Показываем ошибку пользователю
+      toast.error(
+        backendMessage 
+          ? `Error: ${backendMessage}` 
+          : 'Failed to save recipe. Please check your connection or data.'
+      );
     }
   };
 
