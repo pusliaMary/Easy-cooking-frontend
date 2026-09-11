@@ -55,7 +55,6 @@ export const SideBar = ({ activeFeature, onTabClick }: SideBarProps) => {
       >
         <ul className={style.menu}>
           {sidebarTabs.map(({ key, label }) => {
-            // Подсвечиваем Recipes List, даже когда мы внутри экрана добавления рецепта
             const isActive = activeFeature === key || (key === 'recipesList' && activeFeature === 'createRecipe');
 
             return (

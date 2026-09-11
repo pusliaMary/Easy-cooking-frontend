@@ -3,7 +3,7 @@
 .authContainer {
     height: 100vh;
     width: 100vw;
-    background-color: var(--background-color); // Ваш теплый фон страницы
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,16 +23,15 @@
     }
 }
     
-/* Неоморфная плашка формы в цвет вашего общего фона */
 .mainContent {
-    background-color: var(--background-color); // Идеальное слияние с фоном
-    padding: 3.5rem 2.5rem;
+    background-color: var(--background-color);
+    padding: 3.5rem 3.5rem;
     width: 100%;
     border-radius: 40px; 
     
-    // Мягкие объемные тени, рассчитанные специально под ваш цвет #e4dbd9
+    
     box-shadow: 12px 12px 24px #beaba7, 
-                -12px -12px 24px #ffffff;
+            -12px -12px 24px #f5ecea;
 
     @include mobile-xl {
         padding: 4.5rem 3.5rem;
@@ -45,12 +44,11 @@
     font-family: var(--font-poiret-one); 
     font-size: 2rem; 
     font-weight: 800;
-    color: var(--text-color); // Ваш основной цвет текста
+    color: var(--text-color);
     letter-spacing: 1px;
     margin-bottom: 0.5rem;
 }
 
-/* Эффект утопленных инпутов на основе ваших цветов */
 .input {
     width: 100% !important;
     box-sizing: border-box !important;
@@ -65,7 +63,7 @@
         min-height: 52px !important; 
         width: 100% !important;
         
-        background-color: var(--background-color) !important; // Цвет один в один с формой
+        background-color: var(--background-color) !important;
         border: 1px solid transparent !important; 
         outline: none !important;
         border-radius: 25px !important; 
@@ -76,7 +74,7 @@
         line-height: 52px !important;
         color: var(--text-color) !important;
         
-        // Базовые внутренние тени для эффекта вдавленности
+        
         box-shadow: inset 4px 4px 8px #beaba7, 
                     inset -4px -4px 8px #ffffff !important;
         
@@ -88,24 +86,23 @@
                     background-color 0.25s ease-in-out !important;
 
         &::placeholder {
-            color: var(--gray-color); // Ваш цвет для плейсхолдеров
+            color: var(--gray-color);
             opacity: 0.7;
         }
 
-        // ХУВЕР ИНПУТА: Лунка становится чуть глубже визуально
+        
         &:hover {
             box-shadow: inset 6px 6px 10px #beaba7, 
                         inset -6px -6px 10px #ffffff !important;
         }
 
-        // ФОКУС ИНПУТА: Появляется рамка цвета вашего --terracot с прозрачностью 40%
+        
         &:focus {
             outline: none !important;
             box-shadow: inset 4px 4px 8px #beaba7, 
                         inset -4px -4px 8px #ffffff !important;
             
-            // Клик по инпуту подсвечивается мягким цветом рамки будущей кнопки
-            border-color: rgba(220, 80, 52, 0.4) !important; // Полупрозрачный вариант вашего --terracot (#DC5034)
+            border-color: rgba(220, 80, 52, 0.4) !important;
         }
     }
 }
@@ -118,7 +115,6 @@
     width: 100%;
 }
 
-/* Неоморфная кнопка с мягким ховером цвета рамки клика инпута */
 .submitButton {
     width: 100%; 
     padding: 0.8rem 2rem !important; 
@@ -132,7 +128,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     
-    // Изначально кнопка выпуклая
+    
     box-shadow: 4px 4px 8px #beaba7, 
                 -4px -4px 8px #ffffff !important;
     
@@ -142,19 +138,18 @@
                 transform 0.1s ease !important;
     cursor: pointer;
 
-    // ХУВЕР КНОПКИ: Окрашивается в тот же цвет, что и рамка клика инпута (40% прозрачности вашего терракота)
+    
     &:hover {
-        background-color: rgba(220, 80, 52, 0.8) !important; // Полупрозрачный --terracot
-        color: var(--white) !important; // Текст становится четким белым
+        background-color: rgba(220, 80, 52, 0.8) !important;
+        color: var(--white) !important;
         
-        // Тени подсвечиваются мягким терракотовым оттенком вместо серого
         box-shadow: 4px 4px 12px rgba(220, 80, 52, 0.25), 
                     -4px -4px 12px #ffffff !important;
     }
 
-    // КЛИК ПО КНОПКЕ: Эффектное вдавливание внутрь поверхности
+    
     &:active {
-        background-color: rgba(220, 80, 52, 0.5) !important; // Чуть плотнее цвет при нажатии
+        background-color: rgba(220, 80, 52, 0.5) !important;
         color: var(--white) !important;
         
         box-shadow: inset 4px 4px 6px rgba(0, 0, 0, 0.15), 

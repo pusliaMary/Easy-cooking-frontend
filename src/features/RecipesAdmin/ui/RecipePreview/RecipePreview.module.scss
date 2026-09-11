@@ -1,12 +1,12 @@
 @use "@/app/styles/media-queries.scss" as *;
-@use "@/app/styles/mixin.scss" as *; 
+@use "@/app/styles/mixin.scss" as *;
+ 
 
-.container {
-  @include section-style-admin; 
-}
 
 .title {
   margin-bottom: 16px;
+  align-self: center;
+  color: var(--green-dark-color);
 }
 
 .errorMessage {
@@ -20,8 +20,6 @@
 }
 
 
-
-/* Базовый контейнер карточки */
 .cardContainer {
   background-color: var(--white);
   border-radius: 20px;
@@ -99,7 +97,8 @@
   height: 200px;
 
   @include tablet-m() {
-    height: 280px; 
+    height: 280px;
+    
   }
 
   @include desktop-m() {
