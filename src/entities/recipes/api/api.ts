@@ -1,6 +1,5 @@
 import { api } from "@/shared/api/api";
 import { createApiConfig } from "@/shared/api/helper";
-import { buildQueryParams } from "@/shared/api/buildQueryParams";
 import { endpoints } from "@/shared/api/endpoints";
 import type { Recipe, CategoryType, ProteinType } from "../model/types";
 
@@ -30,57 +29,51 @@ export const recipesApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getRecipes: builder.query<Recipe[], GetRecipesParams | void>({
       query: (params) => {
-        const queryString = params ? buildQueryParams(params) : "";
-        const path = queryString ? `${url}?${queryString}` : url;
+        const path = params
+          ? `${url}?${new URLSearchParams(params as unknown as Record<string, string>).toString()}`
+          : url;
 
         return createApiConfig(path, "GET");
       },
       providesTags: ["Recipes"],
     }),
 
-    // НОВЫЙ ЭНДПОИНТ: Получение одного рецепта по ID для предзаполнения формы
     getRecipeById: builder.query<Recipe, string>({
       query: (id) => createApiConfig(`${url}/${id}`, "GET"),
       providesTags: (_result, _error, id) => [{ type: "Recipes", id }],
     }),
 
-    createRecipe: builder.mutation<Recipe, Partial<Recipe>>({
-      query: (newRecipe) =>
-        createApiConfig(`${url}`, "POST", newRecipe),
+    // ИСПРАВЛЕНО: Мутация теперь принимает чистый FormData
+    createRecipe: builder.mutation<Recipe, FormData>({
+      query: (formData) => createApiConfig(`${url}`, "POST", formData),
       invalidatesTags: ["Recipes"],
     }),
 
     deleteRecipe: builder.mutation<string, { _id: string }>({
-      query: ({ _id }) => 
-        createApiConfig(`${url}/${_id}`, "DELETE"),
+      query: ({ _id }) => createApiConfig(`${url}/${_id}`, "DELETE"),
       invalidatesTags: ["Recipes"],
     }),
 
-        editRecipe: builder.mutation<Recipe, Partial<Recipe> & { _id: string }>({
-      query: ({ _id, ...updatedRecipeData }) => {
-        // Подставляем _id в URL, как прописано в роутере Express: "/recipes/:id"
-        const pathWithId = `${url}/${_id}`; 
-        
-        // Передаем pathWithId аргументом в хелпер, метод PUT и payload в body
-        return createApiConfig(pathWithId, "PUT", updatedRecipeData);
-      },
-      invalidatesTags: (_result, _error, { _id }) => [
-        "Recipes", 
-        { type: "Recipes", id: _id }
+    // ИСПРАВЛЕНО: Мутация принимает ID и FormData отдельно
+    editRecipe: builder.mutation<Recipe, { id: string; formData: FormData }>({
+      query: ({ id, formData }) =>
+        createApiConfig(`${url}/${id}`, "PUT", formData),
+      invalidatesTags: (_result, _error, { id }) => [
+        "Recipes",
+        { type: "Recipes", id },
       ],
     }),
 
     uploadImage: builder.mutation<{ url: string }, FormData>({
-      query: (formData) => 
+      query: (formData) =>
         createApiConfig(`${url}/uploadImage`, "POST", formData),
     }),
   }),
 });
 
-// Экспортируем новый хук useGetRecipeByIdQuery
 export const {
   useGetRecipesQuery,
-  useGetRecipeByIdQuery, // <-- Добавлен сюда
+  useGetRecipeByIdQuery,
   useCreateRecipeMutation,
   useDeleteRecipeMutation,
   useEditRecipeMutation,

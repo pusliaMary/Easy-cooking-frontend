@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { SideBar } from '../Sidebar/ui/Sidebar';
-import { Toast } from '@/shared/ui/Toast';
 import { getEditFeaturesMap, defaultFeature } from '../../lib/editFeaturesMap';
 import type { TabKey } from '../../lib/tabs';
 import style from './AdminPanelLayout.module.scss';
@@ -35,7 +34,6 @@ export const AdminPanelLayout = () => {
         {featuresMap[activeFeature] || <div>Feature not found</div>}
       </main>
       
-      <Toast />
     </div>
   );
 };

@@ -2,8 +2,10 @@ import type { Dispatch, SetStateAction } from "react";
 import { Button } from "@/shared/ui/Button";
 import { Stack } from "@/shared/ui/Stack";
 import { getStyles } from "@/shared/lib";
+import { toast } from "@/shared/ui/Toast"; // 1. Импортируем наш кастомный фасад уведомлений
 import styles from "./Filters.module.scss";
 import { filteredMeal, filteredRecipeBase, type FilterItem } from "@/shared/lib";
+
 
 import { useRef, useState, useCallback } from "react";
 import type {
@@ -26,9 +28,9 @@ interface FiltersProps {
 }
 
 const MEAL_MAP: Record<string, CategoryType[]> = {
-  breakfast: ["salad", "soup", "garnish", "main Course", "dessert", "drink"],
-  supper: ["salad", "soup", "main Course", "dessert", "drink"],
-  dinner: ["salad", "main Course", "dessert"],
+  breakfast: ["salad", "soup", "garnish", "mainCourse", "dessert", "drink"],
+  supper: ["salad", "soup", "mainCourse", "dessert", "drink"],
+  dinner: ["salad", "mainCourse", "dessert"],
 };
 
 export const Filters = ({
@@ -64,7 +66,10 @@ export const Filters = ({
     if (isLoading) return;
 
     if (chosenMeals.length === 0) {
-      alert("Please select at least one meal. Meal-bases are optional.");
+      // 2. Красивое инфо-уведомление вместо alert. Используем toastId, чтобы не плодить дубли при спам-кликах
+      toast.info("Please select at least one meal. Meal-bases are optional.", {
+        toastId: "meal-select-required",
+      });
       setVisibleRecipes([]);
       return;
     }
@@ -73,18 +78,15 @@ export const Filters = ({
       .filter(Boolean)
       .map((b) => String(b).trim().toLowerCase());
 
-    // 1. Первичная фильтрация по белкам / ключевым словам
     const baseFilteredRecipes = fetchedRecipes.filter((recipe: Recipe) => {
       if (!recipe) return false;
 
-      // ОБНОВЛЕНИЕ: Напитки и десерты добавляются независимо от выбранной основы (мясо, веган и т.д.)
       const isDrinkOrDessert = 
         recipe.category === "drink" || 
         recipe.category === "dessert";
         
       if (isDrinkOrDessert) return true;
 
-      // Для остальных категорий (основные блюда, супы и т.д.) применяется стандартный фильтр
       if (lowerBases.length === 0) return true;
 
       const hasMatchingProtein =
@@ -157,10 +159,16 @@ export const Filters = ({
     });
 
     if (structuredPlan.length === 0) {
-      alert("План не создан! Нет доступных уникальных рецептов для выбранных критериев.");
+      // 3. Тоаст ошибки вместо системного алерта, если не удалось собрать план
+      toast.error("Failed to create plan! No available unique recipes matching your criteria.", {
+        toastId: "plan-generation-failed",
+      });
       setVisibleRecipes([]);
       return;
     }
+
+    // Если план успешно сгенерирован, можно также добавить ненавязчивый успех (опционально)
+    toast.success("Your recipe plan has been generated successfully!");
 
     setCompletedSteps([]);
     setPurchasedItems([]);
@@ -173,6 +181,8 @@ export const Filters = ({
     setChosenBases([]);
     setPurchasedItems([]);
     setCompletedSteps([]);
+    // Сигнализируем пользователю, что все сбросилось
+    toast.info("Plan cleared.");
   }, [setChosenBases, setCompletedSteps, setPurchasedItems, setVisibleRecipes]);
 
   return (

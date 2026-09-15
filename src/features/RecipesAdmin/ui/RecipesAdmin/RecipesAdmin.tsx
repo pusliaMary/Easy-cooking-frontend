@@ -5,7 +5,6 @@ import {
 } from '@/entities/recipes/api/api';
 import { RecipesForm } from '../RecipesForm/RecipesForm';
 import type { RecipeFormInput } from '../../lib/recipeZodSchema';
-import type { Recipe } from '@/entities/recipes'; // Импортируем интерфейс Recipe из ваших типов
 import style from './RecipesAdmin.module.scss';
 import { toast } from '@/shared/ui/Toast';
 
@@ -35,39 +34,48 @@ export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
 
   const isSubmitting = isCreating || isEditing;
 
-  
   const handleSubmitForm = async (data: RecipeFormInput, resetForm: () => void) => {
     try {
-      
-      const stepsArray: string[] = data.steps?.map((step) => step.name).filter(Boolean) || [];
-      const keywordsArray: string[] = data.keyWords?.map((word) => word.name).filter(Boolean) || [];
-      const imageString: string = data.uploadImage?.[0]?.preview || "";
+      // 1. Создаем пустой объект FormData
+      const formData = new FormData();
 
-      // Собираем чистый объект, полностью соответствующий интерфейсу Recipe
-      const baseRecipeData = {
-        title: data.title,
-        category: data.category,
-        containsProtein: data.containsProtein,
-        containsFiber: data.containsFiber,
-        whatProtein: data.containsProtein ? data.whatProtein : [],
-        ingredients: data.ingredients || [], // Оставляем как есть, так как бэкенд ждет { name: string }[]
-        steps: stepsArray,         // Передаем чистый string[]
-        keyWords: keywordsArray,   // Передаем чистый string[]
-        imgSource: imageString,    // Передаем чистый string
-      };
+      // 2. Наполняем базовые строковые и булевые поля
+      formData.append("title", data.title);
+      formData.append("category", data.category);
+      formData.append("containsProtein", String(data.containsProtein));
+      formData.append("containsFiber", String(data.containsFiber));
 
+      // 3. Формируем плоские массивы строк из структуры useFieldArray формы
+      const stepsArray = data.steps?.map((step) => step.name).filter(Boolean) || [];
+      const keywordsArray = data.keyWords?.map((word) => word.name).filter(Boolean) || [];
+      const ingredientsArray = data.ingredients?.map((ing) => ({ name: ing.name })) || [];
+      const proteinArray = data.containsProtein ? data.whatProtein || [] : [];
+
+      // 4. Сериализуем все массивы в JSON-строки, как жестко ожидает бэкенд
+      formData.append("steps", JSON.stringify(stepsArray));
+      formData.append("keyWords", JSON.stringify(keywordsArray));
+      formData.append("ingredients", JSON.stringify(ingredientsArray));
+      formData.append("whatProtein", JSON.stringify(proteinArray));
+
+      // 5. Обработка изображения из компонента UploadImage
+      if (data.uploadImage && data.uploadImage.length > 0) {
+        const imageObj = data.uploadImage[0];
+
+        if (imageObj.file) {
+          // Если выбран новый физический файл, отправляем его как File под ключом 'uploadImage'
+          formData.append("uploadImage", imageObj.file);
+        } else if (imageObj.preview) {
+          // Если изображение старое (при редактировании), передаем сохраненный URL в imgSource
+          formData.append("imgSource", imageObj.preview);
+        }
+      }
+
+      // 6. Вызываем соответствующую мутацию RTK Query
       if (isEditMode && recipeId) {
-        // Явно типизируем объект для мутации обновления: Partial<Recipe> & { _id: string }
-        const updatePayload: Partial<Recipe> & { _id: string } = {
-          _id: recipeId,
-          ...baseRecipeData,
-        };
-        await editRecipe(updatePayload).unwrap();
+        await editRecipe({ id: recipeId, formData }).unwrap();
         toast.success(`Recipe "${data.title}" updated successfully.`);
       } else {
-        // Явно типизируем объект для мутации создания: Partial<Recipe>
-        const createPayload: Partial<Recipe> = baseRecipeData;
-        await createRecipe(createPayload).unwrap();
+        await createRecipe(formData).unwrap();
         toast.success(`Recipe "${data.title}" created successfully!`);
       }
       
@@ -78,11 +86,10 @@ export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
       const rtkError = error as RTKQueryError;
       const backendMessage = rtkError.data?.message || rtkError.message;
       
-      // Показываем ошибку пользователю
       toast.error(
         backendMessage 
           ? `Error: ${backendMessage}` 
-          : 'Failed to save recipe. Please check your connection or data.'
+          : 'Failed to save recipe. Please check your data.'
       );
     }
   };

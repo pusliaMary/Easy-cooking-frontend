@@ -16,10 +16,9 @@ interface RecipesFormProps {
   isEdit: boolean;
   isSubmitting: boolean;
   initialData?: Recipe;
-  // ДОБАВЬТЕ ЭТУ СТРОКУ: Форма должна знать, какую функцию вызывать при сабмите
+  // ИСПРАВЛЕНО: Типизация полностью соответствует RecipeFormInput без 'any'
   onSubmit: (data: RecipeFormInput, resetForm: () => void) => void; 
 }
-
 
 const mapRecipeToFormInput = (recipe: Recipe): Partial<RecipeFormInput> => {
   return {
@@ -113,7 +112,7 @@ export const RecipesForm = ({
 
         {/* Category Field */}
         <Stack direction="column" gap={8} align="stretch">
-          <Typography as="h3" variant='h3'>Category</Typography>
+          <Typography as="h3">Category</Typography>
           <select
             {...register("category")}
             className={errors.category ? styles.inputError : ""}
@@ -143,16 +142,6 @@ export const RecipesForm = ({
               <input type="checkbox" {...register("containsFiber")} disabled={isSubmitting} /> Contains Fiber
             </label>
           </Stack>
-          {errors.containsProtein && (
-            <Typography as="span" className={styles.error}>
-              ⚠️ {errors.containsProtein.message}
-            </Typography>
-          )}
-          {errors.containsFiber && (
-            <Typography as="span" className={styles.error}>
-              ⚠️ {errors.containsFiber.message}
-            </Typography>
-          )}
         </Stack>
 
         {/* What Protein Fields */}
@@ -172,23 +161,12 @@ export const RecipesForm = ({
                 </label>
               ))}
             </Stack>
-            {errors.whatProtein && (
-              <Typography as="span" className={styles.error}>
-                ⚠️ {errors.whatProtein.message}
-              </Typography>
-            )}
           </Stack>
         )}
+
         {/* Ingredients Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Ingredients</Typography>
-          
-          {errors.ingredients?.message && (
-            <Typography as="span" className={styles.error}>
-              ⚠️ {errors.ingredients.message}
-            </Typography>
-          )}
-
           {ingredientFields.map((field, index) => (
             <Stack key={field.id} direction="column" gap={8} align="stretch">
               <Stack direction="row" gap={8} align="center">
@@ -205,20 +183,9 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
-              {errors.ingredients?.[index]?.name && (
-                <Typography as="span" className={styles.error}>
-                  ⚠️ {errors.ingredients[index]?.name?.message}
-                </Typography>
-              )}
             </Stack>
           ))}
-          
-          <button
-            type="button"
-            onClick={() => appendIngredient({ name: "" })}
-            className={styles.addButton}
-            disabled={isSubmitting}
-          >
+          <button type="button" onClick={() => appendIngredient({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
             <Plus size={16} /> Add Ingredient
           </button>
         </Stack>
@@ -226,13 +193,6 @@ export const RecipesForm = ({
         {/* Steps Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Steps</Typography>
-
-          {errors.steps?.message && (
-            <Typography as="span" className={styles.error}>
-              ⚠️ {errors.steps.message}
-            </Typography>
-          )}
-
           {stepFields.map((field, index) => (
             <Stack key={field.id} direction="column" gap={8} align="stretch">
               <Stack direction="row" gap={8} align="center">
@@ -248,20 +208,9 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
-              {errors.steps?.[index]?.name && (
-                <Typography as="span" className={styles.error}>
-                  ⚠️ {errors.steps[index]?.name?.message}
-                </Typography>
-              )}
             </Stack>
           ))}
-          
-          <button
-            type="button"
-            onClick={() => appendStep({ name: "" })}
-            className={styles.addButton}
-            disabled={isSubmitting}
-          >
+          <button type="button" onClick={() => appendStep({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
             <Plus size={16} /> Add Step
           </button>
         </Stack>
@@ -269,13 +218,6 @@ export const RecipesForm = ({
         {/* Keywords Array Fields */}
         <Stack direction="column" gap={16} align="stretch">
           <Typography as="h3">Keywords</Typography>
-
-          {errors.keyWords?.message && (
-            <Typography as="span" className={styles.error}>
-              ⚠️ {errors.keyWords.message}
-            </Typography>
-          )}
-
           {keywordFields.map((field, index) => (
             <Stack key={field.id} direction="column" gap={8} align="stretch">
               <Stack direction="row" gap={8} align="center">
@@ -292,20 +234,9 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
-              {errors.keyWords?.[index]?.name && (
-                <Typography as="span" className={styles.error}>
-                  ⚠️ {errors.keyWords[index]?.name?.message}
-                </Typography>
-              )}
             </Stack>
           ))}
-          
-          <button
-            type="button"
-            onClick={() => appendKeyword({ name: "" })}
-            className={styles.addButton}
-            disabled={isSubmitting}
-          >
+          <button type="button" onClick={() => appendKeyword({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
             <Plus size={16} /> Add Keyword
           </button>
         </Stack>
@@ -325,19 +256,9 @@ export const RecipesForm = ({
               />
             )}
           />
-          {errors.uploadImage && (
-            <Typography as="span" className={styles.error}>
-              ⚠️ {errors.uploadImage.message}
-            </Typography>
-          )}
         </Stack>
 
-        {/* Submit Actions */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={styles.submitButton}
-        >
+        <button type="submit" disabled={isSubmitting} className={styles.submitButton}>
           {isSubmitting ? "Saving..." : isEdit ? "Update Recipe" : "Save Recipe"}
         </button>
       </Stack>
