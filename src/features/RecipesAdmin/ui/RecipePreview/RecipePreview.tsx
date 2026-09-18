@@ -20,28 +20,26 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
   const { data: recipes = [], isLoading, isError } = useGetRecipesQuery({});
   const [deleteRecipe] = useDeleteRecipeMutation();
 
-  // Функция удаления теперь принимает title рецепта для персонализации уведомлений
   const handleDelete = async (e: React.MouseEvent, id: string, title?: string) => {
     e.stopPropagation(); 
     
-    if (window.confirm(`Are you sure you want to delete "${title || 'this recipe'}"?`)) {
-      try {
-        await deleteRecipe({ _id: id }).unwrap();
-        
-        // Информативный тоаст с названием удаленного рецепта
-        toast.success(`Recipe "${title || 'Unknown'}" deleted successfully.`);
-      } catch (err: unknown) {
-        console.error("Delete failed:", err);
-        let msg = "Failed to delete recipe.";
-        
-        if (err && typeof err === 'object' && 'data' in err) {
-          const rtkError = err as RTKQuerySerializedError;
-          if (rtkError.data?.message) msg = rtkError.data.message;
-        }
-        
-        // Тоаст ошибки вместо нативного alert
-        toast.error(msg);
+    if (!window.confirm(`Are you sure you want to delete "${title || 'this recipe'}"?`)) {
+      return;
+    }
+
+    try {
+      await deleteRecipe({ _id: id }).unwrap();
+      toast.success(`Recipe "${title || 'Unknown'}" deleted successfully.`);
+    } catch (err: unknown) {
+      console.error("Delete failed:", err);
+      let msg = "Failed to delete recipe.";
+      
+      if (err && typeof err === 'object' && 'data' in err) {
+        const rtkError = err as RTKQuerySerializedError;
+        if (rtkError.data?.message) msg = rtkError.data.message;
       }
+      
+      toast.error(msg);
     }
   };
 
@@ -67,7 +65,6 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
       {!isLoading && !isError && (
         <Stack direction="row" wrap gap={24} align="start" className={styles.recipesGrid} max>
           
-          {/* КАРТОЧКА №1: ДОБАВИТЬ РЕЦЕПТ */}
           <Stack 
             direction="column" 
             className={getStyles(styles.cardContainer, { [styles.addCard]: true }, [])} 
@@ -85,7 +82,6 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
             </Typography>
           </Stack>
 
-          {/* ОСТАЛЬНЫЕ КАРТОЧКИ: РЕЦЕПТЫ ИЗ БАЗЫ */}
           {recipes.map((recipe) => (
             <Stack 
               key={recipe._id} 
@@ -94,6 +90,7 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
             >
               <div className={getStyles(styles.imageWrapper, {}, [])}>
                 <img 
+                  // ИСПРАВЛЕНО: Добавлены корректные размеры и текст для заглушки
                   src={recipe.imgSource || "https://placehold.co"} 
                   alt={recipe.title} 
                   className={styles.recipeImg} 

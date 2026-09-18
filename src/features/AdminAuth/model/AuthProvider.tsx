@@ -1,5 +1,7 @@
-import { useState, useMemo, type ReactNode } from 'react';
+import { useState, useMemo, useEffect, type ReactNode } from 'react';
 import { AuthContext } from './auth-context';
+import { useCheckMeQuery } from '../api/authApi';
+import { api } from '@/shared/api/api'; 
 
 export interface UserData {
     username: string;
@@ -15,8 +17,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
-    const isLoggedIn = Boolean(user);
-
     const login = (userData: UserData) => {
         setUser(userData);
         localStorage.setItem('authUser', JSON.stringify(userData));
@@ -25,7 +25,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const logout = () => {
         localStorage.removeItem('authUser');
         setUser(null);
+        // Сбрасываем глобальный кэш всех запросов RTK Query
+        api.util.resetApiState(); 
     };
+
+    const { error, isFetching } = useCheckMeQuery(undefined, {
+        skip: !user,
+        pollingInterval: 60000, 
+    });
+
+    // ИСПРАВЛЕНО: Вызов logout перенесен в очередь микрозадач (асинхронно для React)
+    useEffect(() => {
+        if (error && 'status' in error && error.status === 401) {
+            queueMicrotask(() => {
+                logout();
+            });
+        }
+    }, [error]);
+
+    const isLoggedIn = Boolean(user);
 
     const value = useMemo(
         () => ({
@@ -36,6 +54,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }),
         [isLoggedIn, user]
     );
+
+    if (user && isFetching && !isLoggedIn) {
+        return <div>Loading session...</div>; 
+    }
 
     return (
         <AuthContext.Provider value={value}>

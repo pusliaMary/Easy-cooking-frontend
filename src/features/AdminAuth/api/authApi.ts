@@ -7,7 +7,11 @@ const authApi = api.injectEndpoints({
     loginAdmin: build.mutation({
       query: (admin) => createApiConfig(endpoints.auth.login, "POST", admin),
     }),
+    // ДОБАВЛЕНО: Эндпоинт фоновой проверки активной куки на бэкенде
+    checkMe: build.query<{ username: string }, void>({
+      query: () => createApiConfig("/me", "GET"), 
+    }),
   }),
 });
 
-export const { useLoginAdminMutation } = authApi;
+export const { useLoginAdminMutation, useCheckMeQuery } = authApi;

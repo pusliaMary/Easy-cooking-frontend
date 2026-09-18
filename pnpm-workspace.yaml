@@ -2,3 +2,10 @@ allowBuilds:
   '@parcel/watcher': false
   core-js: false
   protobufjs: false
+
+overrides:
+  core-js: "^3.39.0"
+  crypto-js: "^4.2.0"
+
+allowedDeprecatedVersions:
+  crypto-js: "4.2.0"

@@ -1,0 +1,12 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "plugins": ["stylelint-unused-selectors"],
+  "rules": {
+    "plugin/unused-selectors": [
+      true,
+      {
+        "documents": ["src/**/*.tsx", "src/**/*.ts"]
+      }
+    ]
+  }
+}
