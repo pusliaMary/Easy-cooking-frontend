@@ -1,3 +1,5 @@
+// RecipesForm.tsx — ЧАСТЬ 1
+import { useEffect } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
@@ -16,7 +18,6 @@ interface RecipesFormProps {
   isEdit: boolean;
   isSubmitting: boolean;
   initialData?: Recipe;
-  // ИСПРАВЛЕНО: Типизация полностью соответствует RecipeFormInput без 'any'
   onSubmit: (data: RecipeFormInput, resetForm: () => void) => void; 
 }
 
@@ -68,6 +69,13 @@ export const RecipesForm = ({
     defaultValues: defaultValues as RecipeFormInput,
   });
 
+  // ЭФФЕКТ ДЛЯ ДИАГНОСТИКИ: Выводит ошибки валидации Zod в консоль (F12)
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      console.log("❌ ОШИБКИ ВАЛИДАЦИИ ФОРМЫ (ZOD):", errors);
+    }
+  }, [errors]);
+
   const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
     control,
     name: "ingredients",
@@ -88,7 +96,7 @@ export const RecipesForm = ({
   const handleLocalSubmit = (data: RecipeFormInput) => {
     onSubmit(data, () => reset());
   };
-
+// RecipesForm.tsx — ЧАСТЬ 2
   return (
     <form onSubmit={handleSubmit(handleLocalSubmit)} className={styles.form}>
       <Stack direction="column" gap={24} align="stretch">
@@ -183,6 +191,11 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
+              {errors.ingredients?.[index]?.name && (
+                <Typography as="span" className={styles.error}>
+                  ⚠️ {errors.ingredients[index]?.name?.message}
+                </Typography>
+              )}
             </Stack>
           ))}
           <button type="button" onClick={() => appendIngredient({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
@@ -208,6 +221,11 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
+              {errors.steps?.[index]?.name && (
+                <Typography as="span" className={styles.error}>
+                  ⚠️ {errors.steps[index]?.name?.message}
+                </Typography>
+              )}
             </Stack>
           ))}
           <button type="button" onClick={() => appendStep({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
@@ -234,6 +252,11 @@ export const RecipesForm = ({
                   </button>
                 )}
               </Stack>
+              {errors.keyWords?.[index]?.name && (
+                <Typography as="span" className={styles.error}>
+                  ⚠️ {errors.keyWords[index]?.name?.message}
+                </Typography>
+              )}
             </Stack>
           ))}
           <button type="button" onClick={() => appendKeyword({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
@@ -256,6 +279,12 @@ export const RecipesForm = ({
               />
             )}
           />
+          {/* Текстовый вывод ошибки валидации картинки под самим компонентом загрузки */}
+          {errors.uploadImage && (
+            <Typography as="span" className={styles.error}>
+              ⚠️ {errors.uploadImage.message || "Image is required"}
+            </Typography>
+          )}
         </Stack>
 
         <button type="submit" disabled={isSubmitting} className={styles.submitButton}>

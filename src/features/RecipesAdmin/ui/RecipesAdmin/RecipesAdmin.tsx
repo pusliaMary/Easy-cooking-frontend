@@ -35,64 +35,72 @@ export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
   const isSubmitting = isCreating || isEditing;
 
   const handleSubmitForm = async (data: RecipeFormInput, resetForm: () => void) => {
-    try {
-      // 1. Создаем пустой объект FormData
-      const formData = new FormData();
+  // Отладочный лог: посмотрим, что реально лежит в форме в момент нажатия кнопки
+  console.log("=== SUBMITTING FORM DATA ===", data);
 
-      // 2. Наполняем базовые строковые и булевые поля
-      formData.append("title", data.title);
-      formData.append("category", data.category);
-      formData.append("containsProtein", String(data.containsProtein));
-      formData.append("containsFiber", String(data.containsFiber));
+  try {
+    // 1. Улучшенная проверка: проверяем на undefined, на пустой массив и на пустые объекты внутри
+    const hasImage = data.uploadImage && data.uploadImage.length > 0 && (data.uploadImage[0].file || data.uploadImage[0].preview);
 
-      // 3. Формируем плоские массивы строк из структуры useFieldArray формы
-      const stepsArray = data.steps?.map((step) => step.name).filter(Boolean) || [];
-      const keywordsArray = data.keyWords?.map((word) => word.name).filter(Boolean) || [];
-      const ingredientsArray = data.ingredients?.map((ing) => ({ name: ing.name })) || [];
-      const proteinArray = data.containsProtein ? data.whatProtein || [] : [];
-
-      // 4. Сериализуем все массивы в JSON-строки, как жестко ожидает бэкенд
-      formData.append("steps", JSON.stringify(stepsArray));
-      formData.append("keyWords", JSON.stringify(keywordsArray));
-      formData.append("ingredients", JSON.stringify(ingredientsArray));
-      formData.append("whatProtein", JSON.stringify(proteinArray));
-
-      // 5. Обработка изображения из компонента UploadImage
-      if (data.uploadImage && data.uploadImage.length > 0) {
-        const imageObj = data.uploadImage[0];
-
-        if (imageObj.file) {
-          // Если выбран новый физический файл, отправляем его как File под ключом 'uploadImage'
-          formData.append("uploadImage", imageObj.file);
-        } else if (imageObj.preview) {
-          // Если изображение старое (при редактировании), передаем сохраненный URL в imgSource
-          formData.append("imgSource", imageObj.preview);
-        }
-      }
-
-      // 6. Вызываем соответствующую мутацию RTK Query
-      if (isEditMode && recipeId) {
-        await editRecipe({ id: recipeId, formData }).unwrap();
-        toast.success(`Recipe "${data.title}" updated successfully.`);
-      } else {
-        await createRecipe(formData).unwrap();
-        toast.success(`Recipe "${data.title}" created successfully!`);
-      }
-      
-      resetForm(); 
-      onSuccess(); 
-    } catch (error) {
-      console.error('Failed to save recipe:', error);
-      const rtkError = error as RTKQueryError;
-      const backendMessage = rtkError.data?.message || rtkError.message;
-      
-      toast.error(
-        backendMessage 
-          ? `Error: ${backendMessage}` 
-          : 'Failed to save recipe. Please check your data.'
-      );
+    if (!hasImage) {
+      console.warn("Image verification failed. Displaying toast...");
+      toast.error("Please add an image. A recipe cannot be saved without an image.");
+      return; // Останавливаем отправку
     }
-  };
+
+    // 2. Создаем пустой объект FormData
+    const formData = new FormData();
+
+    // 3. Наполняем базовые строковые и булевые поля
+    formData.append("title", data.title);
+    formData.append("category", data.category);
+    formData.append("containsProtein", String(data.containsProtein));
+    formData.append("containsFiber", String(data.containsFiber));
+
+    // 4. Формируем плоские массивы строк из структуры useFieldArray формы
+    const stepsArray = data.steps?.map((step) => step.name).filter(Boolean) || [];
+    const keywordsArray = data.keyWords?.map((word) => word.name).filter(Boolean) || [];
+    const ingredientsArray = data.ingredients?.map((ing) => ({ name: ing.name })) || [];
+    const proteinArray = data.containsProtein ? data.whatProtein || [] : [];
+
+    // 5. Сериализуем все массивы в JSON-строки
+    formData.append("steps", JSON.stringify(stepsArray));
+    formData.append("keyWords", JSON.stringify(keywordsArray));
+    formData.append("ingredients", JSON.stringify(ingredientsArray));
+    formData.append("whatProtein", JSON.stringify(proteinArray));
+
+    // 6. Безопасная обработка изображения
+    const imageObj = data.uploadImage[0];
+
+    if (imageObj.file) {
+      formData.append("uploadImage", imageObj.file);
+    } else if (imageObj.preview) {
+      formData.append("imgSource", imageObj.preview);
+    }
+
+    // 7. Вызываем мутацию RTK Query
+    if (isEditMode && recipeId) {
+      await editRecipe({ id: recipeId, formData }).unwrap();
+      toast.success(`Recipe "${data.title}" updated successfully.`);
+    } else {
+      await createRecipe(formData).unwrap();
+      toast.success(`Recipe "${data.title}" created successfully!`);
+    }
+    
+    resetForm(); 
+    onSuccess(); 
+  } catch (error) {
+    console.error('Failed to save recipe:', error);
+    const rtkError = error as RTKQueryError;
+    const backendMessage = rtkError.data?.message || rtkError.message;
+    
+    toast.error(
+      backendMessage 
+        ? `Error: ${backendMessage}` 
+        : 'Failed to save recipe. Please check your data.'
+      );
+  }
+};
 
   if (isEditMode && isLoading) {
     return (
