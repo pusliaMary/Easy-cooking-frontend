@@ -72,7 +72,6 @@ export const recipeZodSchema = z
         z.object({
           id: z.string(),
           preview: z.string(),
-          // ИСПРАВЛЕНО: Сделали .optional(), чтобы старая картинка по ссылке проходила валидацию
           file: z
             .instanceof(File)
             .refine(

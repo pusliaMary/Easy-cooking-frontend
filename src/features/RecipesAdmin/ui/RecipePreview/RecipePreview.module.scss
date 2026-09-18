@@ -147,17 +147,15 @@
   }
 }
 
-/* НОВЫЙ КОНТЕЙНЕР ДЛЯ РЯДА КНОПОК */
 .actionsWrapper {
   position: absolute;
   top: 12px;
   right: 12px;
   display: flex;
-  gap: 8px; // Отступ между кнопками Edit и Delete
+  gap: 8px;
   z-index: 10;
 }
 
-/* Общие базовые стили кнопок в углу */
 .editBtn,
 .deleteBtn {
   border: none;
@@ -175,16 +173,14 @@
   }
 }
 
-/* Стиль кнопки редактирования (Зеленый) */
 .editBtn {
-  background: rgba(113, 157, 110, 0.85); // На основе var(--green-dark-color) с альфа-каналом
+  background: rgba(113, 157, 110, 0.85);
 
   &:hover {
     background: var(--green-dark-color);
   }
 }
 
-/* Стиль кнопки удаления (Красный) */
 .deleteBtn {
   background: rgba(229, 62, 62, 0.85);
 

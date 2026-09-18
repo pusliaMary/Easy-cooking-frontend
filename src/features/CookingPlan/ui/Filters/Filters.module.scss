@@ -8,9 +8,6 @@
   @include mobile-l {
     flex-direction: row;
 
-    .imageContainer {
-      grid-template-columns: repeat(3, 1fr);
-    }
   }
   min-height: 200px;
   height: auto;
@@ -81,7 +78,7 @@
 
   &:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 6px rgba(220, 80, 52, 0.12); // Тень почти исчезает
+    box-shadow: 0 2px 6px rgba(220, 80, 52, 0.12);
   }
 
   @include mobile-l {

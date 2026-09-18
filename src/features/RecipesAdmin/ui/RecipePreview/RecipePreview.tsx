@@ -90,7 +90,6 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
             >
               <div className={getStyles(styles.imageWrapper, {}, [])}>
                 <img 
-                  // ИСПРАВЛЕНО: Добавлены корректные размеры и текст для заглушки
                   src={recipe.imgSource || "https://placehold.co"} 
                   alt={recipe.title} 
                   className={styles.recipeImg} 

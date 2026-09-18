@@ -11,48 +11,39 @@ $sizes: (
   sm: $font-size-sm,
   md: $font-size-md,
   xl: $font-size-xl,
-  xxl: $font-size-xxl
+  xxl: $font-size-xxl,
 );
 
-@each $name, $size in $sizes {
-  .#{$name} {
-    font-size: $size;
+.button {
+  position: relative;
+  font-family: var(--font-lato);
+  font-weight: 400;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  transition: color 0.3s ease;
+  color: var(--black-color);
+
+  &:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: currentColor;
+    transition: width 0.7s ease;
   }
 }
 
-.button {
-    position: relative;
-    font-family: var(--font-lato);
-    font-weight: 400;
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    transition: color 0.3s ease;
-    color: var(--black-color);
-    
-    &:disabled {
-        opacity: 0.4;
-        pointer-events: none;
-        cursor: default;
-      }
-    
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: -3px; 
-      left: 0;
-      width: 0%;
-      height: 1px; 
-      background-color: currentColor;
-      transition: width .7s ease;
-    }   
-}
-
-
-
 .secondary:hover::after {
   width: 100%;
-  
 }
 
 .isLoading {
@@ -71,9 +62,3 @@ $sizes: (
   }
 }
 
-// не нашла квадратных кнопок на сайте. Нужен ли такой класс?
-.square {
-    background: var(--white);
-    padding: 10px;
-    opacity: 0.7;
-}

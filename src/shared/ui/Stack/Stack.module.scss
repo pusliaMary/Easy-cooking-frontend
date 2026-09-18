@@ -10,7 +10,6 @@
   width: 100%;
 }
 
-// 1. Автоматическая генерация классов для Justify-Content
 $justify-values: (
   "Start": flex-start,
   "Center": center,
@@ -26,7 +25,6 @@ $justify-values: (
   }
 }
 
-// 2. Автоматическая генерация классов для Align-Items
 $align-values: (
   "Start": flex-start,
   "Center": center,
@@ -40,7 +38,6 @@ $align-values: (
   }
 }
 
-// 3. Автоматическая генерация классов для Flex-Direction
 $direction-values: (
   "Row": row,
   "Column": column
@@ -52,7 +49,6 @@ $direction-values: (
   }
 }
 
-// 4. Автоматическая генерация классов для Gap (от 8 до 64)
 $gaps: 8, 16, 24, 32, 40, 64;
 
 @each $gap in $gaps {

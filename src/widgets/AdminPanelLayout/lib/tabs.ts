@@ -3,7 +3,6 @@ export interface NavigationItem {
   label: string;
 }
 
-// В сайдбаре по-прежнему только список
 export const adminPanelNavigation = {
   recipesList: {
     key: 'recipesList',
@@ -11,5 +10,4 @@ export const adminPanelNavigation = {
   },
 } as const satisfies Record<string, NavigationItem>;
 
-// Добавляем 'editRecipe' в пул доступных экранов
 export type TabKey = keyof typeof adminPanelNavigation | 'createRecipe' | 'editRecipe';

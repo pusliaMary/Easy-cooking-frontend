@@ -1,4 +1,3 @@
-// RecipesForm.tsx — ЧАСТЬ 1
 import { useEffect } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -69,8 +68,7 @@ export const RecipesForm = ({
     defaultValues: defaultValues as RecipeFormInput,
   });
 
-  // ЭФФЕКТ ДЛЯ ДИАГНОСТИКИ: Выводит ошибки валидации Zod в консоль (F12)
-  useEffect(() => {
+ useEffect(() => {
     if (Object.keys(errors).length > 0) {
       console.log("❌ ОШИБКИ ВАЛИДАЦИИ ФОРМЫ (ZOD):", errors);
     }
@@ -96,7 +94,7 @@ export const RecipesForm = ({
   const handleLocalSubmit = (data: RecipeFormInput) => {
     onSubmit(data, () => reset());
   };
-// RecipesForm.tsx — ЧАСТЬ 2
+
   return (
     <form onSubmit={handleSubmit(handleLocalSubmit)} className={styles.form}>
       <Stack direction="column" gap={24} align="stretch">
@@ -279,7 +277,6 @@ export const RecipesForm = ({
               />
             )}
           />
-          {/* Текстовый вывод ошибки валидации картинки под самим компонентом загрузки */}
           {errors.uploadImage && (
             <Typography as="span" className={styles.error}>
               ⚠️ {errors.uploadImage.message || "Image is required"}

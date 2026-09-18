@@ -20,11 +20,11 @@ export const getEditFeaturesMap = ({
   recipesList: (
     <RecipePreview
       onAddNewClick={() => {
-        onSelectRecipe(null); // Сбрасываем id при создании нового
+        onSelectRecipe(null);
         onChangeTab('createRecipe');
       }} 
       onEditClick={(id) => {
-        onSelectRecipe(id); // Запоминаем id рецепта для редактирования
+        onSelectRecipe(id);
         onChangeTab('editRecipe');
       }}
     />
@@ -36,7 +36,7 @@ export const getEditFeaturesMap = ({
   ),
   editRecipe: (
     <RecipesAdmin 
-      recipeId={selectedRecipeId} // Передаем id в форму (компонент должен уметь принимать recipeId)
+      recipeId={selectedRecipeId}
       onSuccess={() => {
         onSelectRecipe(null);
         onChangeTab(adminPanelNavigation.recipesList.key);

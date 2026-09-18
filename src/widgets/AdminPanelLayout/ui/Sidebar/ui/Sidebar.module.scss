@@ -21,13 +21,12 @@
   }
 }
 
-// Контейнер сайдбара
 .sidebar {
   position: fixed;
   top: 60px; 
   left: 0;
   bottom: 0;
-  width: 100%; // На мобилках во весь экран
+  width: 100%;
   background-color: var(--white);
   border-right: 1px solid var(--grey-light);
   padding: 2rem 1.5rem;
@@ -43,10 +42,10 @@
     transform: translateX(0);
   }
 
-  // Переход на десктопное отображение (от 820px)
+  
   @include tablet-m {
     top: 0;
-    width: 320px; // Синхронизировано с вашим margin-left в миксине
+    width: 320px;
     transform: translateX(0);
   }
 }
@@ -89,7 +88,6 @@
   }
 }
 
-// Кастомные стили для кнопки выхода (Sign Out)
 .sidebar :global(.btn) {
   width: 100%;
   padding: 1rem;

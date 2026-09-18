@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Button } from "@/shared/ui/Button";
 import { Stack } from "@/shared/ui/Stack";
 import { getStyles } from "@/shared/lib";
-import { toast } from "@/shared/ui/Toast"; // 1. Импортируем наш кастомный фасад уведомлений
+import { toast } from "@/shared/ui/Toast";
 import styles from "./Filters.module.scss";
 import { filteredMeal, filteredRecipeBase, type FilterItem } from "@/shared/lib";
 
@@ -66,7 +66,6 @@ export const Filters = ({
     if (isLoading) return;
 
     if (chosenMeals.length === 0) {
-      // 2. Красивое инфо-уведомление вместо alert. Используем toastId, чтобы не плодить дубли при спам-кликах
       toast.info("Please select at least one meal. Meal-bases are optional.", {
         toastId: "meal-select-required",
       });
@@ -159,7 +158,6 @@ export const Filters = ({
     });
 
     if (structuredPlan.length === 0) {
-      // 3. Тоаст ошибки вместо системного алерта, если не удалось собрать план
       toast.error("Failed to create plan! No available unique recipes matching your criteria.", {
         toastId: "plan-generation-failed",
       });
@@ -167,7 +165,6 @@ export const Filters = ({
       return;
     }
 
-    // Если план успешно сгенерирован, можно также добавить ненавязчивый успех (опционально)
     toast.success("Your recipe plan has been generated successfully!");
 
     setCompletedSteps([]);
@@ -181,7 +178,6 @@ export const Filters = ({
     setChosenBases([]);
     setPurchasedItems([]);
     setCompletedSteps([]);
-    // Сигнализируем пользователю, что все сбросилось
     toast.info("Plan cleared.");
   }, [setChosenBases, setCompletedSteps, setPurchasedItems, setVisibleRecipes]);
 

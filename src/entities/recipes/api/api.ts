@@ -3,7 +3,7 @@ import { createApiConfig } from "@/shared/api/helper";
 import { endpoints } from "@/shared/api/endpoints";
 import type { Recipe, CategoryType, ProteinType } from "../model/types";
 
-const url = endpoints.path.recipes; // "/recipes"
+const url = endpoints.path.recipes;
 
 export interface GetRecipesParams {
   limit?: number;
@@ -43,7 +43,6 @@ export const recipesApi = api.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: "Recipes", id }],
     }),
 
-    // ИСПРАВЛЕНО: Мутация теперь принимает чистый FormData
     createRecipe: builder.mutation<Recipe, FormData>({
       query: (formData) => createApiConfig(`${url}`, "POST", formData),
       invalidatesTags: ["Recipes"],
@@ -54,7 +53,6 @@ export const recipesApi = api.injectEndpoints({
       invalidatesTags: ["Recipes"],
     }),
 
-    // ИСПРАВЛЕНО: Мутация принимает ID и FormData отдельно
     editRecipe: builder.mutation<Recipe, { id: string; formData: FormData }>({
       query: ({ id, formData }) =>
         createApiConfig(`${url}/${id}`, "PUT", formData),

@@ -6,21 +6,20 @@ import style from './AdminPanelLayout.module.scss';
 
 export const AdminPanelLayout = () => {
   const [activeFeature, setActiveFeature] = useState<TabKey>(defaultFeature);
-  // Добавляем стейт для хранения id выбранного рецепта
+  
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
 
   const handleTabClick = (featureKey: TabKey): void => {
     setActiveFeature(featureKey);
   };
 
-  // Вызываем карту с передачей стейта и коллбэков
+  
   const featuresMap = getEditFeaturesMap({
     onChangeTab: handleTabClick,
     onSelectRecipe: setSelectedRecipeId,
     selectedRecipeId,
   });
 
-  // Для подсветки сайдбара: Recipes List должен гореть и при редактировании, и при создании
   const currentActiveForSidebar = 
     activeFeature === 'createRecipe' || activeFeature === 'editRecipe' 
       ? 'recipesList' 

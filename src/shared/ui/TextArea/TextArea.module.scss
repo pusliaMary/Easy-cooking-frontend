@@ -22,12 +22,11 @@
   color: var(--text-color);
   background: var(--background-color);
   border: 1px solid var(--black-color);
-  border-radius: 4px; // Рекомендуется добавить для аккуратного отображения
+  border-radius: 4px;
 
   @include placeholder-support;
 }
 
-// Модификатор ошибки (применяется вместе с .textarea)
 .error {
   border-color: var(--error-color);
 }
@@ -35,17 +34,17 @@
 .fieldMeta {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 0.5rem; // Предотвращает слипание ошибки и счетчика на маленьких экранах
+  gap: 0.5rem;
   width: 100%;
 }
 
 .errorMessage {
   color: var(--error-color);
-  min-width: 0; // Защита от переполнения грид-ячейки длинным текстом
+  min-width: 0;
 }
 
 .charCounter {
-  grid-column: 2; // Гарантирует, что счетчик всегда будет во второй колонке
+  grid-column: 2;
   justify-self: end;
   color: var(--gray-dark-color);
 }

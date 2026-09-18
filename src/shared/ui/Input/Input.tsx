@@ -5,13 +5,12 @@ import styles from "./Input.module.scss";
 import { Stack } from "../Stack/Stack";
 import { Typography } from "../Typography";
 
-// 1. Описываем кастомные пропсы компонента без any
+
 interface InputCustomProps {
   label?: string;
   isError?: boolean;
   errorMessage?: string;
   max?: boolean;
-  // Полная строгая типизация для методов react-hook-form
   register?: {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => Promise<boolean | void> | void;
     onBlur?: (event: FocusEvent<HTMLInputElement>) => Promise<boolean | void> | void;

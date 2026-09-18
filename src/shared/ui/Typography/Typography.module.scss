@@ -1,21 +1,18 @@
 @use "@/app/styles/media-queries.scss" as *;
 
-// Модификаторы и утилиты
 .noMargin       { margin: 0; }
 .tabularNumbers { font-variant-numeric: tabular-nums; }
 
-// Шрифты и начертания
+
 .lato      { font-family: var(--font-lato); }
 .poiretOne { font-family: var(--font-poiret-one); }
 .normal    { font-weight: 400; }
 .bold      { font-weight: 700; }
 
-// Варианты типографики
 .h1 {
   font-size: 32px;
   line-height: 1.2;
-  // Убрано дублирование: на tablet-m размер оставался 32px
-}
+  }
 
 h2 {
     font-family: var(--font-poiret-one);
@@ -55,7 +52,6 @@ h2 {
   @include tablet-m { font-size: 18px; }
 }
 
-// Объединение общих свойств для body-классов
 .body16, .body14, .body12 {
   line-height: var(--line-height);
 }

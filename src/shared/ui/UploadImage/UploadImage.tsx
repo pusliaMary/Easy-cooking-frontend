@@ -6,11 +6,12 @@ import styles from "./UploadImage.module.scss";
 import { Typography } from "../Typography";
 import { getStyles } from "@/shared/lib";
 import { Stack } from "../Stack/Stack";
-import { MAX_FILE_SIZE_MB, MAX_FILE_SIZE_BYTES, ACCEPTED_IMAGE_TYPES } from "./lib/constants";
+import {
+  MAX_FILE_SIZE_MB,
+  MAX_FILE_SIZE_BYTES,
+  ACCEPTED_IMAGE_TYPES,
+} from "./lib/constants";
 
-// ==========================================
-// 1. Interfaces and Types
-// ==========================================
 export interface UploadedImageFile {
   id: string;
   file?: File;
@@ -23,7 +24,7 @@ export interface UploadImageProps {
   maxFiles?: number;
   expandWhenEmpty?: boolean;
   great?: boolean;
-  disabled?: boolean; // FIXED: Added support for external disabled state
+  disabled?: boolean;
 }
 
 export interface UploadImageRef {
@@ -38,7 +39,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       maxFiles = 10,
       expandWhenEmpty,
       great,
-      disabled: externalDisabled = false, // FIXED: Destructured external prop with default value
+      disabled: externalDisabled = false,
     },
     ref,
   ) => {
@@ -46,7 +47,6 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
-    // FIXED: Renamed internal variable and combined both constraints
     const isLimitReached = value.length >= maxFiles;
     const isDisabled = externalDisabled || isLimitReached;
 
@@ -64,19 +64,20 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       }
     };
 
-        const validateFiles = (selectedFiles: File[]): UploadedImageFile[] => {
+    const validateFiles = (selectedFiles: File[]): UploadedImageFile[] => {
       const validFiles: UploadedImageFile[] = [];
       let error = "";
 
       selectedFiles.forEach((file) => {
         if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-          error = "Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed.";
+          error =
+            "Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed.";
         } else if (file.size > MAX_FILE_SIZE_BYTES) {
           error = `File size exceeds ${MAX_FILE_SIZE_MB}MB limit.`;
         } else {
           validFiles.push({
             id: uuidv4(),
-            file, // Здесь по-прежнему передается железный File, что полностью валидно
+            file,
             preview: URL.createObjectURL(file),
           });
         }
@@ -85,7 +86,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
       setErrorMessage(error || undefined);
       return validFiles;
     };
-    
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
       if (e.target.files && e.target.files.length > 0 && !isDisabled) {
         const validFiles = validateFiles(Array.from(e.target.files));
@@ -128,14 +129,14 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
     };
 
     const removeImage = (id: string): void => {
-      if (externalDisabled) return; // FIXED: Prevent image deletion if form is submitting
+      if (externalDisabled) return;
 
       const fileToRemove = value.find((file) => file.id === id);
-      
+
       if (fileToRemove?.preview) {
         URL.revokeObjectURL(fileToRemove.preview);
       }
-      
+
       if (onChange) {
         const updatedFiles = value.filter((file) => file.id !== id);
         onChange(updatedFiles);
@@ -144,7 +145,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
 
     const mode: Record<string, boolean | undefined> = {
       [styles.dragActive]: dragActive,
-      [styles.disabled]: isDisabled, // FIXED: Using combined disabled logic for styling classes
+      [styles.disabled]: isDisabled,
       [styles.expand]: expandWhenEmpty && value.length === 0,
       [styles.great]: great,
     };
@@ -180,7 +181,7 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
               ref={fileInputRef}
               onChange={handleChange}
               hidden
-              disabled={isDisabled} // FIXED: Applying combined variable to input
+              disabled={isDisabled}
               accept={ACCEPTED_IMAGE_TYPES.join(",")}
             />
           </Stack>
@@ -196,11 +197,11 @@ export const UploadImage = forwardRef<UploadImageRef, UploadImageProps>(
             <img src={preview} alt={id} className={styles.previewImage} />
             <button
               onClick={(e) => {
-                e.stopPropagation(); // Safe protection from triggering field click events
+                e.stopPropagation();
                 removeImage(id);
               }}
               className={styles.deleteButton}
-              disabled={externalDisabled} // FIXED: Disabling the delete button during submission
+              disabled={externalDisabled}
             >
               <Trash2 size={35} color="black" />
             </button>

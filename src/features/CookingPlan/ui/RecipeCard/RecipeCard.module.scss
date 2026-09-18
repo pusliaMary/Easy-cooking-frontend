@@ -1,112 +1,107 @@
 @use "@/app/styles/media-queries.scss" as *;
 
 .cardContainer {
-    background-color: var(--white);
-    border-radius: 20px; /* Скругление больше, чтобы карточка казалась мягче и объемнее */
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    border: 1px solid rgba(221, 218, 218, 0.6); /* Полупрозрачная тонкая граница */
-    
-    /* ЭФФЕКТ ОБЪЕМА: Многослойная глубокая тень (симуляция рассеянного света) */
-    box-shadow: 
-        0px 4px 6px -1px rgba(0, 0, 0, 0.05),
-        0px 10px 20px -3px rgba(40, 40, 40, 0.08),
-        0px 20px 30px -5px rgba(0, 0, 0, 0.03);
-        
-    /* Плавный переход для ховера с эффектом физического приподнимания */
-    transition: 
-        transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
-        box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-        border-color 0.3s ease;
+  background-color: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(221, 218, 218, 0.6);
 
-    &:hover {
-        /* Карточка физически «взлетает» к пользователю */
-        transform: translateY(-8px) scale(1.01); 
-        border-color: var(--orange-color);
-        
-        /* Тень становится экстремально глубокой и мягкой (карточка выше над столом) */
-        box-shadow: 
-            0px 20px 35px -5px rgba(236, 149, 109, 0.2),
-            0px 30px 50px -10px rgba(40, 40, 40, 0.12);
+  box-shadow:
+    0px 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0px 10px 20px -3px rgba(40, 40, 40, 0.08),
+    0px 20px 30px -5px rgba(0, 0, 0, 0.03);
 
-        .recipeImg {
-            transform: scale(1.05); /* Картинка увеличивается внутри */
-        }
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.3s ease;
 
-        .imageOverlay {
-            opacity: 0.15; /* Оверлей слегка темнеет для контраста */
-        }
+  &:hover {
+    transform: translateY(-8px) scale(1.01);
+    border-color: var(--orange-color);
+
+    box-shadow:
+      0px 20px 35px -5px rgba(236, 149, 109, 0.2),
+      0px 30px 50px -10px rgba(40, 40, 40, 0.12);
+
+    .recipeImg {
+      transform: scale(1.05);
     }
+
+    .imageOverlay {
+      opacity: 0.15;
+    }
+  }
 }
 
 .imageWrapper {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    background-color: var(--background-color);
-    
-    /* Базовая высота для мобилок (до 820px) */
-    height: 200px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--background-color);
 
-    /* ИСПРАВЛЕНО: Для устройств больше 820px (tablet-m) делаем карточки БОЛЬШИМИ */
-    @include tablet-m {
-        height: 280px; 
-    }
+  height: 200px;
 
-    /* На больших мониторах делаем картинку еще массивнее */
-    @include desktop-m {
-        height: 320px; 
-    }
+  @include tablet-m {
+    height: 280px;
+  }
+
+  @include desktop-m {
+    height: 320px;
+  }
 }
 
 .recipeImg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Глянцевый оверлей для объема картинки */
 .imageOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Градиент создает ощущение падающего сверху света и легкого объема */
-    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
-    opacity: 0.1;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  opacity: 0.1;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .h3 {
-    font-family: var(--font-lato);
-    font-size: var(--font-size-xs);
-    font-weight: 700; /* Делаем шрифт жирнее, чтобы сбалансировать крупную карточку */
-    color: var(--text-color);
-    text-align: center;
-    padding: 18px 16px;
-    margin: 0;
-    line-height: 1.3;
-    
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp:2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-family: var(--font-lato);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--text-color);
+  text-align: center;
+  padding: 18px 16px;
+  margin: 0;
+  line-height: 1.3;
 
-    /* ИСПРАВЛЕНО: Увеличиваем размер текста для больших устройств (820px+) */
-  	@include tablet-m {
-        font-size: var(--font-size-s);
-        padding: 22px 20px;
-    }
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-    @include desktop-m {
-        font-size: var(--font-size-sm); /* На десктопе заголовок становится по-настоящему крупным */
-        padding: 26px 24px;
-    }
+  @include tablet-m {
+    font-size: var(--font-size-s);
+    padding: 22px 20px;
+  }
+
+  @include desktop-m {
+    font-size: var(--font-size-sm);
+    padding: 26px 24px;
+  }
 }

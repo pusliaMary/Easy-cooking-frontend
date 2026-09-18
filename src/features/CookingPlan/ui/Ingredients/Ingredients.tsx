@@ -13,18 +13,28 @@ interface ingredientsProps {
   setPurchasedItems: Dispatch<SetStateAction<string[]>>;
 }
 
-export const Ingredients = ({ isLoading, isError, visibleRecipes, setPurchasedItems, purchasedItems }: ingredientsProps) => {
+export const Ingredients = ({
+  isLoading,
+  isError,
+  visibleRecipes,
+  setPurchasedItems,
+  purchasedItems,
+}: ingredientsProps) => {
   const togglePurchased = (name: string) => {
     setPurchasedItems((prev) =>
-      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+      prev.includes(name)
+        ? prev.filter((item) => item !== name)
+        : [...prev, name],
     );
   };
 
   const uniqueIngredients = useMemo(() => {
     const allIngredientNames = visibleRecipes.flatMap((group) =>
       group.recipes.flatMap((recipe) =>
-        recipe.ingredients ? recipe.ingredients.map((ing) => ing.name.trim()) : []
-      )
+        recipe.ingredients
+          ? recipe.ingredients.map((ing) => ing.name.trim())
+          : [],
+      ),
     );
     return Array.from(new Set(allIngredientNames));
   }, [visibleRecipes]);
@@ -32,8 +42,16 @@ export const Ingredients = ({ isLoading, isError, visibleRecipes, setPurchasedIt
   if (isLoading || isError || uniqueIngredients.length === 0) return null;
 
   return (
-    <Stack direction="column" align="start" gap={16} max className={styles.ingredientsSection}>
-      <Typography variant="h2" className={styles.ingredientsLabel}>Shopping list</Typography>
+    <Stack
+      direction="column"
+      align="start"
+      gap={16}
+      max
+      className={styles.ingredientsSection}
+    >
+      <Typography variant="h2" className={styles.ingredientsLabel}>
+        Shopping list
+      </Typography>
       <ul className={styles.ingredientsList}>
         {uniqueIngredients.map((ingredientName) => {
           const isChecked = purchasedItems?.includes(ingredientName);

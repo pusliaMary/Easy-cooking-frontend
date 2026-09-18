@@ -28,14 +28,11 @@ export const CookingSteps = ({
     );
   };
 
-  // Группируем шаги ОТНОСИТЕЛЬНО КАЖДОГО БЛЮДА
-  const recipesWithSteps = useMemo(() => {
+   const recipesWithSteps = useMemo(() => {
     const currentProteinBases = chosenBases.map((b) => String(b).trim().toLowerCase());
 
-    // Собираем все уникальные рецепты, у которых есть шаги
     const allRecipes = visibleRecipes.flatMap((group) => group.recipes);
     
-    // Исключаем дубликаты рецептов, если они попали в разные приемы пищи
     const uniqueRecipes = allRecipes.filter(
       (recipe, index, self) => self.findIndex((r) => r.renderKey === recipe.renderKey) === index
     );
@@ -53,14 +50,14 @@ export const CookingSteps = ({
 
         return {
           key,
-          text: stepText, // Берем только чистый текст шага (без повторения названия блюда!)
+          text: stepText,
           index: index + 1,
           isPriority: isProteinRecipe || stepMentionsProtein,
           isDone: completedSteps.includes(key),
         };
       });
 
-      // Считаем, сколько шагов в этом блюде уже выполнено
+      
       const doneCount = steps.filter((s) => s.isDone).length;
       const isRecipeFullyDone = steps.length > 0 && doneCount === steps.length;
 
@@ -68,9 +65,9 @@ export const CookingSteps = ({
         title: recipe.title,
         id: recipeSlug,
         steps,
-        isRecipeFullyDone, // Флаг: приготовлено ли блюдо полностью
+        isRecipeFullyDone,
       };
-    }).filter(recipe => recipe.steps.length > 0); // Показываем только те, где есть шаги
+    }).filter(recipe => recipe.steps.length > 0);
   }, [visibleRecipes, chosenBases, completedSteps]);
 
   if (isLoading || isError || recipesWithSteps.length === 0) return null;
@@ -81,7 +78,7 @@ export const CookingSteps = ({
       
       <div className={styles.recipesContainer}>
         {recipesWithSteps.map((recipe) => (
-          /* Блок одного конкретного блюда */
+          
           <div 
             key={recipe.id} 
             className={`${styles.recipeBlock} ${recipe.isRecipeFullyDone ? styles.recipeBlockDone : ""}`}
