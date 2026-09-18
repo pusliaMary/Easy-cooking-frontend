@@ -1,4 +1,4 @@
-export const apiUrl = "https://easy-cooking-back.onrender.com";
+export const apiUrl = "https://easy-cooking-backend.onrender.com";
 
 
 export const endpoints = {
