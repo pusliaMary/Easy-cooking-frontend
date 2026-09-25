@@ -21,9 +21,6 @@ importers:
       '@techlabteam/useful-hooks':
         specifier: ^1.1.5
         version: 1.1.5(react-router-dom@7.18.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
-      auth0-js:
-        specifier: ^10.2.0
-        version: 10.2.1(supports-color@8.1.1)
       framer-motion:
         specifier: ^13.1.0
         version: 13.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -56,7 +53,7 @@ importers:
         version: 11.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react-use-auth:
         specifier: 2.1.0-14
-        version: 2.1.0-14(@types/react@19.3.0)(auth0-js@10.2.1(supports-color@8.1.1))(firebase@8.10.1)(firebaseui@4.8.1(firebase@8.10.1))(netlify-identity-widget@1.9.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 2.1.0-14(@types/react@19.3.0)(auth0-js@9.32.0(supports-color@8.1.1))(firebase@8.10.1)(firebaseui@4.8.1(firebase@8.10.1))(netlify-identity-widget@1.9.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       uuid:
         specifier: ^14.0.2
         version: 14.0.2
@@ -1069,8 +1066,8 @@ packages:
     engines: {node: '>= 4.5.0'}
     hasBin: true
 
-  auth0-js@10.2.1:
-    resolution: {integrity: sha512-8jaYQEDrRkfD4nS7Kot4AM189OIfgABySpZM7L9vGyEIvBOxYEelnU7wpkwUW/XxvNBzlc7kt6m45OVfGwQvDw==}
+  auth0-js@9.32.0:
+    resolution: {integrity: sha512-Vbt8W1sI3VLEdhaRNNP6Uq0qD5KUWQ4iSFn0nv03Xn4npC8r7YRUrvFrA27CCXK+ZV5fjy0Ajr/ElZ7ed97ukA==}
 
   autoprefixer@9.8.8:
     resolution: {integrity: sha512-eM9d/swFopRt5gdJ7jrpCwgvEMIayITpojhkkSMRsFHYuH5bkSQ4p/9qTEHtmNudUZh22Tehu7I6CxAW0IXTKA==}
@@ -2203,6 +2200,9 @@ packages:
 
   isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
+
+  js-cookie@2.2.1:
+    resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
 
   js-cookie@3.0.8:
     resolution: {integrity: sha512-yeJd4aNAdYZQjaon2bpD/Gb0B/omw7HQOsynXXcOiWVCacbBcPlgn8S/d1X6blFSaHao7ozqtW7NZW19xpCtIw==}
@@ -4493,7 +4493,7 @@ snapshots:
   '@types/vfile@3.0.2':
     dependencies:
       '@types/node': 24.13.5
-      '@types/unist': 2.0.11
+      '@types/unist': 3.0.3
       '@types/vfile-message': 2.0.0
 
   '@typescript-eslint/eslint-plugin@8.70.0(@typescript-eslint/parser@8.70.0(eslint@10.10.0(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.10.0(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3)':
@@ -4707,11 +4707,11 @@ snapshots:
 
   atob@2.1.2: {}
 
-  auth0-js@10.2.1(supports-color@8.1.1):
+  auth0-js@9.32.0(supports-color@8.1.1):
     dependencies:
       base64-js: 1.5.1
       idtoken-verifier: 2.2.4
-      js-cookie: 3.0.8
+      js-cookie: 2.2.1
       minimist: 1.2.8
       qs: 6.16.0
       superagent: 10.3.0(supports-color@8.1.1)
@@ -6005,6 +6005,8 @@ snapshots:
 
   isstream@0.1.2: {}
 
+  js-cookie@2.2.1: {}
+
   js-cookie@3.0.8: {}
 
   js-tokens@4.0.0: {}
@@ -6670,10 +6672,10 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  react-use-auth@2.1.0-14(@types/react@19.3.0)(auth0-js@10.2.1(supports-color@8.1.1))(firebase@8.10.1)(firebaseui@4.8.1(firebase@8.10.1))(netlify-identity-widget@1.9.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  react-use-auth@2.1.0-14(@types/react@19.3.0)(auth0-js@9.32.0(supports-color@8.1.1))(firebase@8.10.1)(firebaseui@4.8.1(firebase@8.10.1))(netlify-identity-widget@1.9.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       '@xstate/react': 1.6.3(@types/react@19.3.0)(react@19.3.0)(xstate@4.38.3)
-      auth0-js: 10.2.1(supports-color@8.1.1)
+      auth0-js: 9.32.0(supports-color@8.1.1)
       date-fns: 2.30.0
       firebase: 8.10.1
       firebaseui: 4.8.1(firebase@8.10.1)
