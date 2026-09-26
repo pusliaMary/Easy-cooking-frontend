@@ -1,29 +1,10 @@
 import { api } from "@/shared/api/api";
 import { createApiConfig } from "@/shared/api/helper";
 import { endpoints } from "@/shared/api/endpoints";
-import type { Recipe, CategoryType, ProteinType } from "../model/types";
+import type { Recipe } from "../model/types";
+import type { GetRecipesParams } from "./types";
 
 const url = endpoints.path.recipes;
-
-export interface GetRecipesParams {
-  limit?: number;
-  page?: number;
-  sort?: string;
-  title?: string;
-  category?: CategoryType;
-  containsProtein?: boolean;
-  containsFiber?: boolean;
-  whatProtein?: ProteinType | ProteinType[];
-  keyWords?: string | string[];
-  "ingredients.name"?: string | string[];
-  [key: string]:
-    | string
-    | number
-    | boolean
-    | string[]
-    | ProteinType[]
-    | undefined;
-}
 
 export const recipesApi = api.injectEndpoints({
   endpoints: (builder) => ({
