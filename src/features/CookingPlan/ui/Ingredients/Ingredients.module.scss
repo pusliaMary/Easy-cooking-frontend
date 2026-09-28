@@ -61,7 +61,7 @@
     min-width: 18px;
     width: 18px;
     height: 18px;
-    border: 2px solid var(--orange-color);
+    border: 2px solid var(--button-color);
     border-radius: 5px;
     background-color: var(--white);
     transition: all 0.2s ease;
@@ -71,11 +71,11 @@
   &:hover {
     transform: translateY(-2px);
     background-color: var(--white);
-    border-color: var(--orange-color);
+    border-color: var(--button-color);
     box-shadow: 0px 6px 15px rgba(236, 149, 109, 0.15);
 
     &::before {
-      border-color: var(--terracot);
+      border-color: var(--primary-color-chosen);
     }
   }
 
@@ -86,13 +86,13 @@
 }
 .checked {
   background-color: rgba(88, 210, 158, 0.1) !important;
-  color: var(--gray-color) !important;
+  color: var(--light-text-color) !important;
   text-decoration: line-through;
   border-color: rgba(88, 210, 158, 0.2) !important;
 
   &::before {
-    background-color: var(--green-light);
-    border-color: var(--green-light);
+    background-color: var(--button-color);
+    border-color: var(--button-color);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
     background-size: 12px;
     background-position: center;

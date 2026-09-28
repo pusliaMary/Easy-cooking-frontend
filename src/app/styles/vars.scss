@@ -1,52 +1,121 @@
 :root {
-    // colors
-    --orange-color: #EC956D; // accordion panel background
-    --gray-color: gray; // circle number, portfolio filter scrollbar
-    --grey-light: rgb(221, 218, 218);
-    --green-light: #58D29E;
-    --green-dark-color: #719D6E; // accordion icon "+"
-    --terracot: #DC5034; // social media icons, numbers, first and last letter in H1
-    --error-color: #ff0000; //error
-    --black-color: #000000;
+  // colors
+
+  // AUTUMN
+
     --background-color: #e4dbd9;
+    --button-color: #EC956D;
+
     --text-color: #282828;
+    --light-text-color: gray;
+
+    --primary-color: #58D29E;
+    --contrast-color: #719D6E;
+    --primary-color-chosen: #DC5034;
+
+    --error-color: #ff0000;
+    --black-color: #000000;
     --white: #FFF;
 
-    //fonts
-    --font-lato: "Lato", sans-serif; //main text
-    --font-poiret-one: "Poiret One", sans-serif; //accent text
+  // WINTER
 
-    //font-size
-    --font-size-xxs: 0.75rem; // photo hover, mobile nav, mobile accordion
-    --font-size-xs: 1rem; // regular text
-    --font-size-s: 1.25rem;
-    --font-size-sm: 1.5rem; // button
-    --font-size-m: 1.75rem;
-    --font-size-md: 2rem; // price 
-    --font-size-lg: 2.25rem; // numbers(steps)
-    --font-size-l: 3rem; // quote, service title
-    --font-size-xl: 5rem;
-    --font-size-xxl: 8rem; // H1
+  //   --background-color: #EBF3F5; /* Мягкий морозный белый с легким голубым оттенком */
+  //   --button-color: #5FA8D3;     /* Ледяной голубой для основных кнопок */
 
-    // mobile font-size
-    --mobile-font-size-xs: 0.5rem; // beside numbers, accordion panel, portfolio photo description  
-    --mobile-font-size-sm: 0.625rem; // portfolio filter 
-    --mobile-font-size-md: 0.8rem; // regular text
-    --mobile-font-size-lg: 1.125rem; // numbers(steps)
-    --mobile-font-size-xl: 1.25rem; // quote
+  //   --text-color: #1D2A3A;       /* Глубокий темно-синий для отличной читаемости */
+  //   --light-text-color: #8FA0B4; /* Холодный серый для второстепенного текста */
 
-    // font-weight
-    --font-weight-semibold: 600;
+  //   --primary-color: #00D2FF;    /* Светло-голубой для акцентов и иконок */
+  //   --contrast-color: #F1A7B4;   /* Нежный зефирно-розовый для контраста (как румянец) */
+  //   --primary-color-chosen: #1B4965; /* Насыщенный синий для выбранных активных элементов */
 
-    // line-height
-    --line-height: 1.4;
+  //   --error-color: #D9383A;      /* Благородный холодный красный для ошибок */
+  //   --black-color: #0B111E;      /* Угольно-синий вместо жесткого черного */
+  //   --white: #FFFFFF;            /* Чистый снежно-белый */
 
-    // text transform
-    --text-uppercase: uppercase;
-    --text-capitalize: capitalize;
+  // SPRING
 
-    --text-indent: 1.5rem;
+  //   --background-color: #F5FAF4; /* Свежий белый с легким, едва заметным весенним подтоном */
+  //   --button-color: #2ECC71;     /* Яркий, сочный цвет молодой травы для кнопок */
 
-    // slider position
-    --slider-position: 50%;
+  //   --text-color: #1A3024;       /* Глубокий темно-хвойный для идеальной читаемости */
+  //   --light-text-color: #708A7C; /* Спокойный серо-зеленый для второстепенного текста */
+
+  //   --primary-color: #10FA9E;    /* Яркий, светящийся мятно-зеленый для акцентов */
+  //   --contrast-color: #FF6B8B;   /* Сочный цвет цветущей тюльпановой розы для контраста */
+  //   --primary-color-chosen: #1B8A4F; /* Насыщенный изумрудный для выбранных активных элементов */
+
+  //   --error-color: #E74C3C;      /* Чистый, заметный красный для ошибок */
+  //   --black-color: #111A15;      /* Очень темный землисто-зеленый вместо жесткого черного */
+  //   --white: #FFFFFF;            /* Чистый белый */
+
+  // SUMMER
+
+  //   --background-color: #EEF7F2; /* Освежающий бледно-мятный фон */
+  //   --button-color: #FF9F1C;     /* Яркий, сочный апельсиновый цвет для кнопок */
+
+  //   --text-color: #619477;       /* Глубокий сочно-зеленый заголовок h1 */
+  //   --light-text-color: #A3EBB1; /* Спокойный травянисто-серый для второстепенного текста */
+
+  //   --primary-color: #2ECC71;    /* Яркий, сочный зеленый для основных летних акцентов */
+  //   --contrast-color:#1E6B3E ;   /* Нежный мятно-лаймовый цвет, родственный и близкий к primary */
+  //   --primary-color-chosen: #219653; /* Насыщенный травяной для выбранных активных элементов */
+
+  //   --error-color: #E63946;      /* Кораллово-красный для ошибок */
+  //   --black-color: #0D2618;      /* Густой темно-зеленый вместо жесткого черного */
+  //   --white: #FFFFFF;            /* Чистый белый */
+
+  // NIGHT / NEO-NOIR
+
+  //   --background-color: #0F0A1C; /* Глубокий темно-фиолетовый, как ночной смог на картинке */
+  //   --button-color: #D3208B;     /* Насыщенный цвет фуксии с вывесок (сочный акцент для кнопок) */
+
+  //   --text-color: #38A3A5;       /* Спокойный бирюзовый заголовок h1, близкий к primary (цвет вывески HOTEL) */
+  //   --light-text-color: #6C5E7B; /* Приглушенный серо-лавандовый для второстепенного текста */
+
+  //   --primary-color:  #6930C3;    /* Мягкий неоново-голубой для основных акцентов (как свечение в центре) */
+  //   --contrast-color: #4EA8DE;   /* Глубокий фиолетовый, близкий к primary по тону (как тени на улице) */
+  //   --primary-color-chosen: #2A6F97; /* Плотный темно-синий для выбранных активных элементов */
+
+  //   --error-color: #FF4D6D;      /* Яркий неоново-розовый для ошибок */
+  //   --black-color: #05030A;      /* Густой полуночный черный в самых темных участках подворотни */
+  //   --white: #E0AAFF;            /* Нежный лавандово-белый (вместо едкого белого), залитый отсветом неона */
+
+  //fonts
+  --font-lato: "Lato", sans-serif; //main text
+  --font-poiret-one: "Poiret One", sans-serif; //accent text
+
+  //font-size
+  --font-size-xxs: 0.75rem; // photo hover, mobile nav, mobile accordion
+  --font-size-xs: 1rem; // regular text
+  --font-size-s: 1.25rem;
+  --font-size-sm: 1.5rem; // button
+  --font-size-m: 1.75rem;
+  --font-size-md: 2rem; // price
+  --font-size-lg: 2.25rem; // numbers(steps)
+  --font-size-l: 3rem; // quote, service title
+  --font-size-xl: 5rem;
+  --font-size-xxl: 8rem; // H1
+
+  // mobile font-size
+  --mobile-font-size-xs: 0.5rem; // beside numbers, accordion panel, portfolio photo description
+  --mobile-font-size-sm: 0.625rem; // portfolio filter
+  --mobile-font-size-md: 0.8rem; // regular text
+  --mobile-font-size-lg: 1.125rem; // numbers(steps)
+  --mobile-font-size-xl: 1.25rem; // quote
+
+  // font-weight
+  --font-weight-semibold: 600;
+
+  // line-height
+  --line-height: 1.4;
+
+  // text transform
+  --text-uppercase: uppercase;
+  --text-capitalize: capitalize;
+
+  --text-indent: 1.5rem;
+
+  // slider position
+  --slider-position: 50%;
 }

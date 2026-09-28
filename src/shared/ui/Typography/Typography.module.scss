@@ -17,7 +17,7 @@
 h2 {
     font-family: var(--font-poiret-one);
     font-size: var(--font-size-md);
-    color: var(--terracot);
+    color: var(--primary-color-chosen);
     text-transform: var(--text-uppercase);
     margin-bottom: 24px;
     letter-spacing: 1px;
@@ -33,7 +33,7 @@ h2 {
       left: 0;
       width: 40px;
       height: 2px;
-      background-color: var(--orange-color);
+      background-color: var(--button-color);
     }
 
     @include mobile-l {

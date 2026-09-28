@@ -20,7 +20,7 @@
 .mobileTitle {
   text-transform: var(--text-uppercase);
   font-size: var(--font-size-s);
-  color: var(--green-dark-color);
+  color: var(--contrast-color);
 
   @include mobile-l {
     font-size: 3rem;

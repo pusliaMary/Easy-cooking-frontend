@@ -71,7 +71,7 @@
   font-family: var(--font-poiret-one);
   font-size: var(--font-size-sm);
   font-weight: 700;
-  color: var(--terracot);
+  color: var(--primary-color-chosen);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -80,7 +80,7 @@
 .doneBadge {
   font-family: var(--font-lato);
   font-size: var(--font-size-xxs);
-  background-color: var(--green-light);
+  background-color: var(--button-color);
   color: var(--white);
   padding: 4px 8px;
   border-radius: 6px;
@@ -124,7 +124,7 @@
 
 .stepNumber {
   font-weight: 700;
-  color: var(--gray-color);
+  color: var(--light-text-color);
   white-space: nowrap;
 }
 
@@ -135,22 +135,22 @@
 
 .priorityStep {
   background-color: rgba(236, 149, 109, 0.12);
-  border-left: 4px solid var(--terracot);
+  border-left: 4px solid var(--primary-color-chosen);
 
   .stepNumber {
-    color: var(--terracot);
+    color: var(--primary-color-chosen);
   }
 }
 
 .cookingItemDone {
   background-color: rgba(88, 210, 158, 0.05) !important;
-  color: var(--gray-color) !important;
+  color: var(--light-text-color) !important;
   text-decoration: line-through;
   opacity: 0.6;
   border-left: 4px solid transparent;
 
   .stepNumber {
-    color: var(--gray-color);
+    color: var(--light-text-color);
   }
 
   &::after {
@@ -158,7 +158,7 @@
     display: inline-block;
     min-width: 16px;
     height: 16px;
-    background-color: var(--green-light);
+    background-color: var(--button-color);
     border-radius: 50%;
     margin-left: 12px;
     align-self: center;
@@ -179,6 +179,6 @@
   box-shadow: none;
 
   .recipeTitle {
-    color: var(--gray-color);
+    color: var(--light-text-color);
   }
 }

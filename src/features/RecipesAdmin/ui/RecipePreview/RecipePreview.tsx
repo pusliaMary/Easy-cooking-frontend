@@ -73,7 +73,7 @@ export const RecipePreview = ({ onAddNewClick, onEditClick }: RecipePreviewListP
             <div className={getStyles(styles.imageWrapper, { [styles.addCardImageWrapper]: true }, [])}>
               <Stack direction="column" align="center" justify="center" max>
                 <div className={styles.plusCircle}>
-                  <Plus size={36} color="var(--orange-color)" />
+                  <Plus size={36} color="var(--button-color)" />
                 </div>
               </Stack>
             </div>

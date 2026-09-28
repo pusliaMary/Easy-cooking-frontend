@@ -83,7 +83,7 @@
 
   &.active {
     color: var(--white);
-    background-color: var(--green-dark-color);
+    background-color: var(--contrast-color);
     box-shadow: 0px 4px 10px rgba(113, 157, 110, 0.2);
   }
 }
@@ -91,7 +91,7 @@
 .sidebar :global(.btn) {
   width: 100%;
   padding: 1rem;
-  background-color: var(--terracot) !important;
+  background-color: var(--primary-color-chosen) !important;
   color: var(--white) !important;
   font-family: var(--font-lato);
   font-size: var(--font-size-xs);
