@@ -7,7 +7,7 @@
   background-color: var(--white);
   border-radius: 20px;
   box-shadow: 0px 10px 30px rgba(40, 40, 40, 0.05);
-  border: 1px solid var(--grey-light);
+  border: 1px solid var(--light-text-color);
   width: 100%;
   box-sizing: border-box;
 
@@ -54,7 +54,7 @@
 
 .recipeBlock {
   background: var(--white);
-  border: 1px solid var(--grey-light);
+  border: 1px solid var(--light-text-color);
   border-radius: 16px;
   padding: 0px 20px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.02);
@@ -112,7 +112,7 @@
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.02);
 
   &:hover {
-    background-color: var(--grey-light);
+    background-color: var(--light-text-color);
     transform: translateX(4px);
   }
 

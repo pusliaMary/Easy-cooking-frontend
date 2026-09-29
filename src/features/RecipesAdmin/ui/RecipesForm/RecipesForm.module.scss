@@ -10,7 +10,7 @@ textarea {
   
   padding: 1.1rem 1.25rem; 
   background-color: var(--white);
-  border: 1px solid var(--grey-light);
+  border: 1px solid var(--light-text-color);
   border-radius: 6px;
   color: var(--text-color);
   font-family: var(--font-lato);
@@ -66,7 +66,7 @@ h3 {
   color: var(--text-color);
   text-transform: var(--text-uppercase);
   font-weight: var(--font-weight-semibold);
-  border-bottom: 1px solid var(--grey-light);
+  border-bottom: 1px solid var(--light-text-color);
   padding-bottom: 0.75rem;
   margin-top: 2rem;
   letter-spacing: 0.03em;
@@ -142,3 +142,38 @@ button[type="button"]:has(svg) {
     padding: 1.1rem;
   }
 }
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: var(--hover-background-color, #f0f0f0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.cancelButton {
+  // Стили для нижней текстовой кнопки отмены, если она необходима
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+

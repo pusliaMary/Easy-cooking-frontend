@@ -87,7 +87,7 @@ return (
           </Typography>
         )}
         
-        <Button size="sm" variant="primary" onClick={handleLogout}>
+        <Button size="sm" variant="primary" onClick={handleLogout} className={styles.signOutButton}>
           Sign Out
         </Button>
       </Stack>

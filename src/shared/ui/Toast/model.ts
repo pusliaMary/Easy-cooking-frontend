@@ -1,7 +1,7 @@
 import { toast as toastify } from 'react-toastify';
 import type { ToastOptions } from 'react-toastify';
 
-export type CustomToastOptions = Pick<ToastOptions, 'toastId'>;
+export type CustomToastOptions = Pick<ToastOptions, 'toastId' | 'autoClose' | 'closeButton'>;
 
 export const toast = {
   success: (message: string, options?: CustomToastOptions) => 
@@ -12,4 +12,10 @@ export const toast = {
     
   info: (message: string, options?: CustomToastOptions) => 
     toastify.info(message, options),
+
+  custom: (content: React.ReactNode, options?: CustomToastOptions) =>
+    toastify(content, options),
+
+  dismiss: (toastId?: string | number) => 
+    toastify.dismiss(toastId),
 };

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import { Stack } from "@/shared/ui/Stack/Stack";
 import { Typography } from "@/shared/ui/Typography";
 import { UploadImage } from "@/shared/ui/UploadImage";
@@ -14,10 +14,12 @@ import styles from "./RecipesForm.module.scss";
 
 interface RecipesFormProps {
   onSuccess: () => void;
+  onCancel: () => void;
   isEdit: boolean;
   isSubmitting: boolean;
   initialData?: Recipe;
-  onSubmit: (data: RecipeFormInput, resetForm: () => void) => void; 
+  onSubmit: (data: RecipeFormInput, resetForm: () => void) => void;
+  setIsFormDirty: (dirty: boolean) => void; 
 }
 
 const mapRecipeToFormInput = (recipe: Recipe): Partial<RecipeFormInput> => {
@@ -41,6 +43,8 @@ export const RecipesForm = ({
   isSubmitting,
   isEdit,
   initialData,
+  onCancel,
+  setIsFormDirty,
 }: RecipesFormProps) => {
   
   const defaultValues = isEdit && initialData 
@@ -62,17 +66,24 @@ export const RecipesForm = ({
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<RecipeFormInput>({
     resolver: zodResolver(recipeZodSchema, undefined, { raw: true }),
     defaultValues: defaultValues as RecipeFormInput,
   });
+  
 
- useEffect(() => {
+   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       console.log("❌ ОШИБКИ ВАЛИДАЦИИ ФОРМЫ (ZOD):", errors);
     }
-  }, [errors]);
+
+    setIsFormDirty(isDirty);
+    
+    return () => {
+      setIsFormDirty(false);
+    };
+  }, [errors, isDirty, setIsFormDirty]);
 
   const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
     control,
@@ -95,9 +106,25 @@ export const RecipesForm = ({
     onSubmit(data, () => reset());
   };
 
-  return (
+    return (
     <form onSubmit={handleSubmit(handleLocalSubmit)} className={styles.form}>
       <Stack direction="column" gap={24} align="stretch">
+        
+        {/* Шапка формы с кнопкой Назад СЛЕВА */}
+        <Stack direction="row" gap={16} align="center">
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            className={styles.backButton}
+            title="Back to recipes"
+            disabled={isSubmitting}
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <Typography variant="h2">
+            {isEdit ? "Edit Recipe" : "Create New Recipe"}
+          </Typography>
+        </Stack>
         
         {/* Title Field */}
         <Stack direction="column" gap={8} align="stretch">
@@ -284,10 +311,22 @@ export const RecipesForm = ({
           )}
         </Stack>
 
-        <button type="submit" disabled={isSubmitting} className={styles.submitButton}>
-          {isSubmitting ? "Saving..." : isEdit ? "Update Recipe" : "Save Recipe"}
-        </button>
+        {/* Футер формы с двумя кнопками */}
+        <Stack direction="row" gap={16} justify="end">
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            className={styles.cancelButton}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </button>
+          <button type="submit" disabled={isSubmitting} className={styles.submitButton}>
+            {isSubmitting ? "Saving..." : isEdit ? "Update Recipe" : "Save Recipe"}
+          </button>
+        </Stack>
       </Stack>
     </form>
   );
+
 };

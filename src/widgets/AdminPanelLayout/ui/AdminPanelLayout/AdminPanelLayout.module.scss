@@ -27,3 +27,62 @@
     margin-left: 320px;
   }
 }
+
+.confirmToast {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.toastContent {
+  h4 {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a202c;
+  }
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: #718096;
+    line-height: 1.4;
+  }
+}
+
+.toastActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  button {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .stayBtn {
+    background-color: var(--button-color, #ff6b6b);
+    color: white;
+    border: none;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .leaveBtn {
+    background-color: transparent;
+    color: var(--error-color, #e53e3e);
+    border: 1px solid var(--error-color, #e53e3e);
+
+    &:hover {
+      background-color: rgba(229, 62, 62, 0.05);
+    }
+  }
+}
+

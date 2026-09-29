@@ -7,7 +7,7 @@
   left: 0;
   height: 60px;
   background-color: var(--white);
-  border-bottom: 1px solid var(--grey-light);
+  border-bottom: 1px solid var(--light-text-color);
   padding: 0 2rem;
   box-sizing: border-box;
   z-index: 100;
@@ -28,7 +28,7 @@
   bottom: 0;
   width: 100%;
   background-color: var(--white);
-  border-right: 1px solid var(--grey-light);
+  border-right: 1px solid var(--light-text-color);
   padding: 2rem 1.5rem;
   box-sizing: border-box;
   z-index: 90;
@@ -103,4 +103,8 @@
   &:hover {
     opacity: 0.9;
   }
+}
+
+.signOutButton {
+  font-size: 20px;
 }

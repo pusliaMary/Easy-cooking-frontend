@@ -85,7 +85,7 @@
 @mixin placeholder {
   font-family: var(--font-lato);
   font-size: var(--font-size-xxs);
-  color: var(--gray-dark-color);
+  color: var(--light-text-color);
 
   @include desktop-m {
     font-size: var(--font-size-xs);

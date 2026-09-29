@@ -45,7 +45,7 @@
 .primaryButton {
   @extend %button;
   background-color: var(--primary-color);
-  color: var(--grey);
+  color: var(--text-color);
 
   width: 100% !important;
   padding: 14px 20px;
@@ -93,9 +93,9 @@
 .secondaryButton {
   @extend %button;
   background-color: transparent;
-  border: 2px solid var(--grey-light);
-  color: var(--light-text-color);
+  color: var(--text-color);
   box-shadow: none;
+  font-size: 16px;
 
   @media (max-width: 500px) {
     width: 100% !important;

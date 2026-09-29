@@ -18,10 +18,12 @@ interface RTKQueryError {
 
 export interface RecipesAdminProps {
   onSuccess: () => void;
+  onCancel: () => void;
   recipeId?: string | null;
+  setIsFormDirty: (dirty: boolean) => void;
 }
 
-export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
+export const RecipesAdmin = ({ onSuccess, onCancel, recipeId, setIsFormDirty  }: RecipesAdminProps) => {
   const isEditMode = Boolean(recipeId);
 
   const {
@@ -124,10 +126,17 @@ export const RecipesAdmin = ({ onSuccess, recipeId }: RecipesAdminProps) => {
     );
   }
 
+  const handleSuccessWithReset = () => {
+    setIsFormDirty(false);
+    onSuccess();
+  };
+
   return (
     <div className={style.adminWrapper}>
       <RecipesForm
-        onSuccess={onSuccess}
+      onSuccess={handleSuccessWithReset}
+        onCancel={onCancel}
+        setIsFormDirty={setIsFormDirty}
         isEdit={isEditMode}
         initialData={recipeData}
         onSubmit={handleSubmitForm}

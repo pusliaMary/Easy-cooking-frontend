@@ -247,7 +247,7 @@ export const Filters = ({
             <Button 
               className={styles.secondaryButton} 
               variant="secondary" 
-              size="sm" 
+              size="md" 
               onClick={ClearPlan}
             >
               Clear plan

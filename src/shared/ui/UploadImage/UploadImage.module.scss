@@ -17,7 +17,7 @@
         max-height: 270px;
         aspect-ratio: 5 / 3;
         @include dashed-border;
-        background-color: var(--light-text-color);
+        background-color: var(--background-color);
         transition: background-color 0.3s ease;
         gap: 16px;
         padding: 1rem;
