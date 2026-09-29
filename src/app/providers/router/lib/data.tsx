@@ -13,13 +13,13 @@ export const routeConfig = {
     main: {
         path: getRouteMain(),
         page: <MainPage/>,
-        auth: false
+        authOnly: false
     },
 
     auth: {
         path: getRouteAuth(),
         page: <AuthPage />,
-        auth: false
+        authOnly: false
     },
 
     admin: {
