@@ -1,11 +1,11 @@
 export const createApiConfig = (
     url: string,
     method: string,
-    body?: object
+    body?: unknown,
 ) => {
     return{
         url,
         method,
-        ...(body && { body })
+        ...(body!== undefined && { body })
     }
 }

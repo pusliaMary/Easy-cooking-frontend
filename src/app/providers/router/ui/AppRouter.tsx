@@ -10,7 +10,7 @@ interface AppRouteProps {
   page: React.JSX.Element;
 }
 
-const ProtectedRoute = ({ children, authOnly }: { children: React.JSX.Element; authOnly?: boolean }) => {
+const ProtectedRoute = ({ children, authOnly }: { children: React.JSX.Element; authOnly?: boolean }): React.JSX.Element => {
   const { isLoggedIn } = useAuth();
   const location = useLocation();
 

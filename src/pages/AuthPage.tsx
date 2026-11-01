@@ -1,12 +1,11 @@
-import { AdminLoginForm } from "@/features/AdminAuth"
-
+import { AdminLoginForm } from "@/features/AdminAuth";
 
 const AuthPage = () => {
-    return (
-        <>
-            <AdminLoginForm />
-        </>
-    )
-}
+  return (
+    <>
+      <AdminLoginForm />
+    </>
+  );
+};
 
-export default AuthPage
+export default AuthPage;

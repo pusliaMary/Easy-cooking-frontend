@@ -3,6 +3,7 @@ import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import { Stack } from "@/shared/ui/Stack/Stack";
+import { Input } from "@/shared/ui/Input/Input";
 import { Typography } from "@/shared/ui/Typography";
 import { UploadImage } from "@/shared/ui/UploadImage";
 import { categories, proteins } from "@/entities/recipes/model/filters";
@@ -19,7 +20,7 @@ interface RecipesFormProps {
   isSubmitting: boolean;
   initialData?: Recipe;
   onSubmit: (data: RecipeFormInput, resetForm: () => void) => void;
-  setIsFormDirty: (dirty: boolean) => void; 
+  setIsFormDirty: (dirty: boolean) => void;
 }
 
 const mapRecipeToFormInput = (recipe: Recipe): Partial<RecipeFormInput> => {
@@ -32,8 +33,8 @@ const mapRecipeToFormInput = (recipe: Recipe): Partial<RecipeFormInput> => {
     ingredients: recipe.ingredients?.map((ing) => ({ name: ing.name })) || [],
     steps: recipe.steps?.map((step) => ({ name: step })) || [],
     keyWords: recipe.keyWords?.map((word) => ({ name: word })) || [],
-    uploadImage: recipe.imgSource 
-      ? [{ id: "existing-image", preview: recipe.imgSource }] 
+    uploadImage: recipe.imgSource
+      ? [{ id: "existing-image", preview: recipe.imgSource }]
       : [],
   };
 };
@@ -46,20 +47,20 @@ export const RecipesForm = ({
   onCancel,
   setIsFormDirty,
 }: RecipesFormProps) => {
-  
-  const defaultValues = isEdit && initialData 
-    ? mapRecipeToFormInput(initialData) 
-    : {
-        title: "",
-        category: undefined,
-        containsProtein: false,
-        whatProtein: [],
-        containsFiber: false,
-        ingredients: [{ name: "" }, { name: "" }, { name: "" }],
-        steps: [{ name: "" }, { name: "" }],
-        keyWords: [{ name: "" }, { name: "" }],
-        uploadImage: [],
-      };
+  const defaultValues =
+    isEdit && initialData
+      ? mapRecipeToFormInput(initialData)
+      : {
+          title: "",
+          category: undefined,
+          containsProtein: false,
+          whatProtein: [],
+          containsFiber: false,
+          ingredients: [{ name: "" }, { name: "" }, { name: "" }],
+          steps: [{ name: "" }, { name: "" }],
+          keyWords: [{ name: "" }, { name: "" }],
+          uploadImage: [],
+        };
 
   const {
     register,
@@ -71,31 +72,42 @@ export const RecipesForm = ({
     resolver: zodResolver(recipeZodSchema, undefined, { raw: true }),
     defaultValues: defaultValues as RecipeFormInput,
   });
-  
 
-   useEffect(() => {
+  useEffect(() => {
     if (Object.keys(errors).length > 0) {
       console.log("❌ ОШИБКИ ВАЛИДАЦИИ ФОРМЫ (ZOD):", errors);
     }
 
     setIsFormDirty(isDirty);
-    
+
     return () => {
       setIsFormDirty(false);
     };
   }, [errors, isDirty, setIsFormDirty]);
 
-  const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
+  const {
+    fields: ingredientFields,
+    append: appendIngredient,
+    remove: removeIngredient,
+  } = useFieldArray({
     control,
     name: "ingredients",
   });
 
-  const { fields: stepFields, append: appendStep, remove: removeStep } = useFieldArray({
+  const {
+    fields: stepFields,
+    append: appendStep,
+    remove: removeStep,
+  } = useFieldArray({
     control,
     name: "steps",
   });
 
-  const { fields: keywordFields, append: appendKeyword, remove: removeKeyword } = useFieldArray({
+  const {
+    fields: keywordFields,
+    append: appendKeyword,
+    remove: removeKeyword,
+  } = useFieldArray({
     control,
     name: "keyWords",
   });
@@ -106,15 +118,14 @@ export const RecipesForm = ({
     onSubmit(data, () => reset());
   };
 
-    return (
+  return (
     <form onSubmit={handleSubmit(handleLocalSubmit)} className={styles.form}>
       <Stack direction="column" gap={24} align="stretch">
-        
         {/* Шапка формы с кнопкой Назад СЛЕВА */}
         <Stack direction="row" gap={16} align="center">
-          <button 
-            type="button" 
-            onClick={onCancel} 
+          <button
+            type="button"
+            onClick={onCancel}
             className={styles.backButton}
             title="Back to recipes"
             disabled={isSubmitting}
@@ -125,17 +136,21 @@ export const RecipesForm = ({
             {isEdit ? "Edit Recipe" : "Create New Recipe"}
           </Typography>
         </Stack>
-        
+
         {/* Title Field */}
         <Stack direction="column" gap={8} align="stretch">
           <Typography as="h3">Recipe Title</Typography>
-          <input
+          <Input
             type="text"
-            {...register("title")}
-            className={errors.title ? styles.inputError : ""}
-            disabled={isSubmitting}
+            label="Recipe Title" // Передаем заголовок прямо в проп
             placeholder="Enter recipe title"
+            disabled={isSubmitting}
+            max
+            isError={!!errors.title}
+            errorMessage={errors.title?.message}
+            register={register("title")}
           />
+
           {errors.title && (
             <Typography as="span" className={styles.error}>
               ⚠️ {errors.title.message}
@@ -169,10 +184,20 @@ export const RecipesForm = ({
         <Stack direction="column" gap={8} align="stretch">
           <Stack direction="row" gap={16} align="center">
             <label>
-              <input type="checkbox" {...register("containsProtein")} disabled={isSubmitting} /> Contains Protein
+              <input
+                type="checkbox"
+                {...register("containsProtein")}
+                disabled={isSubmitting}
+              />{" "}
+              Contains Protein
             </label>
             <label>
-              <input type="checkbox" {...register("containsFiber")} disabled={isSubmitting} /> Contains Fiber
+              <input
+                type="checkbox"
+                {...register("containsFiber")}
+                disabled={isSubmitting}
+              />{" "}
+              Contains Fiber
             </label>
           </Stack>
         </Stack>
@@ -203,15 +228,21 @@ export const RecipesForm = ({
           {ingredientFields.map((field, index) => (
             <Stack key={field.id} direction="column" gap={8} align="stretch">
               <Stack direction="row" gap={8} align="center">
-                <input
+                <Input
                   type="text"
-                  {...register(`ingredients.${index}.name`)}
-                  className={errors.ingredients?.[index]?.name ? styles.inputError : ""}
-                  disabled={isSubmitting}
                   placeholder={`Ingredient #${index + 1}`}
+                  disabled={isSubmitting}
+                  max
+                  isError={!!errors.ingredients?.[index]?.name}
+                  errorMessage={errors.ingredients?.[index]?.name?.message}
+                  register={register(`ingredients.${index}.name`)}
                 />
                 {ingredientFields.length > 3 && (
-                  <button type="button" onClick={() => removeIngredient(index)} disabled={isSubmitting}>
+                  <button
+                    type="button"
+                    onClick={() => removeIngredient(index)}
+                    disabled={isSubmitting}
+                  >
                     <Trash2 size={18} color="red" />
                   </button>
                 )}
@@ -223,7 +254,12 @@ export const RecipesForm = ({
               )}
             </Stack>
           ))}
-          <button type="button" onClick={() => appendIngredient({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
+          <button
+            type="button"
+            onClick={() => appendIngredient({ name: "" })}
+            className={styles.addButton}
+            disabled={isSubmitting}
+          >
             <Plus size={16} /> Add Ingredient
           </button>
         </Stack>
@@ -236,12 +272,18 @@ export const RecipesForm = ({
               <Stack direction="row" gap={8} align="center">
                 <textarea
                   {...register(`steps.${index}.name`)}
-                  className={errors.steps?.[index]?.name ? styles.inputError : ""}
+                  className={
+                    errors.steps?.[index]?.name ? styles.inputError : ""
+                  }
                   disabled={isSubmitting}
                   placeholder={`Step Description #${index + 1}`}
                 />
                 {stepFields.length > 2 && (
-                  <button type="button" onClick={() => removeStep(index)} disabled={isSubmitting}>
+                  <button
+                    type="button"
+                    onClick={() => removeStep(index)}
+                    disabled={isSubmitting}
+                  >
                     <Trash2 size={18} color="red" />
                   </button>
                 )}
@@ -253,7 +295,12 @@ export const RecipesForm = ({
               )}
             </Stack>
           ))}
-          <button type="button" onClick={() => appendStep({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
+          <button
+            type="button"
+            onClick={() => appendStep({ name: "" })}
+            className={styles.addButton}
+            disabled={isSubmitting}
+          >
             <Plus size={16} /> Add Step
           </button>
         </Stack>
@@ -264,15 +311,21 @@ export const RecipesForm = ({
           {keywordFields.map((field, index) => (
             <Stack key={field.id} direction="column" gap={8} align="stretch">
               <Stack direction="row" gap={8} align="center">
-                <input
+                <Input
                   type="text"
-                  {...register(`keyWords.${index}.name`)}
-                  className={errors.keyWords?.[index]?.name ? styles.inputError : ""}
-                  disabled={isSubmitting}
                   placeholder={`Keyword #${index + 1}`}
+                  disabled={isSubmitting}
+                  max
+                  isError={!!errors.keyWords?.[index]?.name}
+                  errorMessage={errors.keyWords?.[index]?.name?.message}
+                  register={register(`keyWords.${index}.name`)}
                 />
                 {keywordFields.length > 2 && (
-                  <button type="button" onClick={() => removeKeyword(index)} disabled={isSubmitting}>
+                  <button
+                    type="button"
+                    onClick={() => removeKeyword(index)}
+                    disabled={isSubmitting}
+                  >
                     <Trash2 size={18} color="red" />
                   </button>
                 )}
@@ -284,7 +337,12 @@ export const RecipesForm = ({
               )}
             </Stack>
           ))}
-          <button type="button" onClick={() => appendKeyword({ name: "" })} className={styles.addButton} disabled={isSubmitting}>
+          <button
+            type="button"
+            onClick={() => appendKeyword({ name: "" })}
+            className={styles.addButton}
+            disabled={isSubmitting}
+          >
             <Plus size={16} /> Add Keyword
           </button>
         </Stack>
@@ -313,20 +371,27 @@ export const RecipesForm = ({
 
         {/* Футер формы с двумя кнопками */}
         <Stack direction="row" gap={16} justify="end">
-          <button 
-            type="button" 
-            onClick={onCancel} 
+          <button
+            type="button"
+            onClick={onCancel}
             className={styles.cancelButton}
             disabled={isSubmitting}
           >
             Cancel
           </button>
-          <button type="submit" disabled={isSubmitting} className={styles.submitButton}>
-            {isSubmitting ? "Saving..." : isEdit ? "Update Recipe" : "Save Recipe"}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={styles.submitButton}
+          >
+            {isSubmitting
+              ? "Saving..."
+              : isEdit
+                ? "Update Recipe"
+                : "Save Recipe"}
           </button>
         </Stack>
       </Stack>
     </form>
   );
-
 };

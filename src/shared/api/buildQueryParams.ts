@@ -1,4 +1,4 @@
-export const buildQueryParams = (params = {}) => {
+export const buildQueryParams = (params: Record<string, unknown>) => {
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {

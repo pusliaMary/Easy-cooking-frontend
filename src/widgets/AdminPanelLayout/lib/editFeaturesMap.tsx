@@ -17,7 +17,7 @@ export const getEditFeaturesMap = ({
   onChangeTab,
   onSelectRecipe,
   selectedRecipeId,
-  setIsFormDirty, // <-- Деструктуризируем
+  setIsFormDirty,
 }: GetEditFeaturesMapParams): Record<TabKey, ReactNode> => {
   
   const handleBack = () => {

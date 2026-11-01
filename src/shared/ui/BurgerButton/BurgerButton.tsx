@@ -1,14 +1,14 @@
 import { getStyles } from "@/shared/lib";
 import style from "./BurgerButton.module.scss";
 
-export interface BurgerButtonProos {
+export interface BurgerButtonProps {
   isOpen: boolean;
   toggleMenu: () => void;
   className?: string;
   ariaLabel?: string;
 }
 
-export const BurgerButton = ({ isOpen, toggleMenu, className, ariaLabel }: BurgerButtonProos) => {
+export const BurgerButton = ({ isOpen, toggleMenu, className, ariaLabel }: BurgerButtonProps) => {
   return (
     <button
       className={getStyles(style.hamburger, { [style.open]: isOpen }, [
