@@ -1,3 +1,3 @@
-import { RecipesAdmin } from "./ui/RecipesAdmin/RecipesAdmin";
+import { AdminPanelLayout } from "./ui/AdminPanelLayout/AdminPanelLayout";
 
-export { RecipesAdmin }
+export { AdminPanelLayout }

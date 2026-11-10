@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useBlocker } from "react-router-dom";
-import { SideBar } from "../Sidebar/ui/Sidebar";
+import { SideBar } from "../Sidebar/Sidebar";
 import { getEditFeaturesMap, defaultFeature } from "../../lib/editFeaturesMap";
 import type { TabKey } from "../../lib/tabs";
 import style from "./AdminPanelLayout.module.scss";

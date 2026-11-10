@@ -5,9 +5,8 @@ import { getStyles } from "@/shared/lib";
 import { toast } from "@/shared/ui/Toast";
 import styles from "./Filters.module.scss";
 import { filteredMeal, filteredRecipeBase, type FilterItem } from "@/shared/lib";
-
-
 import { useRef, useState, useCallback } from "react";
+
 import type {
   Recipe,
   MealGroup,
@@ -95,19 +94,22 @@ export const Filters = ({
           return lowerBases.includes(String(p).trim().toLowerCase());
         });
 
-      const hasMatchingKeyWord =
-        Array.isArray(recipe.keyWords) &&
-        recipe.keyWords.some((w: string) => {
-          if (!w) return false;
-          return lowerBases.includes(String(w).trim().toLowerCase());
-        });
+      // const hasMatchingKeyWord =
+      //   Array.isArray(recipe.keyWords) &&
+      //   recipe.keyWords.some((w: string) => {      ПОКА НЕ ПРОВЕРЯЕМ ПО КЛЮЧЕВЫМ СЛОВАМ
+      //     if (!w) return false;
+      //     return lowerBases.includes(String(w).trim().toLowerCase());
+      //   });
 
-      return hasMatchingProtein || hasMatchingKeyWord;
+      return hasMatchingProtein // || hasMatchingKeyWord;
     });
 
     const structuredPlan: MealGroup[] = [];
     const MEAL_ORDER = ["breakfast", "supper", "dinner"];
     const globalUsedIds = new Set<string>();
+
+    // ЦИКЛ ПО ПРИЕМАМ ПИЩИ
+
 
     MEAL_ORDER.forEach((mealValue) => {
       if (!chosenMeals.includes(mealValue)) return;

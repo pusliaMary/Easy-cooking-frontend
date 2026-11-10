@@ -1,8 +1,7 @@
 import { api } from "@/shared/api/api";
 import { createApiConfig } from "@/shared/api/helper";
 import { endpoints } from "@/shared/api/endpoints";
-import type { Recipe } from "../model/types";
-import type { GetRecipesParams } from "./types";
+import type { Recipe, GetRecipesParams } from "../model/types";
 
 const url = endpoints.path.recipes;
 
@@ -36,7 +35,7 @@ export const recipesApi = api.injectEndpoints({
 
     editRecipe: builder.mutation<Recipe, { id: string; formData: FormData }>({
       query: ({ id, formData }) =>
-        createApiConfig(`${url}/${id}`, "PUT", formData),
+      createApiConfig(`${url}/${id}`, "PUT", formData),
       invalidatesTags: (_result, _error, { id }) => [
         "Recipes",
         { type: "Recipes", id },

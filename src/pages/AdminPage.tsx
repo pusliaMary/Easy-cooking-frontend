@@ -1,4 +1,4 @@
-import { AdminPanelLayout } from "@/widgets/AdminPanelLayout";
+import { AdminPanelLayout } from "@/features/RecipesAdmin/ui/AdminPanelLayout/AdminPanelLayout";
 
 const AdminPage = () => {
   return (

@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
-import { RecipesAdmin } from '@/features/RecipesAdmin';
-import { RecipePreview } from '@/features/RecipesAdmin/ui/RecipePreview/RecipePreview';
-import { adminPanelNavigation } from './tabs';
-import type { TabKey } from './tabs';
+import type { ReactNode } from "react";
+import { RecipesAdmin } from "@/features/RecipesAdmin/ui/RecipesAdmin/RecipesAdmin";
+import { RecipePreview } from "@/features/RecipesAdmin/ui/RecipePreview/RecipePreview";
+import { adminPanelNavigation } from "./tabs";
+import type { TabKey } from "./tabs";
 
 export const defaultFeature: TabKey = adminPanelNavigation.recipesList.key;
 
@@ -19,7 +19,6 @@ export const getEditFeaturesMap = ({
   selectedRecipeId,
   setIsFormDirty,
 }: GetEditFeaturesMapParams): Record<TabKey, ReactNode> => {
-  
   const handleBack = () => {
     onSelectRecipe(null);
     onChangeTab(adminPanelNavigation.recipesList.key);
@@ -30,26 +29,26 @@ export const getEditFeaturesMap = ({
       <RecipePreview
         onAddNewClick={() => {
           onSelectRecipe(null);
-          onChangeTab('createRecipe');
-        }} 
+          onChangeTab("createRecipe");
+        }}
         onEditClick={(id) => {
           onSelectRecipe(id);
-          onChangeTab('editRecipe');
+          onChangeTab("editRecipe");
         }}
       />
     ),
     createRecipe: (
-      <RecipesAdmin 
-        onSuccess={handleBack} 
-        onCancel={handleBack} 
+      <RecipesAdmin
+        onSuccess={handleBack}
+        onCancel={handleBack}
         setIsFormDirty={setIsFormDirty}
       />
     ),
     editRecipe: (
-      <RecipesAdmin 
+      <RecipesAdmin
         recipeId={selectedRecipeId}
-        onSuccess={handleBack} 
-        onCancel={handleBack} 
+        onSuccess={handleBack}
+        onCancel={handleBack}
         setIsFormDirty={setIsFormDirty}
       />
     ),

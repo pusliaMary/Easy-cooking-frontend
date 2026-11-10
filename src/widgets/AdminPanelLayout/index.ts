@@ -1,1 +1,0 @@
-export { AdminPanelLayout } from './ui/AdminPanelLayout/AdminPanelLayout';

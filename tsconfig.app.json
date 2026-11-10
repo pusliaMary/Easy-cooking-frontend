@@ -11,8 +11,7 @@
       "@/*": ["./src/*"],
       "@": ["./src"]
     },
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -24,7 +23,13 @@
 
     /* Linting */
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedSideEffectImports": true,
+
+
   },
   "include": ["src"]
 }

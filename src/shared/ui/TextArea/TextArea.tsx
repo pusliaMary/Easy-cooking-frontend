@@ -1,10 +1,10 @@
-import { forwardRef,  useMemo } from 'react';
-import type {  TextareaHTMLAttributes } from 'react';
-import type { UseFormRegisterReturn } from 'react-hook-form';
-import { Stack } from '../Stack/Stack';
-import styles from './TextArea.module.scss';
+import { forwardRef, useMemo } from "react";
+import type { TextareaHTMLAttributes } from "react";
+import type { UseFormRegisterReturn } from "react-hook-form";
+import { Stack } from "../Stack/Stack";
+import styles from "./TextArea.module.scss";
 import { getStyles } from "@/shared/lib";
-import { Typography } from '../Typography'; 
+import { Typography } from "../Typography";
 
 export interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -15,16 +15,17 @@ export interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 }
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ label, register, className, error, maxLength, value, ...otherProps }, ref) => {
-    
+  (
+    { label, register, className, error, maxLength, value, ...otherProps },
+    ref,
+  ) => {
     const mode = {
       [styles.error]: !!error,
     };
 
-    
     const charCount = useMemo(() => {
       if (!maxLength) return 0;
-      return String(value ?? otherProps.defaultValue ?? '').length;
+      return String(value ?? otherProps.defaultValue ?? "").length;
     }, [value, otherProps.defaultValue, maxLength]);
 
     return (
@@ -42,16 +43,24 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             />
           </label>
         )}
-        
+
         {(error?.message || maxLength) && (
           <div className={styles.fieldMeta}>
             {error?.message && (
-              <Typography as="span" variant="body12" className={styles.errorMessage}>
+              <Typography
+                as="span"
+                variant="body12"
+                className={styles.errorMessage}
+              >
                 {error.message}
               </Typography>
             )}
             {maxLength && (
-              <Typography as="span" variant="body12" className={styles.charCounter}>
+              <Typography
+                as="span"
+                variant="body12"
+                className={styles.charCounter}
+              >
                 {charCount} / {maxLength}
               </Typography>
             )}
@@ -59,7 +68,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         )}
       </Stack>
     );
-  }
+  },
 );
 
-TextArea.displayName = 'TextArea';
+TextArea.displayName = "TextArea";
